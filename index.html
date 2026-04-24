@@ -4,6 +4,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <link rel="stylesheet" href="src/css/style.css" />
+    <link rel="stylesheet" href="src/css/common.css" />
+    <script type="module" src="src/js/main.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      <header>
+        <h1>좋은 아침, <span>00님!</span></h1>
+      </header>
+      <!-- task-add -->
+      <div class="task-add"></div>
+      <!-- === date === -->
+      <section class="date"></section>
+      <!-- === mascot === -->
+      <section class="mascot">
+        <div class="mascot-face">
+          <div class="expression">
+            <span class="left-eye"></span>
+            <span class="right-eye"></span>
+            <span class="mouth"></span>
+          </div>
+        </div>
+        <div class="mascot-bubble">
+          <p>활기찬 하루 되세요!</p>
+        </div>
+      </section>
+      <!-- task -->
+      <section class="task">
+        <ul class="task-status">
+          <li class="task-doing">
+            미완료
+            <span>3</span>
+          </li>
+          <li class="task-done">
+            완료
+            <span>1</span>
+          </li>
+        </ul>
+        <div class="task-list">
+          <h2>오늘의 할 일</h2>
+          <div class="taskItem-wrapper">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+          </div>
+        </div>
+      </section>
+      <!-- === nav === -->
+      <nav></nav>
+    </div>
+  </body>
 </html>
