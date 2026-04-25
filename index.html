@@ -19,8 +19,46 @@
       <header>
         <h1>좋은 아침, <span>00님!</span></h1>
       </header>
-      <!-- task-add -->
-      <div class="task-add"></div>
+      <!-- task-add-btn -->
+      <div class="task-add-btn"></div>
+      <div class="task-modal">
+        <h2>할 일을 추가하세요</h2>
+        <input type="text" id="task-name" placeholder="제목을 입력하세요" />
+        <div class="task-time">
+          <h3>소요 시간</h3>
+          <span>45 min</span>
+          <ul class="time-list">
+            <li data-time="15">15 min</li>
+            <li data-time="30">30 min</li>
+            <li data-time="60">1 hour</li>
+            <li data-time="999">직접 입력</li>
+          </ul>
+        </div>
+        <div class="task-custom">
+          <h3>커스텀</h3>
+          <div class="custom-btn">
+            <div class="custom-icon">
+              <div class="icon icon-result"></div>
+            </div>
+            <div class="title-result">
+              <b>색상</b>
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="task-alarm">
+          <h3>알림 설정</h3>
+          <div class="alarm-status">
+            <b>알림 활성화</b>
+            <ul class="alarm-btn">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+        <div class="task-set">
+          <h2>추가하기</h2>
+        </div>
+      </div>
       <!-- === date === -->
       <section class="date"></section>
       <!-- === mascot === -->
@@ -36,22 +74,29 @@
           <p>활기찬 하루 되세요!</p>
         </div>
       </section>
-      <!-- task -->
-      <section class="task">
-        <ul class="task-status">
-          <li class="task-doing">
+      <!-- todo -->
+      <section class="todo">
+        <ul class="todo-status">
+          <li class="todo-doing">
             미완료
             <span>3</span>
           </li>
-          <li class="task-done">
+          <li class="todo-done">
             완료
             <span>1</span>
           </li>
         </ul>
-        <div class="task-list">
+        <div class="todo-list">
           <h2>오늘의 할 일</h2>
-          <div class="taskItem-wrapper">
-            <div class="item"></div>
+          <div class="todo-wrapper">
+            <div class="item">
+              <div class="icon icon-doing"></div>
+              <div class="text">
+                <h3>테스트 문구입니다.</h3>
+                <span>테스트입니다.</span>
+              </div>
+              <div class="mark"></div>
+            </div>
             <div class="item"></div>
             <div class="item"></div>
             <div class="item"></div>
