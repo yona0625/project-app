@@ -22,19 +22,35 @@ li {
   margin: 0;
   padding: 0;
 }
+header,
+nav {
+  /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
+  flex-shrink: 0;
+}
 .container {
   width: 375px;
   height: 800px;
   margin: 50px auto;
-  border: 1px solid #000000;
+  border: 3px solid green;
   background-color: var(--pure_white);
   position: relative;
   overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.scroll-area,
+.add-modal,
+.custom-modal {
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  padding-bottom: 60px;
+  /* flex: 1; */
 }
-.container::-webkit-scrollbar {
+.scroll-area::-webkit-scrollbar,
+.add-modal::-webkit-scrollbar,
+.custom-modal::-webkit-scrollbar {
   display: none;
 }
 header,
@@ -146,10 +162,23 @@ header span {
   margin-left: 150px;
   z-index: 50;
 }
-.task-modal {
-  height: 580px;
+.modal-dimmed {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  /* border: 1px solid red; */
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 5;
+  display: none;
+}
+.modal-dimmed.active {
+  display: block;
+}
+.add-modal {
+  height: 450px;
+  width: 100%;
+  border: 1px solid red;
   background-color: var(--pure_white);
   /* border: 1px solid red; */
   position: absolute;
@@ -159,16 +188,33 @@ header span {
   box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
   padding: 30px 20px;
   /* display: none; */
+  transform: translateY(100%);
+  transition: 0.5s;
 }
-.task-modal > div {
+.add-modal.open {
+  transform: translateY(0);
+}
+/* 모달: 추가 */
+.add-modal {
+  overflow-y: auto;
+}
+.add-modal > div {
   margin-top: 25px;
 }
-.task-modal h2 {
+.add-modal h2 {
   font-size: 22px;
 }
-.task-modal h3 {
+.add-modal h3 {
   font-size: 15px;
   color: var(--sub_title);
+}
+.taskmodal-x-btn {
+  position: absolute;
+  right: 20px;
+  top: 5px;
+  width: 24px;
+  height: 24px;
+  background-color: red;
 }
 input[id="task-name"] {
   width: 100%;
@@ -306,8 +352,147 @@ input[id="task-name"]:focus {
   margin-top: 40px;
 }
 .task-set h2 {
-   font-size: 16px;
-   color: var(--sub_title);
+  font-size: 16px;
+  color: var(--sub_title);
+}
+/* 모달: 커스텀 */
+.custom-modal {
+  width: 100%;
+  height: 550px;
+  border-radius: 20px 20px 0 0;
+  background-color: var(--pure_white);
+  transform: translateY(100%);
+  transition: 0.5s;
+  position: absolute;
+  bottom: 60px;
+  border-radius: 30px 30px 0 0;
+  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
+  padding: 30px 20px;
+  z-index: 10;
+  /* display: none; */
+}
+.custom-modal.open {
+  transform: translateY(0);
+}
+.custom-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+.custom-preview > h3 {
+  font-size: 16px;
+  color: var(--sub_title);
+}
+.preview-item {
+  border-radius: 20px;
+  width: 100%;
+  height: 70px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+}
+.icon-preview {
+  width: 24px;
+  height: 24px;
+  background-color: var(--main_text);
+}
+.preview-text {
+  color: var(--main_text);
+  margin-left: 15px;
+}
+.preview-text h3 {
+  font-size: 15px;
+}
+.preview-text span {
+  font-size: 13px;
+}
+.preview-mark {
+  width: 24px;
+  height: 24px;
+  border: 1px solid red;
+  margin-left: auto;
+}
+.custom-color {
+  margin-top: 25px;
+}
+.color-list {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.color-list li {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+.color-list li:not(.reset-color) {
+  background-color: blue;
+}
+.reset-color {
+  background-color: var(--pure_white);
+  border: 1px solid var(--border_color);
+}
+.mark-list {
+  width: 100%;
+  height: 320px;
+  border: 1px solid var(--border_color);
+  margin-top: 25px;
+  border-radius: 20px;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  padding: 15px;
+}
+.mark-section h3 {
+  font-size: 14px;
+  color: var(--sub_title);
+}
+.mark-section ul {
+  display: flex;
+  gap: 7px;
+  margin-top: 10px;
+}
+.mark-section ul li {
+  width: 30px;
+  height: 30px;
+  /* background-color: red; */
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border_color);
+}
+.mark-section ul li img {
+  width: 20px;
+  height: 20px;
+}
+.custom-set {
+  width: 100%;
+  height: 45px;
+  border-radius: 20px;
+  background-color: var(--sub_color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border_color);
+}
+.custom-set.active {
+  background-color: var(--main_color);
+  border: 1px solid transparent;
+}
+.custom-set.active h2 {
+  color: var(--pure_white);
+}
+.custom-modal .custom-set {
+  margin-top: 40px;
+}
+.custom-set h2 {
+  font-size: 16px;
+  color: var(--sub_title);
 }
 /* == todo == */
 .todo {
@@ -335,19 +520,23 @@ input[id="task-name"]:focus {
 }
 .todo-list {
   /* border: 1px solid red; */
-  margin-top: 20px;
+  margin-top: 25px;
 }
-.todo-list h2 {
-  margin: 0;
-  font-size: 16px;
-}
+
 .todo-wrapper {
   margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-.item {
+.todo-wrapper h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.list-done {
+  margin-top: 25px;
+}
+.todo-item {
   border-radius: 20px;
   width: 100%;
   height: 70px;
@@ -362,17 +551,17 @@ input[id="task-name"]:focus {
   -webkit-mask-image: url("/public/icons/icon-doing.svg");
   background-color: var(--main_text);
 }
-.text {
+.todo-text {
   color: var(--main_text);
   margin-left: 15px;
 }
-.text h3 {
+.todo-text h3 {
   font-size: 15px;
 }
-.text span {
+.todo-text span {
   font-size: 13px;
 }
-.mark {
+.todo-mark {
   width: 24px;
   height: 24px;
   border: 1px solid red;

@@ -16,13 +16,76 @@
   </head>
   <body>
     <div class="container">
-      <header>
-        <h1>좋은 아침, <span>00님!</span></h1>
-      </header>
+      <div class="scroll-area">
+        <header>
+          <h1>좋은 아침, <span>00님!</span></h1>
+        </header>
+        <!-- === date === -->
+        <section class="date"></section>
+        <!-- === mascot === -->
+        <section class="mascot">
+          <div class="mascot-face">
+            <div class="expression">
+              <span class="left-eye"></span>
+              <span class="right-eye"></span>
+              <span class="mouth"></span>
+            </div>
+          </div>
+          <div class="mascot-bubble">
+            <p>활기찬 하루 되세요!</p>
+          </div>
+        </section>
+        <!-- todo -->
+        <section class="todo">
+          <ul class="todo-status">
+            <li class="todo-doing">
+              미완료
+              <span>3</span>
+            </li>
+            <li class="todo-done">
+              완료
+              <span>1</span>
+            </li>
+          </ul>
+          <div class="todo-list">
+            <!-- 미완료 -->
+            <div class="todo-wrapper list-doing">
+              <h2>오늘의 할 일</h2>
+              <div class="todo-item">
+                <div class="icon icon-doing"></div>
+                <div class="todo-text">
+                  <h3>테스트 문구입니다.</h3>
+                  <span>테스트입니다.</span>
+                </div>
+                <div class="todo-mark"></div>
+              </div>
+              <div class="todo-item"></div>
+              <div class="todo-item"></div>
+            </div>
+            <!-- 완료 -->
+            <div class="todo-wrapper list-done">
+              <h2>완료한 일</h2>
+              <div class="todo-item">
+                <div class="icon icon-doing"></div>
+                <div class="todo-text">
+                  <h3>테스트 문구입니다.</h3>
+                  <span>테스트입니다.</span>
+                </div>
+                <div class="todo-mark"></div>
+              </div>
+              <div class="todo-item"></div>
+              <div class="todo-item"></div>
+            </div>
+          </div>
+        </section>
+      </div>
       <!-- task-add-btn -->
       <div class="task-add-btn"></div>
-      <div class="task-modal">
+      <div class="modal-dimmed"></div>
+      <!-- 추가 -->
+      <div class="add-modal">
         <h2>할 일을 추가하세요</h2>
+        <div class="taskmodal-x-btn"></div>
         <input type="text" id="task-name" placeholder="제목을 입력하세요" />
         <div class="task-time">
           <h3>소요 시간</h3>
@@ -59,59 +122,53 @@
           <h2>추가하기</h2>
         </div>
       </div>
-      <!-- === date === -->
-      <section class="date"></section>
-      <!-- === mascot === -->
-      <section class="mascot">
-        <div class="mascot-face">
-          <div class="expression">
-            <span class="left-eye"></span>
-            <span class="right-eye"></span>
-            <span class="mouth"></span>
-          </div>
-        </div>
-        <div class="mascot-bubble">
-          <p>활기찬 하루 되세요!</p>
-        </div>
-      </section>
-      <!-- todo -->
-      <section class="todo">
-        <ul class="todo-status">
-          <li class="todo-doing">
-            미완료
-            <span>3</span>
-          </li>
-          <li class="todo-done">
-            완료
-            <span>1</span>
-          </li>
-        </ul>
-        <div class="todo-list">
-          <h2>오늘의 할 일</h2>
-          <div class="todo-wrapper">
-            <div class="item">
-              <div class="icon icon-doing"></div>
-              <div class="text">
-                <h3>테스트 문구입니다.</h3>
+      <!-- 커스텀 -->
+      <div class="custom-modal open">
+        <h2>커스텀</h2>
+        <div class="custom-preview">
+          <h3>미리보기</h3>
+          <div class="preview-result">
+            <div class="preview-item">
+              <div class="icon icon-preview"></div>
+              <div class="preview-text">
+                <h3>테스트 문구입니다123213.</h3>
                 <span>테스트입니다.</span>
               </div>
-              <div class="mark"></div>
             </div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
           </div>
         </div>
-      </section>
+        <div class="custom-color">
+          <ul class="color-list">
+            <li class="reset-color"></li>
+          </ul>
+        </div>
+        <!-- icon- 접두사와 충돌 방지를 위해 임시로 mark- 로 지정 -->
+        <div class="mark-list">
+          <!-- 활동 -->
+          <div class="mark-routine mark-section">
+            <h3>활동</h3>
+            <ul></ul>
+          </div>
+          <!-- 음식 -->
+          <div class="mark-food mark-section">
+            <h3>음식</h3>
+            <ul></ul>
+          </div>
+          <!-- 동물 -->
+          <div class="mark-animal mark-section">
+            <h3>동물</h3>
+            <ul></ul>
+          </div>
+          <!-- 기타 -->
+          <div class="mark-others mark-section">
+            <h3>기타</h3>
+            <ul></ul>
+          </div>
+        </div>
+        <div class="custom-set">
+          <h2>설정하기</h2>
+        </div>
+      </div>
       <!-- === nav === -->
       <nav></nav>
     </div>
