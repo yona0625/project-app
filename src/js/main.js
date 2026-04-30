@@ -2,18 +2,16 @@ const taskFunction = {
   newTask: {
     title: "",
     duration: "15",
-    icon: null,
-    color: null,
+    icon: "default",
+    color: "#2d2d2d",
     alarm: null,
     done: false,
   },
   tasks: [],
 
-  /* reset 필요 */
-
   init: function () {
     this.taskOptions();
-    this.taskModalActive();
+    this.modalActive();
   },
 
   /* 버튼 활성화 여부 */
@@ -69,39 +67,112 @@ const taskFunction = {
       this.showToast("제목을 입력해주세요!");
       return;
     }
-    console.log("새로운 할 일 데이터:", this.newTask);
+
+    /* 메인 화면에 렌더링 */
+    const newTaskData = {
+      ...this.newTask,
+      id: Date.now(),
+    };
+    this.tasks.push(newTaskData);
+    this.renderTasks();
+    this.closeAddModal();
+
+
+    /* !: reset 제작 필요 */
+    // this.resetTask();
+  },
+  renderTasks: function () {
+    const doingAllList = document.querySelector(".list-doing");
+    const doingTask = doingAllList.querySelectorAll(".todo-item");
+    /* remove()는 innerHTML과 다르게 선택한 요소 자신만 DOM에서 제거 */
+    doingTask.forEach((item) => item.remove());
+
+    this.tasks.forEach((task) => {
+      const todoItem = document.createElement("div");
+      todoItem.className = "todo-item";
+
+      /* html과 동일하게 그리기 */
+      todoItem.innerHTML = `
+         <div class=
+         "icon icon-doing"
+         style="background-color: ${task.color};
+         -webkit-mask-image: url('/public/icons/icon-${task.icon}.svg');
+         mask-image: url('/public/icons/icon-${task.icon}.svg');">
+         </div>
+         <div class="todo-text">
+            <h3>${task.title}</h3>
+            <span>${task.duration}</span>
+         </div>
+         <div class="todo-mark"></div>
+      `;
+      doingAllList.appendChild(todoItem);
+    });
+    /* 미완료/완료 표시 숫자 */
+    document.querySelector(".todo-doing span").textContent = this.tasks.filter(
+      (number) => !number.done,
+    ).length;
   },
 
-  /* 열고/닫기 */
-  taskModalActive: function () {
-    const openBtn = document.querySelector(".task-add-btn");
-    const closeBtn = document.querySelector(".taskmodal-x-btn");
-    const taskModal = document.querySelector(".add-modal");
+  /* 모달 열고/닫기 */
+  modalActive: function () {
+    /* common */
+    const dimmed = document.querySelector(".modal-dimmed");
     const scrollArea = document.querySelector(".scroll-area");
     const container = document.querySelector(".container");
-    const dimmed = document.querySelector(".modal-dimmed");
 
-    /* ---- 열기 ---- */
-    openBtn.addEventListener("click", () => {
+    /* === add-modal === */
+    const taskModal = document.querySelector(".add-modal");
+    const openBtn = document.querySelector(".task-add-btn");
+    const addCloseBtn = document.querySelector(".task-x-btn");
+
+    const openAddModal = () => {
       taskModal.classList.add("open");
       dimmed.classList.add("active");
       scrollArea.style.overflow = "hidden";
-    });
-    /* ---- 닫기 ---- */
-    closeBtn.addEventListener("click", () => {
+    };
+    const closeAddModal = () => {
       taskModal.classList.remove("open");
       dimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
-    });
+    };
+    this.closeAddModal = closeAddModal;
+
+    /* 열기*/
+    openBtn.addEventListener("click", openAddModal);
+    /* 닫기 */
+    addCloseBtn.addEventListener("click", closeAddModal);
     /* 바깥을 눌렀을 때 닫힘 */
     container.addEventListener("click", (e) => {
       const modalArea = taskModal.contains(e.target);
       const openBtnArea = openBtn.contains(e.target);
-      if (!modalArea && !openBtnArea) {
-        taskModal.classList.remove("open");
-        dimmed.classList.remove("active");
-        scrollArea.style.overflow = "auto";
+      const customModalOpen = customModal.classList.contains("open");
+
+      if (!modalArea && !openBtnArea && !customModalOpen) {
+        closeAddModal();
       }
+    });
+
+    /* === custom-modal === */
+    const customAddBtn = document.querySelector(".custom-btn");
+    const customCloseBtn = document.querySelector(".custom-x-btn");
+    const customModal = document.querySelector(".custom-modal");
+    const customSetBtn = document.querySelector(".custom-set");
+
+    /* 열기 */
+    customAddBtn.addEventListener("click", () => {
+      customModal.classList.add("open");
+    });
+    /* 닫기 - x버튼 */
+    customCloseBtn.addEventListener("click", (e) => {
+      /* 이벤트 버블링 방지 */
+      e.stopPropagation();
+      customModal.classList.remove("open");
+    });
+    /* 닫기 -설정 버튼 */
+    customSetBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!customSetBtn.classList.contains("active")) return;
+      customModal.classList.remove("open");
     });
   },
 };
