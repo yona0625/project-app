@@ -82,94 +82,132 @@
       <!-- task-add-btn -->
       <div class="task-add-btn"></div>
       <div class="modal-dimmed"></div>
-      <!-- 추가 -->
-      <div class="add-modal">
-        <h2>할 일을 추가하세요</h2>
-        <div class="task-x-btn"></div>
-        <input type="text" id="task-name" placeholder="제목을 입력하세요" />
-        <div class="task-time">
-          <h3>소요 시간</h3>
-          <span>45 min</span>
-          <ul class="time-list">
-            <li data-time="15">15 min</li>
-            <li data-time="30">30 min</li>
-            <li data-time="60">1 hour</li>
-            <li data-time="999">직접 입력</li>
-          </ul>
-        </div>
-        <div class="task-custom">
-          <h3>커스텀</h3>
-          <div class="custom-btn">
-            <div class="custom-icon">
-              <div class="icon icon-result"></div>
-            </div>
-            <div class="title-result">
-              <b>색상</b>
-              <span></span>
-            </div>
-          </div>
-        </div>
-        <div class="task-alarm">
-          <h3>알림 설정</h3>
-          <div class="alarm-status">
-            <b>알림 활성화</b>
-            <ul class="alarm-btn">
-              <li></li>
+      <!-- --- 모달 --- -->
+      <div class="modal-area">
+        <!-- 추가 -->
+        <div class="add-modal">
+          <h2>할 일을 추가하세요</h2>
+          <div class="task-x-btn"></div>
+          <input type="text" id="task-name" placeholder="제목을 입력하세요" />
+          <div class="task-time">
+            <h3>소요 시간</h3>
+            <span>45 min</span>
+            <ul class="time-list">
+              <li data-time="15">15 min</li>
+              <li data-time="30">30 min</li>
+              <li data-time="60">1 hour</li>
+              <li data-time="999">직접 입력</li>
             </ul>
           </div>
-        </div>
-        <div class="task-set">
-          <h2>추가하기</h2>
-        </div>
-      </div>
-      <!-- 커스텀 -->
-      <div class="custom-modal">
-        <h2>커스텀</h2>
-        <div class="custom-x-btn"></div>
-        <div class="custom-preview">
-          <h3>미리보기</h3>
-          <div class="preview-result">
-            <div class="preview-item">
-              <div class="icon icon-preview"></div>
-              <div class="preview-text">
-                <h3>테스트 문구입니다123213.</h3>
-                <span>테스트입니다.</span>
+          <div class="task-custom">
+            <h3>커스텀</h3>
+            <div class="custom-btn">
+              <div class="custom-icon">
+                <div class="icon icon-result"></div>
+              </div>
+              <div class="title-result">
+                <b>색상</b>
+                <span></span>
               </div>
             </div>
           </div>
-        </div>
-        <div class="custom-color">
-          <ul class="color-list">
-            <li class="reset-color"></li>
-          </ul>
-        </div>
-        <!-- icon- 접두사와 충돌 방지를 위해 임시로 mark- 로 지정 -->
-        <div class="mark-list">
-          <!-- 활동 -->
-          <div class="mark-routine mark-section">
-            <h3>활동</h3>
-            <ul></ul>
+          <div class="task-alarm">
+            <h3>알림 설정</h3>
+            <div class="alarm-status">
+              <b>알림 활성화</b>
+              <ul class="alarm-btn">
+                <li></li>
+              </ul>
+            </div>
           </div>
-          <!-- 음식 -->
-          <div class="mark-food mark-section">
-            <h3>음식</h3>
-            <ul></ul>
-          </div>
-          <!-- 동물 -->
-          <div class="mark-animal mark-section">
-            <h3>동물</h3>
-            <ul></ul>
-          </div>
-          <!-- 기타 -->
-          <div class="mark-others mark-section">
-            <h3>기타</h3>
-            <ul></ul>
+          <div class="task-set">
+            <h2>추가하기</h2>
           </div>
         </div>
-        <div class="custom-set">
-          <h2>설정하기</h2>
+        <!-- 커스텀 -->
+        <div class="custom-modal">
+          <h2>커스텀</h2>
+          <div class="custom-x-btn"></div>
+          <div class="custom-preview">
+            <h3>미리보기</h3>
+            <div class="preview-result">
+              <div class="preview-item">
+                <div class="icon icon-preview"></div>
+                <div class="preview-text">
+                  <h3>테스트 문구입니다123213.</h3>
+                  <span>테스트입니다.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="custom-color">
+            <ul class="color-list">
+              <li class="reset-color"></li>
+            </ul>
+          </div>
+          <!-- icon- 접두사와 충돌 방지를 위해 임시로 mark- 로 지정 -->
+          <div class="mark-list">
+            <!-- 활동 -->
+            <div class="mark-routine mark-section">
+              <h3>활동</h3>
+              <ul></ul>
+            </div>
+            <!-- 음식 -->
+            <div class="mark-food mark-section">
+              <h3>음식</h3>
+              <ul></ul>
+            </div>
+            <!-- 동물 -->
+            <div class="mark-animal mark-section">
+              <h3>동물</h3>
+              <ul></ul>
+            </div>
+            <!-- 기타 -->
+            <div class="mark-others mark-section">
+              <h3>기타</h3>
+              <ul></ul>
+            </div>
+          </div>
+          <div class="custom-set">
+            <h2>설정하기</h2>
+          </div>
+        </div>
+        <!-- 알람 -->
+        <div class="alarm-modal">
+          <div class="alarm-x-btn"></div>
+          <div class="alarm-time">
+            <div class="time-wrapper">
+              <div class="time-highlight"></div>
+              <!-- 오전/오후 -->
+              <ul class="alarm-ampm alarm-item"></ul>
+              <!-- 시간 -->
+              <ul class="alarm-hour alarm-item"></ul>
+              <span class="time-colon">:</span>
+              <!-- 분 -->
+              <ul class="alarm-minute alarm-item"></ul>
+            </div>
+          </div>
+          <div class="day-wrapper">
+            <div class="alarm-day">
+              <h3>요일 설정</h3>
+              <span class="day-status"> 테스트입니다. </span>
+            </div>
+            <ul class="day-list">
+              <li class="mon day-item">월</li>
+              <li class="tue day-item">화</li>
+              <li class="wed day-item">수</li>
+              <li class="thu day-item">목</li>
+              <li class="fri day-item">금</li>
+              <li class="sat day-item">토</li>
+              <li class="sun day-item">일</li>
+            </ul>
+            <div class="alarm-set">
+              <h2>설정하기</h2>
+            </div>
+          </div>
         </div>
       </div>
+
       <!-- === nav === -->
       <nav></nav>
     </div>

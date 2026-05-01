@@ -41,16 +41,20 @@ nav {
 }
 .scroll-area,
 .add-modal,
-.custom-modal {
+.custom-modal,
+.alarm-modal {
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  padding-bottom: 60px;
+  /* nav -> absolute로 변경, 60px 패딩 삭제 */
+  /* padding-bottom: 60px; */
   /* flex: 1; */
 }
 .scroll-area::-webkit-scrollbar,
 .add-modal::-webkit-scrollbar,
-.custom-modal::-webkit-scrollbar {
+.custom-modal::-webkit-scrollbar,
+.alarm-modal::-webkit-scrollbar,
+.alarm-item::-webkit-scrollbar {
   display: none;
 }
 header,
@@ -189,6 +193,7 @@ header span {
   padding: 30px 20px;
   transform: translateY(100%);
   transition: 0.5s;
+  /* display: none; */
 }
 .add-modal.open {
   transform: translateY(0);
@@ -320,6 +325,7 @@ input[id="task-name"]:focus {
   position: relative;
   display: flex;
   align-items: center;
+  border: 3px solid red;
 }
 .alarm-btn li {
   width: 20px;
@@ -501,6 +507,152 @@ input[id="task-name"]:focus {
   font-size: 16px;
   color: var(--sub_title);
 }
+.alarm-modal {
+  height: 400px;
+  width: 100%;
+  background-color: var(--pure_white);
+  /* border: 1px solid red; */
+  position: absolute;
+  bottom: 60px;
+  z-index: 10;
+  border-radius: 30px 30px 0 0;
+  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
+  transition: 0.5s;
+  /* transform: translateY(0); */
+  transform: translateY(100%);
+  /* display: none; */
+  /* 테스트 완료시 100 설정 */
+}
+.alarm-modal.open {
+  transform: translateY(0);
+}
+.alarm-x-btn {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: red;
+  right: 20px;
+  top: 20px;
+}
+.alarm-time {
+  width: 100%;
+  height: 215px;
+  background-color: var(--pure_white);
+  display: flex;
+  align-items: flex-end;
+  /* border: 3px solid red; */
+  padding: 0;
+}
+.time-wrapper {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  /* border: 1px solid blue; */
+}
+.time-highlight {
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  background-color: #f1f3f5;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.time-colon,
+.alarm-item li {
+  position: relative;
+  z-index: 2;
+}
+.time-colon {
+  display: inline-flex;
+  align-items: center;
+}
+.alarm-item {
+  width: 60px;
+  height: 100%;
+  border: 1px solid black;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.alarm-item li {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: center;
+}
+.day-wrapper {
+  background-color: var(--pure_white);
+  padding: 25px 20px;
+  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 20px 20px 0 0;
+  border: 1px solid var(--border_color);
+}
+.alarm-day {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.alarm-day h3 {
+  font-size: 15px;
+  color: var(--sub_title);
+}
+.alarm-day span {
+  font-size: 14px;
+  color: var(--main_color);
+}
+.day-list {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.day-item {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border_color);
+  background-color: var(--pure_white);
+  border-radius: 5px;
+}
+.day-item.select {
+  background-color: var(--main_color);
+  border: 1px solid transparent;
+  color: var(--pure_white);
+  font-weight: bold;
+}
+.alarm-set {
+  width: 100%;
+  height: 45px;
+  border-radius: 20px;
+  background-color: var(--sub_color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border_color);
+  margin-top: 35px;
+}
+.alarm-set.active {
+  background-color: var(--main_color);
+  border: 1px solid transparent;
+}
+.alarm-set.active h2 {
+  color: var(--pure_white);
+}
+.alarm-set h2 {
+  font-size: 16px;
+  color: var(--sub_title);
+}
 /* == todo == */
 .todo {
   margin-top: 40px;
@@ -582,7 +734,7 @@ nav {
   border-radius: 20px 20px 0 0;
   background-color: var(--pure_white);
   box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
-  position: sticky;
+  position: absolute;
   bottom: 0;
   z-index: 40;
 }

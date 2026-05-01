@@ -77,7 +77,6 @@ const taskFunction = {
     this.renderTasks();
     this.closeAddModal();
 
-
     /* !: reset 제작 필요 */
     // this.resetTask();
   },
@@ -168,11 +167,32 @@ const taskFunction = {
       e.stopPropagation();
       customModal.classList.remove("open");
     });
-    /* 닫기 -설정 버튼 */
+    /* 닫기 - 설정 버튼 */
     customSetBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (!customSetBtn.classList.contains("active")) return;
       customModal.classList.remove("open");
+    });
+
+    /* === alarm-modal === */
+    const alarmAddBtn = document.querySelector(".alarm-btn");
+    const alarmCloseBtn = document.querySelector(".alarm-x-btn");
+    const alarmModal = document.querySelector(".alarm-modal");
+    const alarmSetBtn = document.querySelector(".alarm-set");
+
+    /* 열기 */
+    alarmAddBtn.addEventListener("click", () => {
+      alarmModal.classList.add("open");
+    });
+    /* 닫기 - x버튼 */
+    alarmCloseBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      alarmModal.classList.remove("open");
+    });
+    alarmSetBtn.addEventListener("click", () => {
+      e.stopPropagation();
+      if (!alarmSetBtn.classList.contains("active")) return;
+      alarmModal.classList.remove("open");
     });
   },
 };
@@ -275,3 +295,94 @@ const customFunction = {
   },
 };
 customFunction.init();
+const alarmFunction = {
+  ampm: ["오전", "오후"],
+  hours: Array.from(
+    {
+      length: 12,
+    },
+    /* 시간은 1부터 시작하므로 + 1 */
+    (_, i) => i + 1,
+  ),
+  minutes: Array.from(
+    {
+      length: 60,
+    },
+    (_, i) => i,
+  ),
+  alarmData: {
+    ampm: "오전",
+    hour: 7,
+    minute: 0,
+    days: [],
+  },
+  init: function () {
+    this.renderAlarm(this.ampm, ".alarm-ampm");
+    this.renderAlarm(this.hours, ".alarm-hour");
+    this.renderAlarm(this.minutes, ".alarm-minute");
+    this.daySelect();
+    this.updateDayStatus();
+  },
+  /* 버튼 활성화 여부 */
+  alarmCheck: function () {
+    const alarmSetBtn = document.querySelector(".alarm-set");
+    /* 나머지 데이터는 이미 있으니 요일이 하나라도 선택 되었다면 */
+    if (this.alarmData.days.length > 0) {
+      alarmSetBtn.classList.add("active");
+    } else {
+      alarmSetBtn.classList.remove("active");
+    }
+    this.updateDayStatus();
+  },
+  /* !== Object.entries로 배열의 key:value 가져오는 거랑 다름, 실제로 넘길 값 / 받을 곳 */
+  renderAlarm: function (alarmData, dataTarget) {
+    const alarmDataList = document.querySelector(dataTarget);
+
+    /* ! 여백을 만들어줘야 맨 상단을 가운데로 가져올 수 있음 */
+    const emptyTopBlock = document.createElement("li");
+    alarmDataList.appendChild(emptyTopBlock);
+
+    alarmData.forEach((item) => {
+      /* 각각 한 칸 씩의 알람 설정 속 블록 */
+      const eachAlarmBlock = document.createElement("li");
+      eachAlarmBlock.textContent = item;
+      alarmDataList.appendChild(eachAlarmBlock);
+    });
+
+    /* ! 이하 동일 */
+    const emptyBottomBlock = document.createElement("li");
+    alarmDataList.appendChild(emptyBottomBlock);
+  },
+  daySelect: function () {
+    const dayItems = document.querySelectorAll(".day-item");
+    dayItems.forEach((dayItem) => {
+      dayItem.addEventListener("click", () => {
+        dayItem.classList.toggle("select");
+        const alarmDay = dayItem.textContent;
+        if (this.alarmData.days.includes(alarmDay)) {
+          this.alarmData.days = this.alarmData.days.filter(
+            (day) => day !== alarmDay,
+          );
+        } else {
+          this.alarmData.days.push(alarmDay);
+        }
+        /* 요일까지 선택이 이루어진다음 값 체크 */
+        this.alarmCheck();
+      });
+    });
+  },
+  updateDayStatus: function () {
+    const dayStatus = document.querySelector(".day-status");
+    const { ampm, hour, minute, days } = this.alarmData;
+
+    /* 분을 두 자리 수로 설정 */
+    /* 만약 10보다 작은 1, 2, 3이라면 앞에 0을 붙여야 01, 02, 03으로 나옴. */
+    const minuteText = minute < 10 ? `0${minute}` : minute;
+    /* 요일이 하나라도 있다면 맨 앞에 공백 + " "로 사이 공백, 그게 아니라면 빈 내용 */
+    const dayText = days.length > 0 ? ` ${days.join(" ")}` : "";
+
+    /* 두 자리 수의 minutes, 별도 설정한 요일 스타일을 textContent로 그림 */
+    dayStatus.textContent = `${ampm} ${hour}:${minuteText}${dayText}`;
+  },
+};
+alarmFunction.init();
