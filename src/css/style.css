@@ -301,28 +301,45 @@ input[id="task-name"]:focus {
   border-radius: 5px;
   background-color: red;
 }
-.alarm-status {
+.alarm-text-area {
+  display: flex;
+  align-items: center;
   margin-top: 15px;
+}
+.alarm-status {
   width: 100%;
-  height: 45px;
+  min-height: 45px;
   border: 1px solid var(--border_color);
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border-radius: 20px;
+  position: relative;
+  padding: 15px 20px;
+  background-color: var(--pure_white);
   display: flex;
-  align-items: center;
-  padding: 0 20px;
-  justify-content: space-between;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
 }
 .alarm-status b {
   font-size: 14px;
   font-weight: normal;
 }
+.alarm-result {
+  display: none;
+  font-size: 13px;
+  color: var(--sub_title);
+}
+.alarm-result.active {
+  display: block;
+  /* max-height: 50px; */
+}
 .alarm-btn {
   width: 50px;
   height: 25px;
+  right: 30px;
   border-radius: 20px;
   background-color: var(--sub_title);
-  position: relative;
+  position: absolute;
   display: flex;
   align-items: center;
   border: 3px solid red;
@@ -725,6 +742,7 @@ input[id="task-name"]:focus {
   height: 24px;
   border: 1px solid red;
   margin-left: auto;
+  cursor: pointer;
 }
 
 /* == nav == */

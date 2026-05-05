@@ -82,13 +82,20 @@ const taskFunction = {
   },
   renderTasks: function () {
     const doingAllList = document.querySelector(".list-doing");
-    const doingTask = doingAllList.querySelectorAll(".todo-item");
-    /* remove()는 innerHTML과 다르게 선택한 요소 자신만 DOM에서 제거 */
-    doingTask.forEach((item) => item.remove());
+    const doneAllList = document.querySelector(".list-done");
 
-    this.tasks.forEach((task) => {
+    /* remove()는 innerHTML과 다르게 선택한 요소 자신만 DOM에서 제거 */
+    doingAllList
+      .querySelectorAll(".todo-item")
+      .forEach((item) => item.remove());
+    doneAllList.querySelectorAll(".todo-item").forEach((item) => item.remove());
+
+    /* 몇 번째를 선택했는지 알아야 하기에 index 추가 */
+    this.tasks.forEach((task, index) => {
       const todoItem = document.createElement("div");
       todoItem.className = "todo-item";
+      /* data-index의 형태로 html에 index 부여 */
+      todoItem.dataset.index = index;
 
       /* html과 동일하게 그리기 */
       todoItem.innerHTML = `
@@ -104,11 +111,33 @@ const taskFunction = {
          </div>
          <div class="todo-mark"></div>
       `;
-      doingAllList.appendChild(todoItem);
+
+      /* 체크 박스(mark) 클릭 시 미완료 <-> 완료 */
+      const taskMark = todoItem.querySelector(".todo-mark");
+      console.log(taskMark);
+      taskMark.addEventListener("click", () => {
+        /* 상태 반전 후 렌더링 */
+        console.log("클릭됨!", this);
+        task.done = !task.done;
+        console.log("상태변경:", task.done);
+        this.renderTasks();
+      });
+
+      if (!task.done) {
+        doingAllList.appendChild(todoItem);
+      } else {
+        doneAllList.appendChild(todoItem);
+      }
     });
     /* 미완료/완료 표시 숫자 */
+    /* 미완료 */
     document.querySelector(".todo-doing span").textContent = this.tasks.filter(
       (number) => !number.done,
+    ).length;
+    /* 완료 */
+    document.querySelector(".todo-done span").textContent = this.tasks.filter(
+      /* done의 반대로 역전 */
+      (number) => number.done,
     ).length;
   },
 
@@ -144,9 +173,11 @@ const taskFunction = {
     container.addEventListener("click", (e) => {
       const modalArea = taskModal.contains(e.target);
       const openBtnArea = openBtn.contains(e.target);
+      /* custom/alarm 모달은 클릭 이벤트가 이루어지기 전 선언이 먼저 되므로 하단에 쓰여도 사용 가능(콜백) */
       const customModalOpen = customModal.classList.contains("open");
+      const alarmModalOpen = alarmModal.classList.contains("open");
 
-      if (!modalArea && !openBtnArea && !customModalOpen) {
+      if (!modalArea && !openBtnArea && !customModalOpen && !alarmModalOpen) {
         closeAddModal();
       }
     });
@@ -189,9 +220,23 @@ const taskFunction = {
       e.stopPropagation();
       alarmModal.classList.remove("open");
     });
-    alarmSetBtn.addEventListener("click", () => {
+    /* 설정하기 */
+    alarmSetBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (!alarmSetBtn.classList.contains("active")) return;
+
+      /* 1. 최종 데이터를 newTask(add 모달)에 넘기기 */
+      // '...'은 복사본을 넣음
+      taskFunction.newTask.alarm = { ...alarmFunction.alarmData };
+
+      /* 2. 알람 설정 텍스트 값을 add 모달에 업데이트 */
+      const alarmResult = document.querySelector(".alarm-result");
+
+      /* update 구문에서 적용한 day-status값을 가져와서 textContent로 그림 */
+      alarmResult.textContent =
+        document.querySelector(".day-status").textContent;
+      alarmResult.classList.add("active");
+
       alarmModal.classList.remove("open");
     });
   },
@@ -320,6 +365,7 @@ const alarmFunction = {
     this.renderAlarm(this.ampm, ".alarm-ampm");
     this.renderAlarm(this.hours, ".alarm-hour");
     this.renderAlarm(this.minutes, ".alarm-minute");
+    this.timeSelect();
     this.daySelect();
     this.updateDayStatus();
   },
@@ -352,6 +398,24 @@ const alarmFunction = {
     /* ! 이하 동일 */
     const emptyBottomBlock = document.createElement("li");
     alarmDataList.appendChild(emptyBottomBlock);
+  },
+  timeSelect: function () {
+    const timeItems = document.querySelectorAll(".alarm-item");
+    timeItems.forEach((timeItem, index) => {
+      timeItem.addEventListener("scroll", () => {
+        /* 스크롤로 구분되는 오후/오전, 시간, 분을 한 칸인 높이 50으로 나누고, 스크롤(인덱스)로 선택된 특정 시간을 찾음 */
+        const scrollIndex = Math.round(timeItem.scrollTop / 50);
+        /* 만약 빈 li를 가리키면 통과(undefined가 뜸) */
+        if (scrollIndex < 0) return;
+
+        /* 순서대로 ampm, hour, minute */
+        if (index === 0) this.alarmData.ampm = this.ampm[scrollIndex];
+        if (index === 1) this.alarmData.hour = this.hours[scrollIndex];
+        if (index === 2) this.alarmData.minute = this.minutes[scrollIndex];
+
+        this.updateDayStatus();
+      });
+    });
   },
   daySelect: function () {
     const dayItems = document.querySelectorAll(".day-item");
