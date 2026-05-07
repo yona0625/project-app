@@ -10,8 +10,11 @@ const taskFunction = {
   tasks: [],
 
   init: function () {
+    const savedData = localStorage.getItem("tasks");
+    if (savedData) this.tasks = JSON.parse(savedData);
     this.taskOptions();
     this.modalActive();
+    this.renderTasks();
   },
 
   /* 버튼 활성화 여부 */
@@ -35,7 +38,6 @@ const taskFunction = {
     taskName.addEventListener("input", (e) => {
       /* input 안의 값 */
       this.newTask.title = e.target.value;
-      console.log(e.target.value);
       this.taskCheck();
     });
 
@@ -59,6 +61,7 @@ const taskFunction = {
       this.addTask();
     });
   },
+  /* 수정할 것(toast) */
   showToast: function (message) {
     alert(message);
   },
@@ -74,11 +77,12 @@ const taskFunction = {
       id: Date.now(),
     };
     this.tasks.push(newTaskData);
+
+    /* 로컬 스토리지에 저장 -> JSON으로 문자열 변환 */
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+
     this.renderTasks();
     this.closeAddModal();
-
-    /* !: reset 제작 필요 */
-    // this.resetTask();
   },
   renderTasks: function () {
     const doingAllList = document.querySelector(".list-doing");
@@ -117,11 +121,33 @@ const taskFunction = {
       console.log(taskMark);
       taskMark.addEventListener("click", () => {
         /* 상태 반전 후 렌더링 */
-        console.log("클릭됨!", this);
         task.done = !task.done;
-        console.log("상태변경:", task.done);
         this.renderTasks();
       });
+
+      /* 눌러서 삭제 로직 */
+      let taskPressTimer = null;
+
+      // 누를시
+      const startPressTask = () => {
+        taskPressTimer = setTimeout(() => {
+          /* addTask에서 심어준 id */
+          this.showActionSheet(task.id);
+        }, 500);
+      };
+      // 중도 취소
+      const cancelPressTask = () => {
+        clearTimeout(taskPressTimer);
+      };
+
+      todoItem.addEventListener("mousedown", startPressTask);
+      todoItem.addEventListener("mouseup", cancelPressTask);
+      todoItem.addEventListener("mouseleave", cancelPressTask);
+
+      /* 모바일 용 */
+      todoItem.addEventListener("touchstart", startPressTask);
+      todoItem.addEventListener("touchend", cancelPressTask);
+      todoItem.addEventListener("touchmove", cancelPressTask);
 
       if (!task.done) {
         doingAllList.appendChild(todoItem);
@@ -129,7 +155,7 @@ const taskFunction = {
         doneAllList.appendChild(todoItem);
       }
     });
-    /* 미완료/완료 표시 숫자 */
+    /* 미완료/완료 갯수 실시간 반영 표시 */
     /* 미완료 */
     document.querySelector(".todo-doing span").textContent = this.tasks.filter(
       (number) => !number.done,
@@ -139,6 +165,62 @@ const taskFunction = {
       /* done의 반대로 역전 */
       (number) => number.done,
     ).length;
+  },
+  deleteTask: function (taskId) {
+    this.tasks = this.tasks.filter((t) => t.id !== taskId);
+
+    /* filter를 통해 조건에 따라 재배열이 이루어지고(=삭제), 이 값을 저장해야 하므로 로컬 스토리지에 반영 */
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    this.renderTasks();
+  },
+  resetTask: function () {
+    this.newTask = {
+      title: "",
+      duration: "15",
+      icon: "default",
+      color: "#2d2d2d",
+      alarm: null,
+      done: false,
+    };
+    /* 할 일 내용 초기화 */
+    document.querySelector("#task-name").value = "";
+    document.querySelector(".task-time span").textContent = "15 min";
+    document.querySelector(".alarm-result").classList.remove("active");
+    document.querySelector(".task-set").classList.remove("active");
+    document
+      .querySelectorAll(".time-list li")
+      .forEach((li) => li.classList.remove("active"));
+
+    /* 색상과 아이콘 초기화 */
+    document.querySelector(".icon-result").style.backgroundColor = "#2d2d2d";
+    document.querySelector(".icon-result").style.maskImage = "";
+    document.querySelector(".icon-result").style.webkitMaskImage = "";
+    document.querySelector(".title-result span").style.backgroundColor =
+      "#2d2d2d";
+  },
+  /* 수정/삭제 ui */
+  showActionSheet: function (taskId) {
+    const actionSheet = document.querySelector(".action-sheet");
+    const dimmed = document.querySelector(".modal-dimmed");
+    const deleteBtn = document.querySelector(".action-delete");
+    const closeBtn = document.querySelector(".action-x-btn");
+
+    actionSheet.classList.add("open");
+    dimmed.classList.add("active");
+
+    /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
+    deleteBtn.onclick = () => {
+      /* 테스트용 */
+      if (confirm("정말 삭제하시겠습니까?")) {
+        this.deleteTask(taskId);
+        actionSheet.classList.remove("open");
+        dimmed.classList.remove("active");
+      }
+    };
+    closeBtn.onclick = () => {
+      actionSheet.classList.remove("open");
+      dimmed.classList.remove("active");
+    };
   },
 
   /* 모달 열고/닫기 */
@@ -154,6 +236,7 @@ const taskFunction = {
     const addCloseBtn = document.querySelector(".task-x-btn");
 
     const openAddModal = () => {
+      this.resetTask();
       taskModal.classList.add("open");
       dimmed.classList.add("active");
       scrollArea.style.overflow = "hidden";
@@ -174,10 +257,18 @@ const taskFunction = {
       const modalArea = taskModal.contains(e.target);
       const openBtnArea = openBtn.contains(e.target);
       /* custom/alarm 모달은 클릭 이벤트가 이루어지기 전 선언이 먼저 되므로 하단에 쓰여도 사용 가능(콜백) */
+
+      /* 다른 모달이 계속 추가되었을 때 하단 if문을 간소화 하기 위한 함수. */
+      /* 만약 모달이 한 개라도 열려있다면 그걸로 접근을 제한하면 되므로 그냥 셀렉터로 선택 */
+      const otherModalOpen = () => {
+        return document.querySelector(".modal-area .open") !== null;
+      };
+
       const customModalOpen = customModal.classList.contains("open");
       const alarmModalOpen = alarmModal.classList.contains("open");
 
-      if (!modalArea && !openBtnArea && !customModalOpen && !alarmModalOpen) {
+      /* 다른 모달이 '열려'있을 때 add-modal이 닫히면 안되므로 이를 역전해 모달이 '닫혔을 때' 닫게 함 */
+      if (!modalArea && !openBtnArea && !otherModalOpen()) {
         closeAddModal();
       }
     });
