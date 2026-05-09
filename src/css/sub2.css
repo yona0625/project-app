@@ -1,0 +1,197 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --main_text: #2d2d2d;
+  --main_color: #4c8ce4;
+  --sub_color: #f1f3f5;
+  --pure_white: #ffffff;
+  --sub_title: #777777;
+  --border_color: #f0f0f0;
+}
+body,
+input::placeholder {
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  letter-spacing: 0.015em;
+}
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+header,
+nav {
+  /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
+  flex-shrink: 0;
+}
+.container {
+  width: 375px;
+  height: 800px;
+  margin: 50px auto;
+  border: 3px solid green;
+  background-color: var(--pure_white);
+  position: relative;
+  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+header,
+section {
+  padding: 0 20px;
+}
+header {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+header h1 {
+  font-size: 24px;
+  margin: 0;
+  color: var(--main_text);
+}
+header span {
+  color: var(--main_color);
+}
+/* == section == */
+section:not(:last-child) {
+    margin-top: 20px;
+}
+section h2 {
+    font-size: 16px;
+    color: var(--main_text);
+}
+section > ul {
+    margin-top: 15px;
+}
+/* account */
+.account-area {
+    border: 1px solid var(--border_color);
+    border-radius: 10px;
+}
+.account-area li {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: 500;
+    /* background-color: red; */
+    border-bottom: 1px solid var(--border_color);
+}
+.account-area li:last-child {
+    border-bottom: 1px solid transparent;
+}
+/* app */
+.app-area {
+    border: 1px solid var(--border_color);
+    border-radius: 10px;
+}
+.app-area li {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: 500;
+    /* background-color: red; */
+    border-bottom: 1px solid var(--border_color);
+}
+.app-area li:last-child {
+    border-bottom: 1px solid transparent;
+}
+/* other */
+.other-area {
+    border: 1px solid var(--border_color);
+    border-radius: 10px;
+}
+.other-area li {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: 500;
+    /* background-color: red; */
+    border-bottom: 1px solid var(--border_color);
+}
+.other-area li:last-child {
+    border-bottom: 1px solid transparent;
+}
+/* == nav == */
+nav {
+  width: 100%;
+  height: 60px;
+  border-radius: 20px 20px 0 0;
+  background-color: var(--pure_white);
+  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
+  position: absolute;
+  bottom: 0;
+  z-index: 40;
+  padding: 0 40px;
+}
+.nav-area {
+  width: 100%;
+  height: 100%;
+  /* background-color: red; */
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.menu-item li {
+  width: 30px;
+  height: 30px;
+}
+.menu-item li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.icon-home,
+.icon-chart,
+.icon-setting {
+  background-color: var(--main_text);
+  width: 100%;
+  height: 100%;
+}
+/* 이중 선택자로 기존 icon과 충돌 방지 */
+.menu-item li.active .icon {
+  background-color: var(--main_color);
+}
+.icon-home {
+  mask-image: url("/public/icons/nav-home.svg");
+  -webkit-mask-image: url("/public/icons/nav-home.svg");
+}
+.icon-chart {
+  mask-image: url("/public/icons/nav-chart.svg");
+  -webkit-mask-image: url("/public/icons/nav-chart.svg");
+}
+.icon-setting {
+  mask-image: url("/public/icons/nav-setting.svg");
+  -webkit-mask-image: url("/public/icons/nav-setting.svg");
+}
+/* == icon test == */
+.icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}

@@ -7,6 +7,11 @@ const taskFunction = {
     alarm: null,
     done: false,
   },
+
+  /* 수정/삭제를 위한 플래그 */
+  mode: "add",
+  editId: null,
+
   tasks: [],
 
   init: function () {
@@ -58,7 +63,11 @@ const taskFunction = {
     });
     /* 추가 버튼 */
     taskSetBtn.addEventListener("click", () => {
-      this.addTask();
+      if (this.mode === "add") {
+        this.addTask();
+      } else {
+        this.fixTask();
+      }
     });
   },
   /* 수정할 것(toast) */
@@ -110,7 +119,7 @@ const taskFunction = {
          mask-image: url('/public/icons/icon-${task.icon}.svg');">
          </div>
          <div class="todo-text">
-            <h3>${task.title}</h3>
+            <h3 style="color: ${task.color}">${task.title}</h3>
             <span>${task.duration}</span>
          </div>
          <div class="todo-mark"></div>
@@ -173,6 +182,21 @@ const taskFunction = {
     localStorage.setItem("tasks", JSON.stringify(this.tasks));
     this.renderTasks();
   },
+  fixTask: function () {
+    const editTask = this.tasks.find((t) => t.id === this.editId);
+    editTask.title = this.newTask.title;
+    editTask.duration = this.newTask.duration;
+    editTask.icon = this.newTask.icon;
+    editTask.color = this.newTask.color;
+    editTask.alarm = this.newTask.alarm;
+
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    /* closeAddModal까지 수행한 후 edit, id값을 초기화 해주기 위해 추가 */
+    this.mode = "add";
+    this.editId = null;
+    this.renderTasks();
+    this.closeAddModal();
+  },
   resetTask: function () {
     this.newTask = {
       title: "",
@@ -182,7 +206,15 @@ const taskFunction = {
       alarm: null,
       done: false,
     };
-    /* 할 일 내용 초기화 */
+    this.mode = "add";
+    this.editId = null;
+
+    /* 커스텀 모달 초기화 */
+    customFunction.customTask.selectedIcon = null;
+    customFunction.customTask.selectedColor = null;
+
+    document.querySelector(".add-modal h2").textContent = "할 일을 추가하세요";
+    /* 할 일 내용 초기화 - 추가 모달 */
     document.querySelector("#task-name").value = "";
     document.querySelector(".task-time span").textContent = "15 min";
     document.querySelector(".alarm-result").classList.remove("active");
@@ -190,25 +222,31 @@ const taskFunction = {
     document
       .querySelectorAll(".time-list li")
       .forEach((li) => li.classList.remove("active"));
-
-    /* 색상과 아이콘 초기화 */
     document.querySelector(".icon-result").style.backgroundColor = "#2d2d2d";
     document.querySelector(".icon-result").style.maskImage = "";
     document.querySelector(".icon-result").style.webkitMaskImage = "";
     document.querySelector(".title-result span").style.backgroundColor =
       "#2d2d2d";
+
+    /* 색상과 아이콘 초기화 - 커스텀 모달 */
+    document.querySelector(".icon-preview").style.backgroundColor = "#2d2d2d"; // 아직 아이콘 없음
+    document.querySelector(".icon-preview").style.maskImage = "";
+    document.querySelector(".icon-preview").style.webkitMaskImage = "";
+    document.querySelector(".preview-text h3").style.color = "#2d2d2d";
   },
   /* 수정/삭제 ui */
   showActionSheet: function (taskId) {
     const actionSheet = document.querySelector(".action-sheet");
     const dimmed = document.querySelector(".modal-dimmed");
     const deleteBtn = document.querySelector(".action-delete");
+    const editBtn = document.querySelector(".action-edit");
     const closeBtn = document.querySelector(".action-x-btn");
 
     actionSheet.classList.add("open");
     dimmed.classList.add("active");
 
     /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
+    /* 삭제 */
     deleteBtn.onclick = () => {
       /* 테스트용 */
       if (confirm("정말 삭제하시겠습니까?")) {
@@ -216,6 +254,48 @@ const taskFunction = {
         actionSheet.classList.remove("open");
         dimmed.classList.remove("active");
       }
+    };
+    /* 수정 */
+    editBtn.onclick = () => {
+      this.mode = "edit";
+      this.editId = taskId;
+      const editTask = this.tasks.find((t) => t.id === taskId);
+
+      /* editTask로 덮어야 수정 시에도 유지가 됨. */
+      this.newTask = { ...editTask };
+
+      /* add-modal의 ui 반영 */
+      document.querySelector("#task-name").value = editTask.title;
+      document.querySelector(".task-time span").textContent =
+        editTask.duration + " min";
+      document.querySelector(".icon-result").style.backgroundColor =
+        editTask.color;
+      document.querySelector(".icon-result").style.maskImage =
+        `url('/public/icons/icon-${editTask.icon}.svg')`;
+      document.querySelector(".icon-result").style.webkitMaskImage =
+        `url('/public/icons/icon-${editTask.icon}.svg')`;
+      document.querySelector(".title-result span").style.backgroundColor =
+        editTask.color;
+
+      /* custom-modal의 ui 반영 */
+      document.querySelector(".icon-preview").style.backgroundColor =
+        editTask.color;
+      document.querySelector(".icon-preview").style.maskImage =
+        `url('/public/icons/icon-${editTask.icon}.svg')`;
+      document.querySelector(".icon-preview").style.webkitMaskImage =
+        `url('/public/icons/icon-${editTask.icon}.svg')`;
+      document.querySelector(".preview-text h3").style.color = editTask.color;
+
+      /* 수정하기 모달로 내용 교체 */
+      this.newTask.title = editTask.title;
+      document.querySelector("#task-name").value = editTask.title;
+      document.querySelector(".add-modal h2").textContent =
+        "할 일을 수정하세요";
+      document.querySelector(".task-set").classList.add("active");
+      document.querySelector(".task-set h2").textContent = "수정하기";
+      document.querySelector(".add-modal").classList.add("open");
+      document.querySelector(".modal-dimmed").classList.add("active");
+      actionSheet.classList.remove("open");
     };
     closeBtn.onclick = () => {
       actionSheet.classList.remove("open");
