@@ -12,6 +12,9 @@
     />
     <link rel="stylesheet" href="src/css/sub1.css" />
     <link rel="stylesheet" href="src/css/common.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="src/js/sub.js" defer></script>
   </head>
   <body>
     <div class="container">
@@ -44,7 +47,9 @@
           </ul>
           <div class="chart-bar">
             <h3>주간 총 달성률</h3>
-            <div class="chart-result"></div>
+            <div class="chart-result">
+              <canvas id="todo-chart"></canvas>
+            </div>
           </div>
           <div class="top3">
             <h3>주간 완료한 일 TOP 3</h3>

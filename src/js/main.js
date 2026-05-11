@@ -1,3 +1,20 @@
+const taskAddBtnPosition = {
+  init: function () {
+    const taskAddBtn = document.querySelector(".task-add-btn");
+    const container = document.querySelector(".container");
+    const resizePosition = () => {
+      const btnRect = container.getBoundingClientRect();
+      console.log(btnRect);
+      /* 버튼 크기(45), 여백 만큼 빼서 왼쪽 위(기준점: 0,0)를 자리잡게 하기 위함 */
+      taskAddBtn.style.left = btnRect.right - 45 - 30 + "px";
+      taskAddBtn.style.top = btnRect.bottom - 45 - 90 + "px";
+    };
+    resizePosition();
+    window.addEventListener("resize", resizePosition);
+  },
+};
+taskAddBtnPosition.init();
+
 const taskFunction = {
   newTask: {
     title: "",
@@ -31,7 +48,6 @@ const taskFunction = {
       taskSetBtn.classList.remove("active");
     }
   },
-
   /* 할 일 추가 */
   taskOptions: function () {
     const taskName = document.querySelector("#task-name");
@@ -110,7 +126,6 @@ const taskFunction = {
       /* data-index의 형태로 html에 index 부여 */
       todoItem.dataset.index = index;
 
-      /* html과 동일하게 그리기 */
       todoItem.innerHTML = `
          <div class=
          "icon icon-doing"
@@ -127,36 +142,37 @@ const taskFunction = {
 
       /* 체크 박스(mark) 클릭 시 미완료 <-> 완료 */
       const taskMark = todoItem.querySelector(".todo-mark");
-      console.log(taskMark);
       taskMark.addEventListener("click", () => {
-        /* 상태 반전 후 렌더링 */
         task.done = !task.done;
+        localStorage.setItem("tasks", JSON.stringify(this.tasks));
         this.renderTasks();
       });
 
-      /* 눌러서 삭제 로직 */
+      /* 눌러서 삭제 */
       let taskPressTimer = null;
 
-      // 누를시
       const startPressTask = () => {
         taskPressTimer = setTimeout(() => {
           /* addTask에서 심어준 id */
           this.showActionSheet(task.id);
         }, 500);
       };
-      // 중도 취소
       const cancelPressTask = () => {
         clearTimeout(taskPressTimer);
       };
 
-      todoItem.addEventListener("mousedown", startPressTask);
-      todoItem.addEventListener("mouseup", cancelPressTask);
-      todoItem.addEventListener("mouseleave", cancelPressTask);
+      const pressTask = {
+        mousedown: startPressTask,
+        mouseup: cancelPressTask,
+        mouseleave: cancelPressTask,
+        touchstart: startPressTask,
+        touchend: cancelPressTask,
+        touchmove: cancelPressTask,
+      };
 
-      /* 모바일 용 */
-      todoItem.addEventListener("touchstart", startPressTask);
-      todoItem.addEventListener("touchend", cancelPressTask);
-      todoItem.addEventListener("touchmove", cancelPressTask);
+      Object.entries(pressTask).forEach(([eventName, handler]) => {
+        todoItem.addEventListener(eventName, handler);
+      });
 
       if (!task.done) {
         doingAllList.appendChild(todoItem);
@@ -171,7 +187,6 @@ const taskFunction = {
     ).length;
     /* 완료 */
     document.querySelector(".todo-done span").textContent = this.tasks.filter(
-      /* done의 반대로 역전 */
       (number) => number.done,
     ).length;
   },
@@ -213,26 +228,42 @@ const taskFunction = {
     customFunction.customTask.selectedIcon = null;
     customFunction.customTask.selectedColor = null;
 
-    document.querySelector(".add-modal h2").textContent = "할 일을 추가하세요";
     /* 할 일 내용 초기화 - 추가 모달 */
-    document.querySelector("#task-name").value = "";
-    document.querySelector(".task-time span").textContent = "15 min";
+    document.querySelector(".add-modal h2").textContent = "할 일을 추가하세요";
     document.querySelector(".alarm-result").classList.remove("active");
     document.querySelector(".task-set").classList.remove("active");
     document
       .querySelectorAll(".time-list li")
       .forEach((li) => li.classList.remove("active"));
-    document.querySelector(".icon-result").style.backgroundColor = "#2d2d2d";
-    document.querySelector(".icon-result").style.maskImage = "";
-    document.querySelector(".icon-result").style.webkitMaskImage = "";
-    document.querySelector(".title-result span").style.backgroundColor =
-      "#2d2d2d";
 
-    /* 색상과 아이콘 초기화 - 커스텀 모달 */
-    document.querySelector(".icon-preview").style.backgroundColor = "#2d2d2d"; // 아직 아이콘 없음
-    document.querySelector(".icon-preview").style.maskImage = "";
-    document.querySelector(".icon-preview").style.webkitMaskImage = "";
-    document.querySelector(".preview-text h3").style.color = "#2d2d2d";
+    this.initTaskModal(this.newTask);
+  },
+  initTaskModal: function (initTask) {
+    /* 마스크 이미지, remove 구문 일단 제외 */
+    const taskName = document.querySelector("#task-name");
+    const taskTime = document.querySelector(".task-time span");
+    const iconResult = document.querySelector(".icon-result");
+    const iconPreview = document.querySelector(".icon-preview");
+    const titleResult = document.querySelector(".title-result span");
+    const previewTitle = document.querySelector(".preview-text h3");
+    const maskURI =
+      initTask.icon === "default"
+        ? ""
+        : `url('/public/icons/icon-${initTask.icon}.svg')`;
+
+    /* add-modal */
+    taskName.value = initTask.title;
+    taskTime.textContent = initTask.duration + " min";
+    iconResult.style.backgroundColor = initTask.color;
+    iconResult.style.maskImage = maskURI;
+    iconResult.style.webkitMaskImage = maskURI;
+    titleResult.style.backgroundColor = initTask.color;
+
+    /* custom-modal */
+    iconPreview.style.backgroundColor = initTask.color;
+    previewTitle.style.color = initTask.color;
+    iconPreview.style.maskImage = maskURI;
+    iconPreview.style.webkitMaskImage = maskURI;
   },
   /* 수정/삭제 ui */
   showActionSheet: function (taskId) {
@@ -264,31 +295,10 @@ const taskFunction = {
       /* editTask로 덮어야 수정 시에도 유지가 됨. */
       this.newTask = { ...editTask };
 
-      /* add-modal의 ui 반영 */
-      document.querySelector("#task-name").value = editTask.title;
-      document.querySelector(".task-time span").textContent =
-        editTask.duration + " min";
-      document.querySelector(".icon-result").style.backgroundColor =
-        editTask.color;
-      document.querySelector(".icon-result").style.maskImage =
-        `url('/public/icons/icon-${editTask.icon}.svg')`;
-      document.querySelector(".icon-result").style.webkitMaskImage =
-        `url('/public/icons/icon-${editTask.icon}.svg')`;
-      document.querySelector(".title-result span").style.backgroundColor =
-        editTask.color;
-
-      /* custom-modal의 ui 반영 */
-      document.querySelector(".icon-preview").style.backgroundColor =
-        editTask.color;
-      document.querySelector(".icon-preview").style.maskImage =
-        `url('/public/icons/icon-${editTask.icon}.svg')`;
-      document.querySelector(".icon-preview").style.webkitMaskImage =
-        `url('/public/icons/icon-${editTask.icon}.svg')`;
-      document.querySelector(".preview-text h3").style.color = editTask.color;
+      /* add, custom 모달 수정 시 값 유지(초기화) */
+      this.initTaskModal(editTask);
 
       /* 수정하기 모달로 내용 교체 */
-      this.newTask.title = editTask.title;
-      document.querySelector("#task-name").value = editTask.title;
       document.querySelector(".add-modal h2").textContent =
         "할 일을 수정하세요";
       document.querySelector(".task-set").classList.add("active");
@@ -302,8 +312,7 @@ const taskFunction = {
       dimmed.classList.remove("active");
     };
   },
-
-  /* 모달 열고/닫기 */
+  /* 모달 활성화 관리 */
   modalActive: function () {
     /* common */
     const dimmed = document.querySelector(".modal-dimmed");
@@ -326,6 +335,7 @@ const taskFunction = {
       dimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
     };
+    /* fixTask, addTask에서 쓰기 위해 외부로 노출 */
     this.closeAddModal = closeAddModal;
 
     /* 열기*/
@@ -340,12 +350,12 @@ const taskFunction = {
 
       /* 다른 모달이 계속 추가되었을 때 하단 if문을 간소화 하기 위한 함수. */
       /* 만약 모달이 한 개라도 열려있다면 그걸로 접근을 제한하면 되므로 그냥 셀렉터로 선택 */
+      /* ★★★ 단, add-modal이 열린 상태에서는 이미 open이 붙고, 이 때 add-modal을 제외한 나머지의 open이 붙은 서브모달들만을 제한해서 잡아야만 본래의 add-modal이 닫힐 수 있음. */
       const otherModalOpen = () => {
-        return document.querySelector(".modal-area .open") !== null;
+        return (
+          document.querySelector(".modal-area .open:not(.add-modal)") !== null
+        );
       };
-
-      const customModalOpen = customModal.classList.contains("open");
-      const alarmModalOpen = alarmModal.classList.contains("open");
 
       /* 다른 모달이 '열려'있을 때 add-modal이 닫히면 안되므로 이를 역전해 모달이 '닫혔을 때' 닫게 함 */
       if (!modalArea && !openBtnArea && !otherModalOpen()) {
@@ -413,6 +423,7 @@ const taskFunction = {
   },
 };
 taskFunction.init();
+
 const customFunction = {
   icons: {
     routine: ["walk", "sleep", "music"],
@@ -458,16 +469,17 @@ const customFunction = {
       colorPreset.addEventListener("click", () => {
         this.customTask.selectedColor = customColor;
 
+        const previewTitle = document.querySelector(".preview-text h3");
+        const iconPreview = document.querySelector(".icon-preview");
+        const titleResult = document.querySelector(".title-result span");
+        const iconResult = document.querySelector(".icon-result");
         /* 미리보기에 적용 */
-        document.querySelector(".preview-text h3").style.color = customColor;
-        document.querySelector(".icon-preview").style.backgroundColor =
-          customColor;
+        previewTitle.style.color = customColor;
+        iconPreview.style.backgroundColor = customColor;
         /* 할일 추가 모달에 적용 */
         taskFunction.newTask.color = customColor;
-        document.querySelector(".title-result span").style.backgroundColor =
-          customColor;
-        document.querySelector(".icon-result").style.backgroundColor =
-          customColor;
+        titleResult.style.backgroundColor = customColor;
+        iconResult.style.backgroundColor = customColor;
 
         this.customCheck();
       });
@@ -485,12 +497,10 @@ const customFunction = {
 
         iconBox.addEventListener("click", () => {
           this.customTask.selectedIcon = iconName;
-
           taskFunction.newTask.icon = iconName;
 
-          const iconResult = document.querySelector(".icon-result");
-
           /* 이미지 마스크, css와 동일 */
+          const iconResult = document.querySelector(".icon-result");
           iconResult.style.maskImage = `url("/public/icons/icon-${iconName}.svg")`;
           iconResult.style.webkitMaskImage = `url("/public/icons/icon-${iconName}.svg")`;
 
@@ -511,6 +521,7 @@ const customFunction = {
   },
 };
 customFunction.init();
+
 const alarmFunction = {
   ampm: ["오전", "오후"],
   hours: Array.from(
@@ -590,6 +601,7 @@ const alarmFunction = {
   },
   daySelect: function () {
     const dayItems = document.querySelectorAll(".day-item");
+
     dayItems.forEach((dayItem) => {
       dayItem.addEventListener("click", () => {
         dayItem.classList.toggle("select");
