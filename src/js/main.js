@@ -6,8 +6,8 @@ const taskAddBtnPosition = {
       const btnRect = container.getBoundingClientRect();
       console.log(btnRect);
       /* 버튼 크기(45), 여백 만큼 빼서 왼쪽 위(기준점: 0,0)를 자리잡게 하기 위함 */
-      taskAddBtn.style.left = btnRect.right - 45 - 30 + "px";
-      taskAddBtn.style.top = btnRect.bottom - 45 - 90 + "px";
+      taskAddBtn.style.left = btnRect.right - 45 - 15 + "px";
+      taskAddBtn.style.top = btnRect.bottom - 45 - 75 + "px";
     };
     resizePosition();
     window.addEventListener("resize", resizePosition);
@@ -126,19 +126,24 @@ const taskFunction = {
       /* data-index의 형태로 html에 index 부여 */
       todoItem.dataset.index = index;
 
+      const checkIcon = task.done ? "icon-aftercheck" : "icon-beforecheck";
+
       todoItem.innerHTML = `
          <div class=
          "icon icon-doing"
          style="background-color: ${task.color};
-         -webkit-mask-image: url('/public/icons/icon-${task.icon}.svg');
-         mask-image: url('/public/icons/icon-${task.icon}.svg');">
+         -webkit-mask-image: url('/public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');
+         mask-image: url('/public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');">
          </div>
          <div class="todo-text">
             <h3 style="color: ${task.color}">${task.title}</h3>
             <span>${task.duration}</span>
          </div>
-         <div class="todo-mark"></div>
-      `;
+         <div class="todo-mark icon" style="
+            mask-image: url('/public/icons/${checkIcon}.svg');
+            -webkit-mask-image: url('/public/icons/${checkIcon}.svg');
+            background-color: #4c8ce4;">
+         </div>`;
 
       /* 체크 박스(mark) 클릭 시 미완료 <-> 완료 */
       const taskMark = todoItem.querySelector(".todo-mark");
@@ -236,10 +241,15 @@ const taskFunction = {
       .querySelectorAll(".time-list li")
       .forEach((li) => li.classList.remove("active"));
 
+    /* 15분 프리셋 기본 값 */
+    document
+      .querySelector('.time-list li[data-time="15"]')
+      .classList.add("active");
+
     this.initTaskModal(this.newTask);
   },
   initTaskModal: function (initTask) {
-    /* 마스크 이미지, remove 구문 일단 제외 */
+    /* remove 구문 제외 */
     const taskName = document.querySelector("#task-name");
     const taskTime = document.querySelector(".task-time span");
     const iconResult = document.querySelector(".icon-result");
@@ -248,7 +258,7 @@ const taskFunction = {
     const previewTitle = document.querySelector(".preview-text h3");
     const maskURI =
       initTask.icon === "default"
-        ? ""
+        ? `url('/public/icons/icon-doing.svg')`
         : `url('/public/icons/icon-${initTask.icon}.svg')`;
 
     /* add-modal */
@@ -278,7 +288,8 @@ const taskFunction = {
 
     /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
     /* 삭제 */
-    deleteBtn.onclick = () => {
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
       /* 테스트용 */
       if (confirm("정말 삭제하시겠습니까?")) {
         this.deleteTask(taskId);
@@ -287,7 +298,8 @@ const taskFunction = {
       }
     };
     /* 수정 */
-    editBtn.onclick = () => {
+    editBtn.onclick = (e) => {
+      e.stopPropagation();
       this.mode = "edit";
       this.editId = taskId;
       const editTask = this.tasks.find((t) => t.id === taskId);
@@ -301,13 +313,22 @@ const taskFunction = {
       /* 수정하기 모달로 내용 교체 */
       document.querySelector(".add-modal h2").textContent =
         "할 일을 수정하세요";
+      /* 해당 타임 프리셋에 맞게 active 활성화, 나머지는 비활성화 */
+      document.querySelectorAll(".time-list li").forEach((li) => {
+        if (li.dataset.time === editTask.duration) {
+          li.classList.add("active");
+        } else {
+          li.classList.remove("active");
+        }
+      });
       document.querySelector(".task-set").classList.add("active");
       document.querySelector(".task-set h2").textContent = "수정하기";
       document.querySelector(".add-modal").classList.add("open");
       document.querySelector(".modal-dimmed").classList.add("active");
       actionSheet.classList.remove("open");
     };
-    closeBtn.onclick = () => {
+    closeBtn.onclick = (e) => {
+      e.stopPropagation();
       actionSheet.classList.remove("open");
       dimmed.classList.remove("active");
     };

@@ -83,6 +83,40 @@ header span {
   width: 100%;
   height: 85px;
   background: var(--sub_color);
+  display: flex;
+  align-items: center;
+}
+.date-area {
+  width: 100%;
+  height: 65px;
+  /* background-color: red; */
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+.date-area li {
+  height: 100%;
+  width: 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.date-area li.active {
+  background-color: var(--main_color);
+}
+.date-area li.active b,
+.date-area li.active span {
+  color: var(--pure_white);
+}
+.date-area li b {
+  font-size: 17px;
+}
+.date-area li span {
+  font-size: 14px;
+  color: #676767;
 }
 /* == mascot == */
 .mascot {
@@ -161,9 +195,29 @@ header span {
 .task-add-btn {
   width: 45px;
   height: 45px;
-  background-color: #000000;
+  background-color: var(--main_color);
+  box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.3);
   position: fixed;
-  z-index: 5;
+  z-index: 9;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.task-add-btn::before,
+.task-add-btn::after {
+  position: absolute;
+  content: "";
+  background-color: #fff;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+.task-add-btn::before {
+  width: 12px;
+  height: 2px;
+}
+.task-add-btn::after {
+  width: 2px;
+  height: 12px;
 }
 .modal-dimmed {
   position: absolute;
@@ -181,9 +235,7 @@ header span {
 .add-modal {
   height: 450px;
   width: 100%;
-  border: 1px solid red;
   background-color: var(--pure_white);
-  /* border: 1px solid red; */
   position: absolute;
   bottom: 60px;
   z-index: 10;
@@ -217,7 +269,8 @@ header span {
   top: 5px;
   width: 24px;
   height: 24px;
-  background-color: red;
+  background: url(/public/images/close-btn-image.png) no-repeat center center;
+  cursor: pointer;
 }
 input[id="task-name"] {
   width: 100%;
@@ -254,6 +307,7 @@ input[id="task-name"]:focus {
   background-color: var(--sub_color);
   border-radius: 20px;
   color: var(--sub_title);
+  cursor: pointer;
 }
 .time-list li.active {
   background-color: var(--main_color);
@@ -263,6 +317,7 @@ input[id="task-name"]:focus {
 .custom-btn {
   display: flex;
   margin-top: 15px;
+  cursor: pointer;
 }
 .custom-icon {
   padding: 10px 15px;
@@ -341,7 +396,7 @@ input[id="task-name"]:focus {
   position: absolute;
   display: flex;
   align-items: center;
-  border: 3px solid red;
+  cursor: pointer;
 }
 .alarm-btn li {
   width: 20px;
@@ -365,6 +420,7 @@ input[id="task-name"]:focus {
 .task-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
+  cursor: pointer;
 }
 .task-set.active h2 {
   color: var(--pure_white);
@@ -399,9 +455,10 @@ input[id="task-name"]:focus {
   position: absolute;
   width: 24px;
   height: 24px;
-  background-color: red;
+  background: url(/public/images/close-btn-image.png) no-repeat center center;
   right: 20px;
   top: 30px;
+  cursor: pointer;
 }
 .custom-preview {
   display: flex;
@@ -438,12 +495,6 @@ input[id="task-name"]:focus {
 .preview-text span {
   font-size: 13px;
 }
-.preview-mark {
-  width: 24px;
-  height: 24px;
-  border: 1px solid red;
-  margin-left: auto;
-}
 .custom-color {
   margin-top: 25px;
 }
@@ -456,6 +507,7 @@ input[id="task-name"]:focus {
   width: 24px;
   height: 24px;
   border-radius: 5px;
+  cursor: pointer;
 }
 .color-list li:not(.reset-color) {
   background-color: blue;
@@ -493,6 +545,7 @@ input[id="task-name"]:focus {
   justify-content: center;
   align-items: center;
   border: 1px solid var(--border_color);
+  cursor: pointer;
 }
 .mark-section ul li img {
   width: 20px;
@@ -512,6 +565,7 @@ input[id="task-name"]:focus {
 .custom-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
+  cursor: pointer;
 }
 .custom-set.active h2 {
   color: var(--pure_white);
@@ -527,7 +581,6 @@ input[id="task-name"]:focus {
   height: 400px;
   width: 100%;
   background-color: var(--pure_white);
-  /* border: 1px solid red; */
   position: absolute;
   bottom: 60px;
   z-index: 10;
@@ -546,7 +599,7 @@ input[id="task-name"]:focus {
   position: absolute;
   width: 24px;
   height: 24px;
-  background-color: red;
+  background: url(/public/images/close-btn-image.png) no-repeat center center;
   right: 20px;
   top: 20px;
 }
@@ -556,7 +609,6 @@ input[id="task-name"]:focus {
   background-color: var(--pure_white);
   display: flex;
   align-items: flex-end;
-  /* border: 3px solid red; */
   padding: 0;
 }
 .time-wrapper {
@@ -567,13 +619,12 @@ input[id="task-name"]:focus {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  /* border: 1px solid blue; */
 }
 .time-highlight {
   width: 100%;
   height: 50px;
   position: absolute;
-  background-color: #f1f3f5;
+  background-color: var(--sub_color);
   z-index: 1;
   top: 50%;
   transform: translateY(-50%);
@@ -591,7 +642,6 @@ input[id="task-name"]:focus {
 .alarm-item {
   width: 60px;
   height: 100%;
-  border: 1px solid black;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
@@ -639,6 +689,7 @@ input[id="task-name"]:focus {
   border: 1px solid var(--border_color);
   background-color: var(--pure_white);
   border-radius: 5px;
+  cursor: pointer;
 }
 .day-item.select {
   background-color: var(--main_color);
@@ -661,6 +712,7 @@ input[id="task-name"]:focus {
 .alarm-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
+  cursor: pointer;
 }
 .alarm-set.active h2 {
   color: var(--pure_white);
@@ -711,6 +763,12 @@ input[id="task-name"]:focus {
 .list-done {
   margin-top: 25px;
 }
+.list-done .todo-item {
+  background-color: var(--sub_color);
+}
+.list-done .todo-item h3 {
+  text-decoration: line-through;
+}
 .todo-item {
   border-radius: 20px;
   width: 100%;
@@ -739,7 +797,6 @@ input[id="task-name"]:focus {
 .todo-mark {
   width: 24px;
   height: 24px;
-  border: 1px solid red;
   margin-left: auto;
   cursor: pointer;
 }
@@ -747,7 +804,6 @@ input[id="task-name"]:focus {
 .action-sheet {
   width: 100%;
   height: 180px;
-  background-color: red;
   position: absolute;
   bottom: 0;
   z-index: 50;
@@ -767,9 +823,10 @@ input[id="task-name"]:focus {
 .action-x-btn {
   width: 24px;
   height: 24px;
-  background-color: red;
+  background: url(/public/images/close-btn-image.png) no-repeat center center;
   position: absolute;
   right: 20px;
+  cursor: pointer;
 }
 .action-set {
   /* border: 1px solid red; */
