@@ -88,7 +88,11 @@ const taskFunction = {
   },
   /* 수정할 것(toast) */
   showToast: function (message) {
-    alert(message);
+    const toast = document.querySelector(".toast");
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2000);
   },
   addTask: function () {
     if (this.newTask.title.trim() === "") {
@@ -127,6 +131,7 @@ const taskFunction = {
       todoItem.dataset.index = index;
 
       const checkIcon = task.done ? "icon-aftercheck" : "icon-beforecheck";
+      // const alarmIcon = task.alarm ? "icon-alarm" : "";
 
       todoItem.innerHTML = `
          <div class=
@@ -282,6 +287,9 @@ const taskFunction = {
     const deleteBtn = document.querySelector(".action-delete");
     const editBtn = document.querySelector(".action-edit");
     const closeBtn = document.querySelector(".action-x-btn");
+    const container = document.querySelector(".container");
+
+    let isPressed = true;
 
     actionSheet.classList.add("open");
     dimmed.classList.add("active");
@@ -331,6 +339,19 @@ const taskFunction = {
       e.stopPropagation();
       actionSheet.classList.remove("open");
       dimmed.classList.remove("active");
+    };
+    /* 바깥 눌렀을 때 닫힘 -> 꾹 누르기를 떼는 순간 닫히는 문제 있음 */
+    container.onclick = (e) => {
+      if(isPressed) {
+        isPressed = false;
+        return;
+      }
+      const sheetArea = actionSheet.contains(e.target);
+      if (!sheetArea) {
+        actionSheet.classList.remove("open");
+        dimmed.classList.remove("active");
+        container.onclick = null;
+      }
     };
   },
   /* 모달 활성화 관리 */
@@ -412,6 +433,8 @@ const taskFunction = {
     const alarmCloseBtn = document.querySelector(".alarm-x-btn");
     const alarmModal = document.querySelector(".alarm-modal");
     const alarmSetBtn = document.querySelector(".alarm-set");
+    const alarmResetBtn = document.querySelector(".alarm-reset");
+    const alarmResult = document.querySelector(".alarm-result");
 
     /* 열기 */
     alarmAddBtn.addEventListener("click", () => {
@@ -432,14 +455,23 @@ const taskFunction = {
       taskFunction.newTask.alarm = { ...alarmFunction.alarmData };
 
       /* 2. 알람 설정 텍스트 값을 add 모달에 업데이트 */
-      const alarmResult = document.querySelector(".alarm-result");
+      // const alarmResult = document.querySelector(".alarm-result");
 
       /* update 구문에서 적용한 day-status값을 가져와서 textContent로 그림 */
       alarmResult.textContent =
         document.querySelector(".day-status").textContent;
       alarmResult.classList.add("active");
-
+      alarmAddBtn.classList.add("set");
       alarmModal.classList.remove("open");
+    });
+    /* 초기화 */
+    alarmResetBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      alarmFunction.resetAlarm();
+      /* 리셋 뿐만 아니라 현재 설정된 값과 텍스트 상태도 초기화 되어야 함. */
+      taskFunction.newTask.alarm = null;
+      alarmResult.classList.remove("active");
+      alarmAddBtn.classList.remove("set");
     });
   },
 };
@@ -570,6 +602,23 @@ const alarmFunction = {
     this.renderAlarm(this.minutes, ".alarm-minute");
     this.timeSelect();
     this.daySelect();
+    this.updateDayStatus();
+  },
+  resetAlarm: function () {
+    this.alarmData = {
+      ampm: "오전",
+      hour: 7,
+      minute: 0,
+      days: [],
+    };
+    /* 오전/오후, 시간 스크롤, 버튼 스타일 초기화 */
+    (document.querySelectorAll(".day-item").forEach((day) => {
+      day.classList.remove("select");
+    }),
+      document.querySelectorAll(".alarm-item").forEach((time) => {
+        time.scrollTop = 0;
+      }),
+      document.querySelector(".alarm-set").classList.remove("active"));
     this.updateDayStatus();
   },
   /* 버튼 활성화 여부 */

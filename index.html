@@ -93,13 +93,21 @@
       <!-- task-add-btn -->
       <div class="task-add-btn"></div>
       <div class="modal-dimmed"></div>
+      <div class="toast">
+        <span>제목을 입력해 주세요</span>
+      </div>
       <!-- --- 모달 --- -->
       <div class="modal-area">
         <!-- 추가 -->
         <div class="add-modal">
           <h2>할 일을 추가하세요</h2>
           <div class="task-x-btn"></div>
-          <input type="text" id="task-name" placeholder="제목을 입력하세요" />
+          <input
+            type="text"
+            id="task-name"
+            placeholder="제목을 입력하세요"
+            maxlength="20"
+          />
           <div class="task-time">
             <h3>소요 시간</h3>
             <span>45 min</span>
@@ -127,7 +135,7 @@
             <div class="alarm-text-area">
               <div class="alarm-status">
                 <b>알림 활성화</b>
-                <span class="alarm-result"> 시험용 </span>
+                <span class="alarm-result"></span>
               </div>
               <ul class="alarm-btn">
                 <li></li>
@@ -215,8 +223,13 @@
               <li class="sat day-item">토</li>
               <li class="sun day-item">일</li>
             </ul>
-            <div class="alarm-set">
-              <h2>설정하기</h2>
+            <div class="alarm-set-group">
+              <div class="alarm-set">
+                <h2>설정하기</h2>
+              </div>
+              <div class="alarm-reset">
+                <h2>초기화</h2>
+              </div>
             </div>
           </div>
         </div>

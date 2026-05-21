@@ -11,6 +11,16 @@
   --sub_title: #777777;
   --border_color: #f0f0f0;
 }
+/* z-index 레이어 
+  nav: 40
+  task-add-btn: 9
+  modal-dimmed: 5
+  toast: 100  
+  add-modal, alarm-modal: 10
+  custom-modal: 20 
+  action-sheet: 50
+*/
+
 body,
 input::placeholder {
   font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
@@ -232,6 +242,29 @@ header span {
 .modal-dimmed.active {
   display: block;
 }
+.toast {
+  position: absolute;
+  background-color: var(--sub_title);
+  bottom: 140px;
+  border-radius: 20px;
+  padding: 10px 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  opacity: 0;
+  visibility: visible;
+  transition: 0.3s;
+  /* 투명할 때 클릭 이벤트를 방지 하지 않으면, 다른 모달 클릭 이벤트를 방해함. */
+  pointer-events: none;
+}
+.toast span {
+  color: var(--pure_white);
+  font-size: 14px;
+}
+.toast.show {
+  opacity: 1;
+  visibility: none;
+}
 .add-modal {
   height: 450px;
   width: 100%;
@@ -405,6 +438,14 @@ input[id="task-name"]:focus {
   border-radius: 50%;
   position: absolute;
   left: 4px;
+}
+.alarm-btn.set {
+  background-color: var(--main_color);
+}
+.alarm-btn.set li {
+  /* left를 기준으로 안 삼을거라면, 기존 left를 해제해줘야만 함. */
+  left: unset;
+  right: 4px;
 }
 .task-set {
   width: 100%;
@@ -697,8 +738,14 @@ input[id="task-name"]:focus {
   color: var(--pure_white);
   font-weight: bold;
 }
+.alarm-set-group {
+  display: flex;
+  align-items: center;
+  margin-top: 35px;
+  justify-content: space-between;
+}
 .alarm-set {
-  width: 100%;
+  width: 70%;
   height: 45px;
   border-radius: 20px;
   background-color: var(--sub_color);
@@ -707,7 +754,6 @@ input[id="task-name"]:focus {
   justify-content: center;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border_color);
-  margin-top: 35px;
 }
 .alarm-set.active {
   background-color: var(--main_color);
@@ -718,6 +764,22 @@ input[id="task-name"]:focus {
   color: var(--pure_white);
 }
 .alarm-set h2 {
+  font-size: 16px;
+  color: var(--sub_title);
+}
+.alarm-reset {
+  width: 28%;
+  height: 45px;
+  border-radius: 20px;
+  background-color: var(--pure_white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border_color);
+  cursor: pointer;
+}
+.alarm-reset h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
