@@ -38,7 +38,7 @@
         <!-- === chart === -->
         <section class="chart">
           <div class="chart-title">
-            <h2>2026년 4월</h2>
+            <h2 class="main-title">2026년 4월</h2>
             <div class="more"></div>
           </div>
           <ul class="chart-btn">
@@ -46,28 +46,30 @@
             <li>월간</li>
           </ul>
           <div class="chart-bar">
-            <h3>주간 총 달성률</h3>
+            <h3 class="sub-title">주간 총 달성률</h3>
             <div class="chart-result">
-              <canvas id="todo-chart"></canvas>
+              <div class="chart-inner">
+                <canvas id="todo-chart"></canvas>
+              </div>
             </div>
           </div>
-          <div class="top3">
-            <h3>주간 완료한 일 TOP 3</h3>
-            <div class="top3-wrapper">
-              <div class="first-prize prize-item">
+          <div class="report">
+            <h3 class="report-title">주간 요약 리포트</h3>
+            <div class="report-wrapper">
+              <div class="total report-item">
                 <div class="rank">1</div>
-                <b>테스트입니다.</b>
-                <span>완료 총 15회</span>
+                <b>총 완료한 일</b>
+                <span class="task-total"></span>
               </div>
-              <div class="second-prize prize-item">
+              <div class="avg report-item">
                 <div class="rank">2</div>
-                <b>테스트입니다.</b>
-                <span>완료 총 14회</span>
+                <b>평균 달성률</b>
+                <span class="task-percent"></span>
               </div>
-              <div class="third-prize prize-item">
+              <div class="date report-item">
                 <div class="rank">3</div>
-                <b>테스트입니다.</b>
-                <span>완료 총 10회</span>
+                <b class="date-title">가장 활발한 요일</b>
+                <span class="date-day">금요일</span>
               </div>
             </div>
           </div>

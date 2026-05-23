@@ -1,23 +1,89 @@
 const todoChart = document.getElementById("todo-chart");
-const chartData = {
-  weekly: [30, 75, 10, 20, 50, 30, 60],
-  labels: ["2일", "3일", "4일", "5일", "6일", "7일", "8일"],
-};
-const maxValue = Math.max.apply(null, chartData.weekly);
-const varColors = [];
-chartData.weekly.forEach((value) => {
-  /* 가장 높은 값이면 더 진한 색 처리 */
-  if (value === maxValue) {
-    varColors.push("#4C8CE4");
-  } else {
-    varColors.push("#A6C6F1");
-  }
-});
+const chartInner = document.querySelector(".chart-inner");
+const chartMainTitle = document.querySelector(".main-title");
+const chartSubTitle = document.querySelector(".sub-title");
+const reportTitle = document.querySelector(".report-title");
+const dateTitle = document.querySelector(".date-title");
+const dateDay = document.querySelector(".date-day");
 
-new Chart(todoChart, {
+/* === 기본 데이터 === */
+const chartData = {
+  /* 주간 */
+  weekly: [30, 75, 10, 20, 50, 30, 60],
+  weeklyLabels: ["2일", "3일", "4일", "5일", "6일", "7일", "8일"],
+  weeklyConfig: {
+    mainTitle: "2026년 4월",
+    subTitle: "주간 총 달성률",
+    reportTitle: "주간 요약 리포트",
+    dateTitle: "가장 활발한 요일",
+    dateDay: "금요일",
+    chartWidth: "100%",
+  },
+  /* 월간 */
+  monthly: [20, 60, 20, 40, 10, 80, 50, 20, 15, 35, 40, 60],
+  monthlyLabels: [
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "5월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월",
+  ],
+  monthlyConfig: {
+    mainTitle: "2026년",
+    subTitle: "월간 총 달성률",
+    reportTitle: "월간 요약 리포트",
+    dateTitle: "가장 활발한 달",
+    dateDay: "6월",
+    chartWidth: "520px",
+  },
+};
+/* === 주간/월간 별 최댓값 bar 색상 === */
+const updateMaxColors = (maxData) => {
+  const maxValue = Math.max.apply(null, maxData);
+  return maxData.map((value) => (value === maxValue ? "#4C8CE4" : "#A6C6F1"));
+};
+/* === 주간/월간 리포트 === */
+// 1. UI 데이터
+const updateChart = (data, labels, config) => {
+  // 제목(년, 월), 소제목들, 리포트 내의 UI 텍스트들 
+  chartMainTitle.textContent = config.mainTitle;
+  chartSubTitle.textContent = config.subTitle;
+  reportTitle.textContent = config.reportTitle;
+  dateTitle.textContent = config.dateTitle;
+  dateDay.textContent = config.dateDay;
+  chartInner.style.width = config.chartWidth;
+
+  // 차트의 라벨, 데이터, 최댓값 bar 컬러
+  allChart.data.labels = labels;
+  allChart.data.datasets[0].data = data;
+  allChart.data.datasets[0].backgroundColor = updateMaxColors(data);
+  updateReport(data);
+  allChart.update();
+};
+// 2. 내부(실질) 데이터
+const updateReport = (reportData) => {
+  const taskTotal = document.querySelector(".task-total");
+  const taskPercent = document.querySelector(".task-percent");
+
+  // 총합, 평균 달성률
+  const taskTotalDone = reportData.reduce((sum, taskItem) => sum + taskItem, 0);
+  taskTotal.textContent = `총 ${taskTotalDone}회`;
+  const taskAvgRate = Math.round(taskTotalDone / reportData.length);
+  taskPercent.textContent = `${taskAvgRate}%`;
+};
+
+/* === 차트 === */
+const allChart = new Chart(todoChart, {
   type: "bar",
   data: {
-    labels: chartData.labels,
+    labels: chartData.weeklyLabels,
     datasets: [
       {
         data: chartData.weekly,
@@ -27,7 +93,7 @@ new Chart(todoChart, {
         barPercentage: 0.65,
         /* 바닥 경계 무시 = 아래 radius 적용 됨 */
         borderSkipped: false,
-        backgroundColor: varColors,
+        backgroundColor: updateMaxColors(chartData.weekly),
       },
     ],
   },
@@ -42,6 +108,12 @@ new Chart(todoChart, {
         },
         border: {
           display: false,
+        },
+        ticks: {
+          /* label이 스킵(생략)되지 않고 모든 값을 띄울 수 있도록 false */
+          autoSkip: false,
+          maxRotation: 0,
+          minRotation: 0,
         },
       },
       y: {
@@ -79,4 +151,20 @@ new Chart(todoChart, {
       },
     },
   },
+});
+updateChart(chartData.weekly, chartData.weeklyLabels, chartData.weeklyConfig);
+
+/* === 주간/월간 tab === */
+const chartBtns = document.querySelectorAll(".chart-btn li");
+chartBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    chartBtns.forEach((item) => item.classList.remove("active"));
+    btn.classList.add("active");
+
+    if (btn.textContent === "주간") {
+      updateChart(chartData.weekly, chartData.weeklyLabels, chartData.weeklyConfig);
+    } else {
+      updateChart(chartData.monthly, chartData.monthlyLabels, chartData.monthlyConfig);
+    }
+  });
 });
