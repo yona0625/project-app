@@ -12,12 +12,15 @@
     />
     <link rel="stylesheet" href="src/css/sub2.css" />
     <link rel="stylesheet" href="src/css/common.css" />
+
+    <script type="module" src="src/js/sub2.js" defer></script>
   </head>
   <body>
     <div class="container">
       <header>
         <h1>설정</h1>
       </header>
+      <!-- === account === -->
       <section class="account">
         <h2>계정</h2>
         <ul class="account-area">
@@ -26,13 +29,15 @@
           <li>데이터 초기화</li>
         </ul>
       </section>
+      <!-- === app === -->
       <section class="app">
         <h2>앱 설정</h2>
         <ul class="app-area">
-          <li>테마 설정</li>
-          <li>언어 설정</li>
+          <li class="select-theme">테마 설정</li>
+          <li class="select-lang">언어 설정</li>
         </ul>
       </section>
+      <!-- === other === -->
       <section class="other">
         <h2>기타</h2>
         <ul class="other-area">
@@ -40,6 +45,75 @@
           <li>정책</li>
         </ul>
       </section>
+      <!-- === dimmed === -->
+      <div class="modal-dimmed"></div>
+      <!-- === setting-screen === -->
+      <div class="color-theme">
+        <h2>테마 설정</h2>
+        <div class="theme-close-btn"></div>
+        <ul class="color-list">
+          <li class="item basic">
+            <span class="color-text">blue (기본)</span>
+            <div class="check-mark"></div>
+          </li>
+          <li class="item green">
+            <span class="color-text">green</span>
+            <div class="check-mark"></div>
+          </li>
+          <li class="item pink">
+            <span class="color-text">pink</span>
+            <div class="check-mark"></div>
+          </li>
+          <li class="item orange">
+            <span class="color-text">orange</span>
+            <div class="check-mark"></div>
+          </li>
+          <li class="item purple">
+            <span class="color-text">purple</span>
+            <div class="check-mark"></div>
+          </li>
+          <li class="item gray">
+            <span class="color-text">gray</span>
+            <div class="check-mark"></div>
+          </li>
+        </ul>
+        <div class="theme-set">
+          <h2>설정하기</h2>
+        </div>
+      </div>
+      <div class="lang-setting">
+        <h2>언어 설정</h2>
+        <div class="lang-close-btn"></div>
+        <ul class="lang-list">
+          <li>
+            <input type="radio" name="lang" id="system" value="system" />
+            <label for="system">시스템 설정</label>
+          </li>
+          <li>
+            <input type="radio" name="lang" id="korean" value="korean" />
+            <label for="korean">한국어</label>
+          </li>
+          <li>
+            <input type="radio" name="lang" id="english" value="english" />
+            <label for="english">English</label>
+          </li>
+          <li>
+            <input type="radio" name="lang" id="japanese" value="japanese" />
+            <label for="japanese">日本語</label>
+          </li>
+          <li>
+            <input type="radio" name="lang" id="chinese" value="chinese" />
+            <label for="chinese">中文</label>
+          </li>
+          <li>
+            <input type="radio" name="lang" id="spanish" value="spanish" />
+            <label for="spanish">Español</label>
+          </li>
+        </ul>
+        <div class="lang-set">
+          <h2>설정하기</h2>
+        </div>
+      </div>
       <!-- === nav === -->
       <nav>
         <div class="nav-area">

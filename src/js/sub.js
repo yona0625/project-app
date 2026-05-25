@@ -1,3 +1,19 @@
+/* 색상 변경(공통) */
+const savedTheme = localStorage.getItem("userTheme");
+if (savedTheme) {
+  const themes = {
+    basic: "#4c8ce4",
+    green: "#5BBF7A",
+    pink: "#F0857A",
+    orange: "#F0C355",
+    purple: "#8B7EC8",
+    gray: "#a5abbd",
+  };
+  document.documentElement.style.setProperty(
+    "--main_color",
+    themes[savedTheme],
+  );
+}
 const todoChart = document.getElementById("todo-chart");
 const chartInner = document.querySelector(".chart-inner");
 const chartMainTitle = document.querySelector(".main-title");
@@ -52,7 +68,7 @@ const updateMaxColors = (maxData) => {
 /* === 주간/월간 리포트 === */
 // 1. UI 데이터
 const updateChart = (data, labels, config) => {
-  // 제목(년, 월), 소제목들, 리포트 내의 UI 텍스트들 
+  // 제목(년, 월), 소제목들, 리포트 내의 UI 텍스트들
   chartMainTitle.textContent = config.mainTitle;
   chartSubTitle.textContent = config.subTitle;
   reportTitle.textContent = config.reportTitle;
@@ -60,7 +76,7 @@ const updateChart = (data, labels, config) => {
   dateDay.textContent = config.dateDay;
   chartInner.style.width = config.chartWidth;
 
-  // 차트의 라벨, 데이터, 최댓값 bar 컬러
+  // 차트의 레이블, 데이터, 최댓값 bar 컬러
   allChart.data.labels = labels;
   allChart.data.datasets[0].data = data;
   allChart.data.datasets[0].backgroundColor = updateMaxColors(data);
@@ -162,9 +178,17 @@ chartBtns.forEach((btn) => {
     btn.classList.add("active");
 
     if (btn.textContent === "주간") {
-      updateChart(chartData.weekly, chartData.weeklyLabels, chartData.weeklyConfig);
+      updateChart(
+        chartData.weekly,
+        chartData.weeklyLabels,
+        chartData.weeklyConfig,
+      );
     } else {
-      updateChart(chartData.monthly, chartData.monthlyLabels, chartData.monthlyConfig);
+      updateChart(
+        chartData.monthly,
+        chartData.monthlyLabels,
+        chartData.monthlyConfig,
+      );
     }
   });
 });

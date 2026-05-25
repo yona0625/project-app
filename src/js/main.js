@@ -1,3 +1,19 @@
+/* 색상 변경(공통) */ 
+const savedTheme = localStorage.getItem("userTheme");
+if (savedTheme) {
+  const themes = {
+    basic: "#4c8ce4",
+    green: "#5BBF7A",
+    pink: "#F0857A",
+    orange: "#F0C355",
+    purple: "#8B7EC8",
+    gray: "#a5abbd",
+  };
+  document.documentElement.style.setProperty(
+    "--main_color",
+    themes[savedTheme],
+  );
+}
 const taskAddBtnPosition = {
   init: function () {
     const taskAddBtn = document.querySelector(".task-add-btn");
@@ -342,7 +358,7 @@ const taskFunction = {
     };
     /* 바깥 눌렀을 때 닫힘 -> 꾹 누르기를 떼는 순간 닫히는 문제 있음 */
     container.onclick = (e) => {
-      if(isPressed) {
+      if (isPressed) {
         isPressed = false;
         return;
       }
