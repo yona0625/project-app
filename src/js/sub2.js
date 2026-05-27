@@ -1,13 +1,38 @@
+/* 데이터 리셋 */
+const userDataReset = {
+  init: function () {
+    const resetArea = document.querySelector(".data-reset");
+    const resetBtn = document.querySelector(".reset-btn");
+    const cancelBtn = document.querySelector(".cancel-btn");
+    const resetModal = document.querySelector(".data-reset-modal");
+    const dimmed = document.querySelector(".modal-dimmed");
+    resetArea.addEventListener("click", () => {
+      resetModal.classList.add("open");
+      dimmed.classList.add("active");
+    });
+    resetBtn.addEventListener("click", () => {
+      localStorage.removeItem("tasks");
+      resetModal.classList.remove("open");
+      dimmed.classList.remove("active");
+    });
+    cancelBtn.addEventListener("click", () => {
+      resetModal.classList.remove("open");
+      dimmed.classList.remove("active");
+    });
+  },
+};
+userDataReset.init();
 /* 테마 설정 */
 const selectTheme = {
   themeColor: {
-    basic: "#4c8ce4",
-    green: "#5bbf7a",
-    pink: "#f0857a",
-    orange: "#ffc81e",
-    purple: "#8b7ec8",
-    gray: "#a5abbd",
+    basic: { main: "#4c8ce4", light: "#A6C6F1" },
+    green: { main: "#5bbf7a", light: "#A8DFB8" },
+    pink: { main: "#f0857a", light: "#F7C0BB" },
+    orange: { main: "#ffc81e", light: "#FFE99A" },
+    purple: { main: "#8b7ec8", light: "#C4BDE8" },
+    gray: { main: "#a5abbd", light: "#D4D7DF" },
   },
+  selectedTheme: null,
   init: function () {
     const themeBtn = document.querySelector(".select-theme");
     const themeList = document.querySelector(".color-theme");
@@ -17,7 +42,13 @@ const selectTheme = {
 
     /* 테마 불러오기 */
     const savedThemeColor = localStorage.getItem("userTheme") || "basic";
-    this.applyTheme(savedThemeColor, themeItems);
+    this.applyTheme(savedThemeColor);
+
+    /* 맨 처음 초기 체크마크 표시, 이 경우 basic이므로 blue(기본) */
+    /* 새로 고침해도 유지됨. */
+    document
+      .querySelector(`.color-list .${savedThemeColor}`)
+      .classList.add("selected");
 
     /* 테마 색상 클릭 시 */
     themeItems.forEach((colorItem) => {
@@ -26,9 +57,10 @@ const selectTheme = {
         const themeName = [...colorItem.classList].find(
           (c) => this.themeColor[c],
         );
-        /* 적용하고, 스토리지에 저장 */
-        this.applyTheme(themeName, themeItems);
-        localStorage.setItem("userTheme", themeName);
+        /* 체크 마크 변경(실시간, 새로고침 시 없어짐) */
+        themeItems.forEach((item) => item.classList.remove("selected"));
+        colorItem.classList.add("selected");
+        this.selectedTheme = themeName;
       });
     });
 
@@ -41,22 +73,24 @@ const selectTheme = {
       themeList.classList.remove("open");
     });
     themeSetBtn.addEventListener("click", () => {
+      /* selectedTheme(=즉 테마를 선택 시) */
+      if (this.selectedTheme) {
+        this.applyTheme(this.selectedTheme);
+        localStorage.setItem("userTheme", this.selectedTheme);
+      }
       themeList.classList.remove("open");
     });
   },
-  applyTheme: function (themeName, themeItems) {
+  applyTheme: function (themeName) {
     /* document.documentElement = html 태그 */
     document.documentElement.style.setProperty(
-      "--main-color",
-      this.themeColor[themeName],
+      "--main_color",
+      this.themeColor[themeName].main,
     );
-    /* 체크 마크 관련 */
-    themeItems.forEach((item) => {
-      item.classList.remove("selected");
-    });
-    document
-      .querySelector(`.color-list .${themeName}`)
-      .classList.add("selected");
+    document.documentElement.style.setProperty(
+      "--main_color_light",
+      this.themeColor[themeName].light,
+    );
   },
 };
 selectTheme.init();

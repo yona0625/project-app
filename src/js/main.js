@@ -1,17 +1,17 @@
-/* 색상 변경(공통) */ 
+/* 색상 변경(공통) */
 const savedTheme = localStorage.getItem("userTheme");
 if (savedTheme) {
   const themes = {
-    basic: "#4c8ce4",
-    green: "#5BBF7A",
-    pink: "#F0857A",
-    orange: "#F0C355",
-    purple: "#8B7EC8",
-    gray: "#a5abbd",
+    basic: { main: "#4c8ce4"},
+    green: { main: "#5bbf7a"},
+    pink: { main: "#f0857a"},
+    orange: { main: "#ffc81e"},
+    purple: { main: "#8b7ec8"},
+    gray: { main: "#a5abbd"},
   };
   document.documentElement.style.setProperty(
     "--main_color",
-    themes[savedTheme],
+    themes[savedTheme].main,
   );
 }
 const taskAddBtnPosition = {
@@ -356,7 +356,6 @@ const taskFunction = {
       actionSheet.classList.remove("open");
       dimmed.classList.remove("active");
     };
-    /* 바깥 눌렀을 때 닫힘 -> 꾹 누르기를 떼는 순간 닫히는 문제 있음 */
     container.onclick = (e) => {
       if (isPressed) {
         isPressed = false;

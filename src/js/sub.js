@@ -2,16 +2,21 @@
 const savedTheme = localStorage.getItem("userTheme");
 if (savedTheme) {
   const themes = {
-    basic: "#4c8ce4",
-    green: "#5BBF7A",
-    pink: "#F0857A",
-    orange: "#F0C355",
-    purple: "#8B7EC8",
-    gray: "#a5abbd",
+    basic: { main: "#4c8ce4", light: "#A6C6F1" },
+    green: { main: "#5bbf7a", light: "#A8DFB8" },
+    pink: { main: "#f0857a", light: "#F7C0BB" },
+    orange: { main: "#ffc81e", light: "#FFE99A" },
+    purple: { main: "#8b7ec8", light: "#C4BDE8" },
+    gray: { main: "#a5abbd", light: "#D4D7DF" },
   };
   document.documentElement.style.setProperty(
     "--main_color",
-    themes[savedTheme],
+    themes[savedTheme].main,
+  );
+  /* var의 연한 색상 */
+  document.documentElement.style.setProperty(
+    "--main_color_light",
+    themes[savedTheme].light,
   );
 }
 const todoChart = document.getElementById("todo-chart");
@@ -63,7 +68,16 @@ const chartData = {
 /* === 주간/월간 별 최댓값 bar 색상 === */
 const updateMaxColors = (maxData) => {
   const maxValue = Math.max.apply(null, maxData);
-  return maxData.map((value) => (value === maxValue ? "#4C8CE4" : "#A6C6F1"));
+  /* css의 root 값을 불러오는 기능(공백 제외) */
+  const mainVarColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--main_color")
+    .trim();
+  const subVarColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--main_color_light")
+    .trim();
+  return maxData.map((value) =>
+    value === maxValue ? mainVarColor : subVarColor,
+  );
 };
 /* === 주간/월간 리포트 === */
 // 1. UI 데이터

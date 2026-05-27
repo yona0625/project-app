@@ -93,6 +93,9 @@ section > ul {
 .account-area li:last-child {
   border-bottom: 1px solid transparent;
 }
+.data-reset {
+  color: red;
+}
 /* app */
 .app-area {
   border: 1px solid var(--border_color);
@@ -130,6 +133,54 @@ section > ul {
 }
 .other-area li:last-child {
   border-bottom: 1px solid transparent;
+}
+/* == modal == */
+.data-reset-modal {
+  width: 320px;
+  position: absolute;
+  background-color: var(--pure_white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  gap: 7px;
+  padding: 20px 30px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  display: none;
+  z-index: 10;
+}
+.data-reset-modal.open {
+  display: flex;
+}
+.data-reset-modal p {
+  font-size: 18px;
+  font-weight: bold;
+}
+.data-reset-modal span {
+  font-size: 14px;
+  color: var(--sub_title);
+}
+.reset-btn-group {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+}
+.reset-btn-group li {
+  padding: 7px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.reset-btn {
+  background-color: red;
+  color: var(--pure_white);
+}
+.cancel-btn {
+  background-color: var(--sub_color);
+  border: 1px solid var(--sub_color);
 }
 /* == setting-screen == */
 /* dimmed */
@@ -208,11 +259,12 @@ section > ul {
 .item.selected .check-mark {
   display: block;
 }
+/* 변수 컬러 영향에서 제외하기 위해 고정값 지정 */
 .basic {
-  background-color: var(--main_color);
+  background-color: #4c8ce4;
 }
 .basic .color-text {
-  color: var(--main_color);
+  color: #4c8ce4;
 }
 .green {
   background-color: var(--green_theme);
@@ -272,6 +324,7 @@ section > ul {
   background-color: var(--pure_white);
   z-index: 10;
   display: none;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
 }
 .lang-setting h2 {
   font-size: 22px;

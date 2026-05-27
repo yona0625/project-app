@@ -10,6 +10,8 @@
   --pure_white: #ffffff;
   --sub_title: #777777;
   --border_color: #f0f0f0;
+
+  --main_color_light: #a6c6f1;
 }
 body,
 input::placeholder {
@@ -157,7 +159,7 @@ header span {
 .chart-title .more {
   width: 15px;
   height: 15px;
-  background-color: red;
+  background: url("/public/icons/icon-more.svg") no-repeat center center;
 }
 .chart-btn {
   margin-top: 15px;
