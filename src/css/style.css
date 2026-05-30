@@ -256,10 +256,20 @@ header span {
   transition: 0.3s;
   /* 투명할 때 클릭 이벤트를 방지 하지 않으면, 다른 모달 클릭 이벤트를 방해함. */
   pointer-events: none;
+  text-align: center;
 }
 .toast span {
   color: var(--pure_white);
   font-size: 14px;
+}
+.toast-cancel {
+  margin-top: 7px;
+  font-size: 15px;
+  color: var(--pure_white);
+  font-weight: bold;
+}
+.toast.show .toast-cancel {
+  pointer-events: auto;
 }
 .toast.show {
   opacity: 1;

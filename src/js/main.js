@@ -2,12 +2,12 @@
 const savedTheme = localStorage.getItem("userTheme");
 if (savedTheme) {
   const themes = {
-    basic: { main: "#4c8ce4"},
-    green: { main: "#5bbf7a"},
-    pink: { main: "#f0857a"},
-    orange: { main: "#ffc81e"},
-    purple: { main: "#8b7ec8"},
-    gray: { main: "#a5abbd"},
+    basic: { main: "#4c8ce4" },
+    green: { main: "#5bbf7a" },
+    pink: { main: "#f0857a" },
+    orange: { main: "#ffc81e" },
+    purple: { main: "#8b7ec8" },
+    gray: { main: "#a5abbd" },
   };
   document.documentElement.style.setProperty(
     "--main_color",
@@ -40,6 +40,10 @@ const taskFunction = {
     alarm: null,
     done: false,
   },
+
+  /* 삭제 toast를 위한 변수 */
+  deleteToastTimer: null,
+  deleteToastTask: null,
 
   /* 수정/삭제를 위한 플래그 */
   mode: "add",
@@ -102,13 +106,51 @@ const taskFunction = {
       }
     });
   },
-  /* 수정할 것(toast) */
+  /* toast - 할 일 추가 */
   showToast: function (message) {
     const toast = document.querySelector(".toast");
+    const toastMsg = document.querySelector(".toast-msg");
+    const toastCancel = document.querySelector(".toast-cancel");
+    toastMsg.textContent = message;
+    toastCancel.style.display = "none";
     toast.classList.add("show");
     setTimeout(() => {
       toast.classList.remove("show");
     }, 2000);
+  },
+  /* toast - 삭제 시 */
+  showDeleteToast: function () {
+    const toast = document.querySelector(".toast");
+    const toastMsg = document.querySelector(".toast-msg");
+    const toastCancel = document.querySelector(".toast-cancel");
+
+    toastCancel.style.display = "block";
+    toastMsg.textContent = "삭제되었습니다";
+    toast.classList.add("show");
+
+    /* 연속 작동으로 인한 타이머 혼선 방지 */
+    clearTimeout(this.deleteToastTimer);
+
+    /* cancel을 하지 않을 경우 */
+    this.deleteToastTimer = setTimeout(() => {
+      /* filter를 통해 조건에 따라 재배열이 이루어지고(=삭제), 이 값을 저장해야 하므로 로컬 스토리지에 반영 */
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      this.deleteToastTask = null;
+      toast.classList.remove("show");
+    }, 3000);
+
+    /* cancel을 할 경우 */
+    toastCancel.onclick = () => {
+      /* 타이머 정지 -> 다시 원상복구하고 스토리지에 저장, toast 숨기기 */
+      clearTimeout(this.deleteToastTimer);
+      if (this.deleteToastTask) {
+        this.tasks.push(this.deleteToastTask);
+        this.deleteToastTask = null;
+        localStorage.setItem("tasks", JSON.stringify(this.tasks));
+        this.renderTasks();
+      }
+      toast.classList.remove("show");
+    };
   },
   addTask: function () {
     if (this.newTask.title.trim() === "") {
@@ -217,11 +259,10 @@ const taskFunction = {
     ).length;
   },
   deleteTask: function (taskId) {
+    this.deleteToastTask = this.tasks.find((t) => t.id === taskId);
     this.tasks = this.tasks.filter((t) => t.id !== taskId);
-
-    /* filter를 통해 조건에 따라 재배열이 이루어지고(=삭제), 이 값을 저장해야 하므로 로컬 스토리지에 반영 */
-    localStorage.setItem("tasks", JSON.stringify(this.tasks));
     this.renderTasks();
+    this.showDeleteToast();
   },
   fixTask: function () {
     const editTask = this.tasks.find((t) => t.id === this.editId);
@@ -314,12 +355,9 @@ const taskFunction = {
     /* 삭제 */
     deleteBtn.onclick = (e) => {
       e.stopPropagation();
-      /* 테스트용 */
-      if (confirm("정말 삭제하시겠습니까?")) {
-        this.deleteTask(taskId);
-        actionSheet.classList.remove("open");
-        dimmed.classList.remove("active");
-      }
+      this.deleteTask(taskId);
+      actionSheet.classList.remove("open");
+      dimmed.classList.remove("active");
     };
     /* 수정 */
     editBtn.onclick = (e) => {
@@ -490,7 +528,6 @@ const taskFunction = {
     });
   },
 };
-taskFunction.init();
 
 const customFunction = {
   icons: {
@@ -588,7 +625,6 @@ const customFunction = {
     });
   },
 };
-customFunction.init();
 
 const alarmFunction = {
   ampm: ["오전", "오후"],
@@ -717,4 +753,7 @@ const alarmFunction = {
     dayStatus.textContent = `${ampm} ${hour}:${minuteText}${dayText}`;
   },
 };
+
+customFunction.init();
 alarmFunction.init();
+taskFunction.init();
