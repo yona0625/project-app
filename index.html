@@ -13,12 +13,15 @@
     <link rel="stylesheet" href="src/css/style.css" />
     <link rel="stylesheet" href="src/css/common.css" />
     <script type="module" src="src/js/main.js" defer></script>
+    <script type="module" src="src/js/character.js" defer></script>
   </head>
   <body>
     <div class="container">
       <div class="scroll-area">
         <header>
-          <h1>좋은 아침, <span>00님!</span></h1>
+          <h1>
+            <span class="header-time"></span><span class="header-user"></span>
+          </h1>
         </header>
         <!-- === date === -->
         <section class="date">
