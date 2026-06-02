@@ -14,23 +14,6 @@ if (savedTheme) {
     themes[savedTheme].main,
   );
 }
-const taskAddBtnPosition = {
-  init: function () {
-    const taskAddBtn = document.querySelector(".task-add-btn");
-    const container = document.querySelector(".container");
-    const resizePosition = () => {
-      const btnRect = container.getBoundingClientRect();
-      console.log(btnRect);
-      /* 버튼 크기(45), 여백 만큼 빼서 왼쪽 위(기준점: 0,0)를 자리잡게 하기 위함 */
-      taskAddBtn.style.left = btnRect.right - 45 - 15 + "px";
-      taskAddBtn.style.top = btnRect.bottom - 45 - 75 + "px";
-    };
-    resizePosition();
-    window.addEventListener("resize", resizePosition);
-  },
-};
-taskAddBtnPosition.init();
-
 const taskFunction = {
   newTask: {
     title: "",
@@ -175,6 +158,20 @@ const taskFunction = {
     const doingAllList = document.querySelector(".list-doing");
     const doneAllList = document.querySelector(".list-done");
 
+    /* 소요 시간 단위 변환 */
+    const convertTime = (duration) => {
+      /* 숫자로 변환 */
+      const min = Number(duration);
+      if (min >= 60) {
+        /* '/'는 몫, '%'는 나머지 */
+        const hours = Math.floor(min / 60);
+        const remainMins = min % 60;
+        return remainMins > 0 ? `${hours} h ${remainMins} m` : `${hours} hour`;
+      }
+      /* 1시간 미만일 시 */
+      return `${min} min`;
+    };
+
     /* remove()는 innerHTML과 다르게 선택한 요소 자신만 DOM에서 제거 */
     doingAllList
       .querySelectorAll(".todo-item")
@@ -200,7 +197,7 @@ const taskFunction = {
          </div>
          <div class="todo-text">
             <h3 style="color: ${task.color}">${task.title}</h3>
-            <span>${task.duration}</span>
+            <span>${convertTime(task.duration)}</span>
          </div>
          <div class="todo-mark icon" style="
             mask-image: url('/public/icons/${checkIcon}.svg');
@@ -228,7 +225,6 @@ const taskFunction = {
       const cancelPressTask = () => {
         clearTimeout(taskPressTimer);
       };
-
       const pressTask = {
         mousedown: startPressTask,
         mouseup: cancelPressTask,
@@ -237,7 +233,6 @@ const taskFunction = {
         touchend: cancelPressTask,
         touchmove: cancelPressTask,
       };
-
       Object.entries(pressTask).forEach(([eventName, handler]) => {
         todoItem.addEventListener(eventName, handler);
       });
@@ -249,11 +244,9 @@ const taskFunction = {
       }
     });
     /* 미완료/완료 갯수 실시간 반영 표시 */
-    /* 미완료 */
     document.querySelector(".todo-doing span").textContent = this.tasks.filter(
       (number) => !number.done,
     ).length;
-    /* 완료 */
     document.querySelector(".todo-done span").textContent = this.tasks.filter(
       (number) => number.done,
     ).length;
@@ -340,7 +333,7 @@ const taskFunction = {
   /* 수정/삭제 ui */
   showActionSheet: function (taskId) {
     const actionSheet = document.querySelector(".action-sheet");
-    const dimmed = document.querySelector(".modal-dimmed");
+    const mainDimmed = document.querySelector(".main-dimmed");
     const deleteBtn = document.querySelector(".action-delete");
     const editBtn = document.querySelector(".action-edit");
     const closeBtn = document.querySelector(".action-x-btn");
@@ -349,7 +342,7 @@ const taskFunction = {
     let isPressed = true;
 
     actionSheet.classList.add("open");
-    dimmed.classList.add("active");
+    mainDimmed.classList.add("active");
 
     /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
     /* 삭제 */
@@ -357,7 +350,7 @@ const taskFunction = {
       e.stopPropagation();
       this.deleteTask(taskId);
       actionSheet.classList.remove("open");
-      dimmed.classList.remove("active");
+      mainDimmed.classList.remove("active");
     };
     /* 수정 */
     editBtn.onclick = (e) => {
@@ -386,13 +379,13 @@ const taskFunction = {
       document.querySelector(".task-set").classList.add("active");
       document.querySelector(".task-set h2").textContent = "수정하기";
       document.querySelector(".add-modal").classList.add("open");
-      document.querySelector(".modal-dimmed").classList.add("active");
+      document.querySelector(".main-dimmed").classList.add("active");
       actionSheet.classList.remove("open");
     };
     closeBtn.onclick = (e) => {
       e.stopPropagation();
       actionSheet.classList.remove("open");
-      dimmed.classList.remove("active");
+      mainDimmed.classList.remove("active");
     };
     container.onclick = (e) => {
       if (isPressed) {
@@ -402,7 +395,7 @@ const taskFunction = {
       const sheetArea = actionSheet.contains(e.target);
       if (!sheetArea) {
         actionSheet.classList.remove("open");
-        dimmed.classList.remove("active");
+        mainDimmed.classList.remove("active");
         container.onclick = null;
       }
     };
@@ -410,7 +403,7 @@ const taskFunction = {
   /* 모달 활성화 관리 */
   modalActive: function () {
     /* common */
-    const dimmed = document.querySelector(".modal-dimmed");
+    const mainDimmed = document.querySelector(".main-dimmed");
     const scrollArea = document.querySelector(".scroll-area");
     const container = document.querySelector(".container");
 
@@ -422,12 +415,12 @@ const taskFunction = {
     const openAddModal = () => {
       this.resetTask();
       taskModal.classList.add("open");
-      dimmed.classList.add("active");
+      mainDimmed.classList.add("active");
       scrollArea.style.overflow = "hidden";
     };
     const closeAddModal = () => {
       taskModal.classList.remove("open");
-      dimmed.classList.remove("active");
+      mainDimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
     };
     /* fixTask, addTask에서 쓰기 위해 외부로 노출 */
@@ -488,15 +481,18 @@ const taskFunction = {
     const alarmSetBtn = document.querySelector(".alarm-set");
     const alarmResetBtn = document.querySelector(".alarm-reset");
     const alarmResult = document.querySelector(".alarm-result");
+    const subDimmed = document.querySelector(".sub-dimmed");
 
     /* 열기 */
     alarmAddBtn.addEventListener("click", () => {
       alarmModal.classList.add("open");
+      subDimmed.classList.add("active");
     });
     /* 닫기 - x버튼 */
     alarmCloseBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       alarmModal.classList.remove("open");
+      subDimmed.classList.remove("active");
     });
     /* 설정하기 */
     alarmSetBtn.addEventListener("click", (e) => {
@@ -515,7 +511,9 @@ const taskFunction = {
         document.querySelector(".day-status").textContent;
       alarmResult.classList.add("active");
       alarmAddBtn.classList.add("set");
+
       alarmModal.classList.remove("open");
+      subDimmed.classList.remove("active");
     });
     /* 초기화 */
     alarmResetBtn.addEventListener("click", (e) => {
@@ -627,6 +625,7 @@ const customFunction = {
 };
 
 const alarmFunction = {
+  weekOrder: ["월", "화", "수", "목", "금", "토", "일"],
   ampm: ["오전", "오후"],
   hours: Array.from(
     {
@@ -723,6 +722,7 @@ const alarmFunction = {
   daySelect: function () {
     const dayItems = document.querySelectorAll(".day-item");
 
+    /* 요일 선택 */
     dayItems.forEach((dayItem) => {
       dayItem.addEventListener("click", () => {
         dayItem.classList.toggle("select");
@@ -734,6 +734,12 @@ const alarmFunction = {
         } else {
           this.alarmData.days.push(alarmDay);
         }
+
+        /* 요일 sort */
+        this.alarmData.days.sort((a, b) => {
+          return this.weekOrder.indexOf(a) - this.weekOrder.indexOf(b);
+        });
+
         /* 요일까지 선택이 이루어진다음 값 체크 */
         this.alarmCheck();
       });
@@ -746,10 +752,22 @@ const alarmFunction = {
     /* 분을 두 자리 수로 설정 */
     /* 만약 10보다 작은 1, 2, 3이라면 앞에 0을 붙여야 01, 02, 03으로 나옴. */
     const minuteText = minute < 10 ? `0${minute}` : minute;
-    /* 요일이 하나라도 있다면 맨 앞에 공백 + " "로 사이 공백, 그게 아니라면 빈 내용 */
-    const dayText = days.length > 0 ? ` ${days.join(" ")}` : "";
 
-    /* 두 자리 수의 minutes, 별도 설정한 요일 스타일을 textContent로 그림 */
+    /* 배열을 공백없는 문자열로 바꾸고 합쳐서 대조할 수 있도록 변환 */
+    const dayStr = days.join("");
+
+    /* 날짜 라벨링 */
+    const labelList = {
+      월화수목금토일: "매일",
+      월화수목금: "평일",
+      토일: "주말",
+    };
+    /* 라벨링 규칙에 맞는다면 labelList, 아니라면 원래대로 공백 넣어서 나열 */
+    const dayLabel = labelList[dayStr] || days.join(" ");
+
+    /* 요일이 하나라도 있다면 라벨링 패턴 혹은 공백 포함 나열 출력, 그게 아니라면 빈 내용 */
+    const dayText = days.length > 0 ? ` ${dayLabel}` : "";
+    
     dayStatus.textContent = `${ampm} ${hour}:${minuteText}${dayText}`;
   },
 };
