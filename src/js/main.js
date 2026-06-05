@@ -118,6 +118,10 @@ const taskFunction = {
     this.deleteToastTimer = setTimeout(() => {
       /* filter를 통해 조건에 따라 재배열이 이루어지고(=삭제), 이 값을 저장해야 하므로 로컬 스토리지에 반영 */
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      /* character.js랑 연결 */
+      document.dispatchEvent(
+        new CustomEvent("tasksUpdated", { detail: this.tasks }),
+      );
       this.deleteToastTask = null;
       toast.classList.remove("show");
     }, 3000);
@@ -150,6 +154,9 @@ const taskFunction = {
 
     /* 로컬 스토리지에 저장 -> JSON으로 문자열 변환 */
     localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    document.dispatchEvent(
+      new CustomEvent("tasksUpdated", { detail: this.tasks }),
+    );
 
     this.renderTasks();
     this.closeAddModal();
@@ -202,7 +209,7 @@ const taskFunction = {
          <div class="todo-mark icon" style="
             mask-image: url('/public/icons/${checkIcon}.svg');
             -webkit-mask-image: url('/public/icons/${checkIcon}.svg');
-            background-color: #4c8ce4;">
+            background-color: var(--main_color);">
          </div>`;
 
       /* 체크 박스(mark) 클릭 시 미완료 <-> 완료 */
@@ -210,6 +217,9 @@ const taskFunction = {
       taskMark.addEventListener("click", () => {
         task.done = !task.done;
         localStorage.setItem("tasks", JSON.stringify(this.tasks));
+        document.dispatchEvent(
+          new CustomEvent("tasksUpdated", { detail: this.tasks }),
+        );
         this.renderTasks();
       });
 
@@ -266,6 +276,9 @@ const taskFunction = {
     editTask.alarm = this.newTask.alarm;
 
     localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    document.dispatchEvent(
+      new CustomEvent("tasksUpdated", { detail: this.tasks }),
+    );
     /* closeAddModal까지 수행한 후 edit, id값을 초기화 해주기 위해 추가 */
     this.mode = "add";
     this.editId = null;
@@ -364,7 +377,6 @@ const taskFunction = {
 
       /* add, custom 모달 수정 시 값 유지(초기화) */
       this.initTaskModal(editTask);
-
       /* 수정하기 모달로 내용 교체 */
       document.querySelector(".add-modal h2").textContent =
         "할 일을 수정하세요";
@@ -387,25 +399,24 @@ const taskFunction = {
       actionSheet.classList.remove("open");
       mainDimmed.classList.remove("active");
     };
-    container.onclick = (e) => {
-      if (isPressed) {
-        isPressed = false;
-        return;
-      }
-      const sheetArea = actionSheet.contains(e.target);
-      if (!sheetArea) {
-        actionSheet.classList.remove("open");
-        mainDimmed.classList.remove("active");
-        container.onclick = null;
-      }
-    };
   },
   /* 모달 활성화 관리 */
   modalActive: function () {
     /* common */
-    const mainDimmed = document.querySelector(".main-dimmed");
     const scrollArea = document.querySelector(".scroll-area");
     const container = document.querySelector(".container");
+    const mainDimmed = document.querySelector(".main-dimmed");
+
+    /* dimmed */
+    mainDimmed.addEventListener("click", () => {
+      /* 항상 클릭 시점에 modal을 찾아야 하므로 안에 선언 */
+      const openModal = document.querySelector(".modal-area .open");
+      const openSheet = document.querySelector(".action-sheet.open");
+      if (openModal) openModal.classList.remove("open");
+      if (openSheet) openSheet.classList.remove("open");
+      mainDimmed.classList.remove("active");
+      scrollArea.style.overflow = "auto";
+    });
 
     /* === add-modal === */
     const taskModal = document.querySelector(".add-modal");
@@ -493,6 +504,7 @@ const taskFunction = {
       e.stopPropagation();
       alarmModal.classList.remove("open");
       subDimmed.classList.remove("active");
+      alarmFunction.resetAlarm();
     });
     /* 설정하기 */
     alarmSetBtn.addEventListener("click", (e) => {
@@ -647,9 +659,9 @@ const alarmFunction = {
     days: [],
   },
   init: function () {
-    this.renderAlarm(this.ampm, ".alarm-ampm");
-    this.renderAlarm(this.hours, ".alarm-hour");
-    this.renderAlarm(this.minutes, ".alarm-minute");
+    this.renderAlarm(this.ampm, ".alarm-ampm", 0); // 오전
+    this.renderAlarm(this.hours, ".alarm-hour", 6); // 7시 시작
+    this.renderAlarm(this.minutes, ".alarm-minute", 0); // 00분
     this.timeSelect();
     this.daySelect();
     this.updateDayStatus();
@@ -661,14 +673,24 @@ const alarmFunction = {
       minute: 0,
       days: [],
     };
+
+    /* renderAlarm처럼 동일하게 7시로 초기화 */
+    const ampmList = document.querySelector(".alarm-ampm");
+    const hourList = document.querySelector(".alarm-hour");
+    const minuteList = document.querySelector(".alarm-minute");
+    const eachAlarmBlock = hourList.querySelector("li");
+
+    setTimeout(() => {
+      ampmList.scrollTop = 0;
+      hourList.scrollTop = 6 * eachAlarmBlock.offsetHeight;
+      minuteList.scrollTop = 0;
+    }, 0);
+
     /* 오전/오후, 시간 스크롤, 버튼 스타일 초기화 */
-    (document.querySelectorAll(".day-item").forEach((day) => {
+    document.querySelectorAll(".day-item").forEach((day) => {
       day.classList.remove("select");
-    }),
-      document.querySelectorAll(".alarm-item").forEach((time) => {
-        time.scrollTop = 0;
-      }),
-      document.querySelector(".alarm-set").classList.remove("active"));
+    });
+    document.querySelector(".alarm-set").classList.remove("active");
     this.updateDayStatus();
   },
   /* 버튼 활성화 여부 */
@@ -682,22 +704,30 @@ const alarmFunction = {
     }
     this.updateDayStatus();
   },
-  /* !== Object.entries로 배열의 key:value 가져오는 거랑 다름, 실제로 넘길 값 / 받을 곳 */
-  renderAlarm: function (alarmData, dataTarget) {
+  /* !== Object.entries로 배열의 key:value 가져오는 거랑 다름, 실제로 넘길 값 / 받을 곳 + index 추가 */
+  renderAlarm: function (alarmData, dataTarget, defaultIndex) {
     const alarmDataList = document.querySelector(dataTarget);
 
-    /* ! 여백을 만들어줘야 맨 상단을 가운데로 가져올 수 있음 */
+    /* 여백을 만들어줘야 맨 상단을 가운데로 가져올 수 있음 */
     const emptyTopBlock = document.createElement("li");
     alarmDataList.appendChild(emptyTopBlock);
 
-    alarmData.forEach((item) => {
+    /* 두 번째 인자 = 인덱스 */
+    alarmData.forEach((item, i) => {
       /* 각각 한 칸 씩의 알람 설정 속 블록 */
       const eachAlarmBlock = document.createElement("li");
       eachAlarmBlock.textContent = item;
+      if (i === defaultIndex) {
+        eachAlarmBlock.classList.add("active");
+        /* 7시로 스크롤 초기화, 인덱스 만큼 스크롤을 읽어서 내림 */
+        setTimeout(() => {
+          alarmDataList.scrollTop = i * eachAlarmBlock.offsetHeight;
+        }, 0);
+      }
       alarmDataList.appendChild(eachAlarmBlock);
     });
 
-    /* ! 이하 동일 */
+    /* 하단 여백 */
     const emptyBottomBlock = document.createElement("li");
     alarmDataList.appendChild(emptyBottomBlock);
   },
@@ -709,6 +739,15 @@ const alarmFunction = {
         const scrollIndex = Math.round(timeItem.scrollTop / 50);
         /* 만약 빈 li를 가리키면 통과(undefined가 뜸) */
         if (scrollIndex < 0) return;
+
+        /* 볼드/크기 하이라이트 */
+        /* 전체 특정 요소가 무엇이 올지 모르기 때문에 전체에서 active를 지우고 active에 붙이는 식으로 처리 */
+        timeItem
+          .querySelectorAll("li")
+          .forEach((li) => li.classList.remove("active"));
+        /* 앞뒤에 공백으로 li가 있으므로 +1을 해야 실제 데이터부터 시작 */
+        const activeLi = timeItem.querySelectorAll("li")[scrollIndex + 1];
+        if (activeLi) activeLi.classList.add("active");
 
         /* 순서대로 ampm, hour, minute */
         if (index === 0) this.alarmData.ampm = this.ampm[scrollIndex];
@@ -767,7 +806,7 @@ const alarmFunction = {
 
     /* 요일이 하나라도 있다면 라벨링 패턴 혹은 공백 포함 나열 출력, 그게 아니라면 빈 내용 */
     const dayText = days.length > 0 ? ` ${dayLabel}` : "";
-    
+
     dayStatus.textContent = `${ampm} ${hour}:${minuteText}${dayText}`;
   },
 };

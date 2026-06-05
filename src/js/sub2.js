@@ -12,6 +12,9 @@ const userDataReset = {
     });
     resetBtn.addEventListener("click", () => {
       localStorage.removeItem("tasks");
+      /* 플래그도 삭제 */
+      localStorage.removeItem("firstTaskAdded");
+      localStorage.removeItem("firstTaskDone");
       resetModal.classList.remove("open");
       dimmed.classList.remove("active");
     });

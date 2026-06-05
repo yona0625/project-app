@@ -1,4 +1,8 @@
 const dayMessage = {
+  isDefaultBubble: false,
+  currentTypeInterval: null,
+  animationTimer: null,
+  // 시간 별 대사
   messages: {
     morning: {
       headerTitle: "좋은 아침,",
@@ -21,16 +25,130 @@ const dayMessage = {
       bubble: ["따뜻한 밤이에요.", "밤이 깊었네요.", "오늘 하루도 고생했어요."],
     },
   },
+  conditions: [
+    {
+      check: function (tasks, doing, done) {
+        return tasks.length === 1 && doing === 1;
+      },
+      message: "오늘의 첫 할 일 추가군요!",
+      /* 스토리지에서 최초 추가되었을 때를 위한 플래그 키 */
+      flagKey: "firstTaskAdded",
+    },
+    {
+      check: function (tasks, doing, done) {
+        return done === 1;
+      },
+      message: "첫 할 일을 완료했어요!",
+      flagKey: "firstTaskDone",
+    },
+    {
+      check: function (tasks, doing, done) {
+        return done === 3;
+      },
+      message: "할 일을 3개째 완료했어요.",
+      animation: "jump",
+    },
+    {
+      check: function (tasks, doing, done) {
+        return tasks.length >= 5 && done === 0;
+      },
+      message: "할 일이 많네요, 하나씩 해봐요!",
+    },
+    {
+      check: function (tasks, doing, done) {
+        return doing === 0 && done > 0;
+      },
+      message: "할 일을 전부 마쳤어요! 축하해요! 🎉",
+      animation: "rainbow",
+    },
+    {
+      check: function (tasks, doing, done) {
+        return done > doing;
+      },
+      message: "실행력 만점! 대단해요!",
+    },
+  ],
   init: function () {
-    const timeMessage = this.getTime();
-    const currentMessage = this.messages[timeMessage];
+    const mascotFace = document.querySelector(".mascot-face");
+    const bubble = document.querySelector(".mascot-bubble p");
+    /* === 실시간 대사 반응(add/fix/delete/checkbox 대응) === */
+
+    document.addEventListener("tasksUpdated", (e) => {
+      const tasks = e.detail;
+      const doing = tasks.filter(function (t) {
+        return !t.done;
+      }).length;
+      const done = tasks.filter(function (t) {
+        return t.done;
+      }).length;
+
+      /* 캐릭터 표정 관련 */
+      if (this.animationTimer) {
+        clearTimeout(this.animationTimer);
+        this.animationTimer = null;
+      }
+      mascotFace.classList.remove("jump", "rainbow");
+
+      /* 상단 conditions와 match가 되는 경우 */
+      const conMatch = this.conditions.find(function (c) {
+        return c.check(tasks, doing, done);
+      });
+      // === 조건부 대사 출력 ===
+      if (conMatch) {
+        this.isDefaultBubble = false;
+        /* flagKey가 있는 경우 */
+        if (conMatch.flagKey) {
+          /* 스토리지와 비교 - 스토리지에 없는 경우 */
+          if (!localStorage.getItem(conMatch.flagKey)) {
+            /* 스토리지에 key를 심어주고, 출력 */
+            localStorage.setItem(conMatch.flagKey, "true");
+            this.typeEffect(bubble, conMatch.message);
+            this.playAnimation(mascotFace, conMatch.animation);
+          }
+          /* 스토리지에 있는 경우 */
+        } else {
+          /* 그냥 출력 */
+          this.typeEffect(bubble, conMatch.message);
+          this.playAnimation(mascotFace, conMatch.animation);
+        }
+      } else {
+        // === 조건부 대사가 아닐 땐 기본 대사 출력 ===
+        if (this.isDefaultBubble) return;
+        this.isDefaultBubble = true;
+        this.showRandomBubble(bubble);
+      }
+    });
 
     const headerTime = document.querySelector(".header-time");
     const headerUserName = document.querySelector(".header-user");
-    const bubble = document.querySelector(".mascot-bubble p");
-    // 헤더 메시지
-    headerTime.textContent = currentMessage.headerTitle;
-    headerUserName.textContent = " 00님";
+    // === 헤더 메시지 ===
+
+    const timeMessage = this.getTime();
+    const currentMessage = this.messages[timeMessage];
+
+    if (headerTime) headerTime.textContent = currentMessage.headerTitle;
+    if (headerUserName) headerUserName.textContent = " 00님";
+
+    this.showRandomBubble(bubble);
+  },
+  playAnimation: function (mascotFace, aniClass) {
+    if (!aniClass) return;
+    mascotFace.classList.add(aniClass);
+
+    if (this.animationTimer) {
+      mascotFace.removeEventListener("animationend", handler);
+    }
+
+    mascotFace.addEventListener("animationend", function handler(e) {
+      if (e.animationName === aniClass) {
+        mascotFace.classList.remove(aniClass);
+        mascotFace.removeEventListener("animationend", handler);
+      }
+    });
+  },
+  showRandomBubble: function (bubble) {
+    const timeMessage = this.getTime();
+    const currentMessage = this.messages[timeMessage];
 
     /* 몇 번째를 꺼낼 것인지? */
     const randomIndex = Math.floor(
@@ -38,9 +156,6 @@ const dayMessage = {
     );
     /* 실제로 꺼내기(캐릭터 대사) */
     const randomBubble = currentMessage.bubble[randomIndex];
-
-    // 캐릭터 메시지
-    // bubble.textContent = randomBubble;
     this.typeEffect(bubble, randomBubble);
   },
   /* 시간 산출 */
@@ -53,15 +168,17 @@ const dayMessage = {
   },
   /* 타이핑 효과 */
   typeEffect: function (element, text) {
+    /* 기존 타이핑 중단 */
+    clearInterval(this.currentTypeInterval);
     /* 초기화 */
     element.textContent = "";
     let typeIndex = 0;
-    const typeInterval = setInterval(function () {
+    this.currentTypeInterval = setInterval(() => {
       /* 0.5초마다 한글자씩 추가 */
       element.textContent += text[typeIndex];
       typeIndex++;
       if (typeIndex >= text.length) {
-        clearInterval(typeInterval);
+        clearInterval(this.currentTypeInterval);
       }
     }, 45);
   },
