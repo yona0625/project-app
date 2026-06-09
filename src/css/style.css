@@ -43,7 +43,7 @@ nav {
   width: 375px;
   height: 800px;
   margin: 50px auto;
-  border: 3px solid green;
+  border: 1px solid var(--main_text);
   background-color: var(--pure_white);
   position: relative;
   overflow-x: hidden;
@@ -304,7 +304,6 @@ header h1 {
   bottom: 60px;
   z-index: 10;
   border-radius: 30px 30px 0 0;
-  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
   padding: 30px 20px;
   transform: translateY(100%);
   transition: 0.5s;
@@ -515,7 +514,6 @@ input[id="task-name"]:focus {
   position: absolute;
   bottom: 60px;
   border-radius: 30px 30px 0 0;
-  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
   padding: 30px 20px;
   z-index: 20;
   /* display: none; */
@@ -581,12 +579,20 @@ input[id="task-name"]:focus {
   border-radius: 5px;
   cursor: pointer;
 }
-.color-list li:not(.reset-color) {
-  background-color: blue;
+.color-list li.checked {
+  background-image: url("/public/icons/icon-check.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px;
 }
+
 .reset-color {
   background-color: var(--pure_white);
   border: 1px solid var(--border_color);
+  background-image: url("/public/icons/icon-xmark.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px;
 }
 .mark-list {
   width: 100%;
@@ -618,6 +624,12 @@ input[id="task-name"]:focus {
   align-items: center;
   border: 1px solid var(--border_color);
   cursor: pointer;
+}
+.mark-section ul li.selected {
+  background-color: var(--sub_title);
+}
+.mark-section ul li.selected img {
+  filter: brightness(0) invert(1);
 }
 .mark-section ul li img {
   width: 20px;
@@ -657,7 +669,6 @@ input[id="task-name"]:focus {
   bottom: 60px;
   z-index: 20;
   border-radius: 30px 30px 0 0;
-  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
   transition: 0.5s;
   /* transform: translateY(0); */
   transform: translateY(100%);
