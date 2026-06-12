@@ -19,6 +19,7 @@ if (savedTheme) {
     themes[savedTheme].light,
   );
 }
+
 const todoChart = document.getElementById("todo-chart");
 const chartInner = document.querySelector(".chart-inner");
 const chartMainTitle = document.querySelector(".main-title");
@@ -65,6 +66,7 @@ const chartData = {
     chartWidth: "520px",
   },
 };
+
 /* === 주간/월간 별 최댓값 bar 색상 === */
 const updateMaxColors = (maxData) => {
   const maxValue = Math.max.apply(null, maxData);
@@ -188,8 +190,12 @@ updateChart(chartData.weekly, chartData.weeklyLabels, chartData.weeklyConfig);
 const chartBtns = document.querySelectorAll(".chart-btn li");
 chartBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
+    /* 탭 버튼 효과 */
     chartBtns.forEach((item) => item.classList.remove("active"));
     btn.classList.add("active");
+
+    /* 탭 + 대사 효과 */
+    const bubble = document.querySelector(".mascot-bubble p");
 
     if (btn.textContent === "주간") {
       updateChart(
@@ -197,12 +203,62 @@ chartBtns.forEach((btn) => {
         chartData.weeklyLabels,
         chartData.weeklyConfig,
       );
+      mascotMessage.showMessage("weekly");
     } else {
       updateChart(
         chartData.monthly,
         chartData.monthlyLabels,
         chartData.monthlyConfig,
       );
+      mascotMessage.showMessage("monthly");
     }
   });
 });
+
+/* === 타이핑 효과 === */
+const mascotMessage = {
+  currentTypeInterval: null,
+  messages: {
+    weekly: [
+      "완벽하지 않아도 괜찮아요!",
+      "쉴 땐 확실히 쉬는 것도 중요해요.",
+      "이번 주는 어땠나요? 항상 응원해요.",
+    ],
+    monthly: [
+      "돌아보면 많은 걸 해냈을 거예요.",
+      "꾸준히 보다는, 멈추지 않는 게 중요해요.",
+      "행복한 한 달이 되었길 바라요!",
+    ],
+  },
+  init: function () {
+    this.showMessage("weekly");
+  },
+  showMessage: function (type) {
+    const bubble = document.querySelector(".mascot-bubble p");
+    this.showRandomBubble(bubble, type);
+  },
+  typeEffect: function (element, text) {
+    clearInterval(this.currentTypeInterval);
+    element.textContent = "";
+    let typeIndex = 0;
+
+    this.currentTypeInterval = setInterval(() => {
+      element.textContent += text[typeIndex];
+      typeIndex++;
+      if (typeIndex >= text.length) {
+        clearInterval(this.currentTypeInterval);
+      }
+    }, 45);
+  },
+  /* 주간/월간 구별이 필요하므로 type 인자 */
+  showRandomBubble: function (bubble, type) {
+    const messageList = this.messages[type];
+
+    /* 몇 번째를 꺼낼 것인지? */
+    const randomIndex = Math.floor(Math.random() * messageList.length);
+    /* 실제로 꺼내기(캐릭터 대사) */
+    const randomBubble = messageList[randomIndex];
+    this.typeEffect(bubble, randomBubble);
+  },
+};
+mascotMessage.init();

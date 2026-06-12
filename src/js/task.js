@@ -3,14 +3,6 @@ import { alarmFunction } from "./alarm.js";
 import { customFunction } from "./custom.js";
 
 const taskFunction = {
-  //   newTask: {
-  //     title: "",
-  //     duration: "15",
-  //     icon: "default",
-  //     color: "#2d2d2d",
-  //     alarm: null,
-  //     done: false,
-  //   },
 
   /* 삭제 toast를 위한 변수 */
   deleteToastTimer: null,
@@ -77,9 +69,7 @@ const taskFunction = {
         newTask.duration = selectedTime;
         this.taskCheck();
 
-        // if (timeDisplay) {
-        //   timeDisplay.textContent = timeSet.textContent;
-        // }
+        timeDisplay.textContent = timeSet.textContent;
       });
     });
     /* 추가 버튼 */
@@ -172,15 +162,12 @@ const taskFunction = {
       .forEach((item) => item.remove());
     doneAllList.querySelectorAll(".todo-item").forEach((item) => item.remove());
 
-    /* 몇 번째를 선택했는지 알아야 하기에 index 추가 */
-    this.tasks.forEach((task, index) => {
+    this.tasks.forEach((task) => {
       const todoItem = document.createElement("div");
       todoItem.className = "todo-item";
-      /* data-index의 형태로 html에 index 부여 */
-      todoItem.dataset.index = index;
 
       const checkIcon = task.done ? "icon-aftercheck" : "icon-beforecheck";
-      // const alarmIcon = task.alarm ? "icon-alarm" : "";
+      const alarmIcon = task.alarm ? "icon-alarm" : "";
 
       todoItem.innerHTML = `
          <div class=
@@ -191,7 +178,11 @@ const taskFunction = {
          </div>
          <div class="todo-text">
             <h3 style="color: ${task.color}">${task.title}</h3>
-            <span>${convertTime(task.duration)}</span>
+           <div class="todo-title">
+             <span>${convertTime(task.duration)}</span>
+              ${task.alarm ? `<div class="icon icon-alarm" style="background-color: var(--main_color);"></div>` : ""}
+           </div>
+          </div>    
          </div>
          <div class="todo-mark icon" style="
             mask-image: url('/public/icons/${checkIcon}.svg');
@@ -349,23 +340,22 @@ const taskFunction = {
     customAddBtn.addEventListener("click", () => {
       customModal.classList.add("open");
     });
-    /* 닫기 - x버튼 */
+    /* 닫기 */
     customCloseBtn.addEventListener("click", (e) => {
       /* 이벤트 버블링 방지 */
       e.stopPropagation();
       customModal.classList.remove("open");
-      /* ★ 수정하기에서 초기화 되면 안 됨 */
-      if (this.mode !== "edit") {
-        customFunction.resetCustom();
-      }
+      /* ★ 수정하기든, 새로 추가한 일이든 마지막으로 설정한 newTask 값을 유지해야 함 */
+      customFunction.setCustom(newTask.color, newTask.icon);
     });
-    /* 닫기 - 설정 버튼 */
+    /* 설정(확정) */
     customSetBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (!customSetBtn.classList.contains("active")) return;
 
       newTask.color = customFunction.customTask.selectedColor;
       newTask.icon = customFunction.customTask.selectedIcon;
+
       customModal.classList.remove("open");
     });
 
@@ -432,8 +422,6 @@ const taskFunction = {
     const closeBtn = document.querySelector(".action-x-btn");
     const container = document.querySelector(".container");
 
-    let isPressed = true;
-
     actionSheet.classList.add("open");
     mainDimmed.classList.add("active");
 
@@ -464,6 +452,12 @@ const taskFunction = {
 
       /* add, custom 모달 수정 시 값 유지(초기화) */
       this.initTaskModal(editTask);
+
+      customFunction.customTask.selectedColor = editTask.color;
+      customFunction.customTask.selectedIcon = editTask.icon;
+
+      customFunction.setCustom(editTask.color, editTask.icon);
+
       /* 수정하기 모달로 내용 교체 */
       document.querySelector(".add-modal h2").textContent =
         "할 일을 수정하세요";

@@ -1,8 +1,10 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 :root {
   --main_text: #2d2d2d;
   --main_color: #4c8ce4;
@@ -11,6 +13,7 @@
   --sub_title: #777777;
   --border_color: #f0f0f0;
 }
+
 /* z-index 레이어 
   nav: 40
   task-add-btn: 9
@@ -22,23 +25,25 @@
   custom-modal: 20 
   action-sheet: 50
 */
-
 body,
 input::placeholder {
   font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   letter-spacing: 0.015em;
 }
+
 ul,
 li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 header,
 nav {
   /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
   flex-shrink: 0;
 }
+
 .container {
   width: 375px;
   height: 800px;
@@ -51,6 +56,7 @@ nav {
   display: flex;
   flex-direction: column;
 }
+
 .scroll-area,
 .add-modal,
 .custom-modal,
@@ -62,9 +68,11 @@ nav {
   /* padding-bottom: 60px; */
   /* flex: 1; */
 }
+
 .scroll-area {
   padding-bottom: 80px;
 }
+
 .scroll-area::-webkit-scrollbar,
 .add-modal::-webkit-scrollbar,
 .custom-modal::-webkit-scrollbar,
@@ -72,24 +80,29 @@ nav {
 .alarm-item::-webkit-scrollbar {
   display: none;
 }
+
 header,
 section {
   padding: 0 20px;
 }
+
 header {
   width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
 }
+
 header h1 {
   font-size: 24px;
   margin: 0;
   color: var(--main_text);
 }
+
 .header-user {
   color: var(--main_color);
 }
+
 /* == date == */
 .date {
   width: 100%;
@@ -98,6 +111,7 @@ header h1 {
   display: flex;
   align-items: center;
 }
+
 .date-area {
   width: 100%;
   height: 65px;
@@ -106,6 +120,7 @@ header h1 {
   gap: 10px;
   justify-content: space-between;
 }
+
 .date-area li {
   height: 100%;
   width: 40px;
@@ -116,25 +131,31 @@ header h1 {
   justify-content: center;
   gap: 5px;
 }
+
 .date-area li.active {
   background-color: var(--main_color);
 }
+
 .date-area li.active b,
 .date-area li.active span {
   color: var(--pure_white);
 }
+
 .date-area li b {
   font-size: 17px;
 }
+
 .date-area li span {
   font-size: 14px;
   color: #676767;
 }
+
 /* == mascot == */
 .mascot {
   display: flex;
   margin-top: 45px;
 }
+
 .mascot-face {
   width: 35px;
   height: 35px;
@@ -145,16 +166,15 @@ header h1 {
   /* animation: jump 1s ease-in-out infinite; */
   /* animation: rainbow 1s ease-in-out infinite; */
 }
+
 .mascot-face.rainbow {
-  animation:
-    floating 2s ease-in-out infinite,
-    rainbow 1s ease-in-out 3;
+  animation: floating 2s ease-in-out infinite, rainbow 1s ease-in-out 3;
 }
+
 .mascot-face.jump {
-  animation:
-    floating 2s ease-in-out infinite,
-    jump 1s ease-in-out 3;
+  animation: floating 2s ease-in-out infinite, jump 1s ease-in-out 3;
 }
+
 .mascot-bubble {
   position: relative;
   padding: 10px 20px;
@@ -165,6 +185,7 @@ header h1 {
   display: flex;
   align-items: center;
 }
+
 .mascot-bubble::after {
   content: "";
   position: absolute;
@@ -175,12 +196,14 @@ header h1 {
   border-bottom: 6px solid transparent;
   border-right: 20px solid var(--main_color);
 }
+
 .mascot-bubble p {
   margin: 0;
   font-size: 13px;
   color: var(--pure_white);
   font-weight: normal;
 }
+
 .expression {
   width: 9px;
   height: 11px;
@@ -190,6 +213,7 @@ header h1 {
   transform: translateY(-50%);
   display: flex;
 }
+
 .left-eye,
 .right-eye {
   position: absolute;
@@ -199,12 +223,15 @@ header h1 {
   background: var(--main_text);
   animation: blink 4s ease-in-out infinite;
 }
+
 .left-eye {
   left: 0;
 }
+
 .right-eye {
   right: 0;
 }
+
 .mouth {
   width: 6px;
   height: 4px;
@@ -215,6 +242,7 @@ header h1 {
   transform: translateX(-50%);
   border-radius: 4px 4px 20px 20px;
 }
+
 /* == task == */
 .task-add-btn {
   width: 45px;
@@ -228,6 +256,7 @@ header h1 {
   bottom: 80px;
   right: 15px;
 }
+
 .task-add-btn::before,
 .task-add-btn::after {
   position: absolute;
@@ -237,14 +266,17 @@ header h1 {
   top: 50%;
   left: 50%;
 }
+
 .task-add-btn::before {
   width: 12px;
   height: 2px;
 }
+
 .task-add-btn::after {
   width: 2px;
   height: 12px;
 }
+
 .main-dimmed,
 .sub-dimmed {
   position: absolute;
@@ -256,13 +288,16 @@ header h1 {
   z-index: 5;
   display: none;
 }
+
 .main-dimmed.active,
 .sub-dimmed.active {
   display: block;
 }
+
 .sub-dimmed {
   z-index: 15;
 }
+
 .toast {
   position: absolute;
   background-color: var(--sub_title);
@@ -279,23 +314,28 @@ header h1 {
   pointer-events: none;
   text-align: center;
 }
+
 .toast span {
   color: var(--pure_white);
   font-size: 14px;
 }
+
 .toast-cancel {
   margin-top: 7px;
   font-size: 15px;
   color: var(--pure_white);
   font-weight: bold;
 }
+
 .toast.show .toast-cancel {
   pointer-events: auto;
 }
+
 .toast.show {
   opacity: 1;
   visibility: none;
 }
+
 .add-modal {
   height: 450px;
   width: 100%;
@@ -309,23 +349,29 @@ header h1 {
   transition: 0.5s;
   /* display: none; */
 }
+
 .add-modal.open {
   transform: translateY(0);
 }
+
 /* 모달: 추가 */
 .add-modal {
   overflow-y: auto;
 }
+
 .add-modal > div {
   margin-top: 25px;
 }
+
 .add-modal h2 {
   font-size: 22px;
 }
+
 .add-modal h3 {
   font-size: 15px;
   color: var(--sub_title);
 }
+
 .task-x-btn {
   position: absolute;
   right: 20px;
@@ -335,7 +381,8 @@ header h1 {
   background: url(/public/images/close-btn-image.png) no-repeat center center;
   cursor: pointer;
 }
-input[id="task-name"] {
+
+input[id=task-name] {
   width: 100%;
   margin-top: 25px;
   height: 50px;
@@ -344,26 +391,32 @@ input[id="task-name"] {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   padding: 0 15px;
 }
-input[id="task-name"]::placeholder {
+
+input[id=task-name]::placeholder {
   font-size: 14px;
   font-weight: normal;
 }
-input[id="task-name"]:focus {
+
+input[id=task-name]:focus {
   outline: none;
 }
+
 .task-time {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
+
 .task-time span {
   font-size: 21px;
   font-weight: bold;
 }
+
 .time-list {
   display: flex;
   gap: 10px;
 }
+
 .time-list li {
   font-size: 13px;
   padding: 6px 15px;
@@ -372,16 +425,19 @@ input[id="task-name"]:focus {
   color: var(--sub_title);
   cursor: pointer;
 }
+
 .time-list li.active {
   background-color: var(--main_color);
   color: var(--pure_white);
   font-weight: bold;
 }
+
 .custom-btn {
   display: flex;
   margin-top: 15px;
   cursor: pointer;
 }
+
 .custom-icon {
   padding: 10px 15px;
   border: 1px solid var(--border_color);
@@ -391,12 +447,14 @@ input[id="task-name"]:focus {
   align-items: center;
   justify-content: center;
 }
+
 .icon-result {
   mask-image: url("/public/icons/icon-doing.svg");
   -webkit-mask-image: url("/public/icons/icon-doing.svg");
   background-color: var(--main_color);
   padding: 10px;
 }
+
 .title-result {
   padding: 10px 15px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
@@ -408,21 +466,25 @@ input[id="task-name"]:focus {
   justify-content: space-between;
   border: 1px solid var(--border_color);
 }
+
 .title-result b {
   font-weight: normal;
   font-size: 14px;
 }
+
 .title-result span {
   width: 24px;
   height: 24px;
   border-radius: 5px;
   background-color: red;
 }
+
 .alarm-text-area {
   display: flex;
   align-items: center;
   margin-top: 15px;
 }
+
 .alarm-status {
   width: 100%;
   min-height: 45px;
@@ -437,19 +499,23 @@ input[id="task-name"]:focus {
   flex-direction: column;
   gap: 7px;
 }
+
 .alarm-status b {
   font-size: 14px;
   font-weight: normal;
 }
+
 .alarm-result {
   display: none;
   font-size: 13px;
   color: var(--sub_title);
 }
+
 .alarm-result.active {
   display: block;
   /* max-height: 50px; */
 }
+
 .alarm-btn {
   width: 50px;
   height: 25px;
@@ -461,6 +527,7 @@ input[id="task-name"]:focus {
   align-items: center;
   cursor: pointer;
 }
+
 .alarm-btn li {
   width: 20px;
   height: 20px;
@@ -469,14 +536,17 @@ input[id="task-name"]:focus {
   position: absolute;
   left: 4px;
 }
+
 .alarm-btn.set {
   background-color: var(--main_color);
 }
+
 .alarm-btn.set li {
   /* left를 기준으로 안 삼을거라면, 기존 left를 해제해줘야만 함. */
   left: unset;
   right: 4px;
 }
+
 .task-set {
   width: 100%;
   height: 45px;
@@ -488,21 +558,26 @@ input[id="task-name"]:focus {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border_color);
 }
+
 .task-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
   cursor: pointer;
 }
+
 .task-set.active h2 {
   color: var(--pure_white);
 }
+
 .task-modal .task-set {
   margin-top: 40px;
 }
+
 .task-set h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
+
 /* 모달: 커스텀 */
 .custom-modal {
   width: 100%;
@@ -518,9 +593,11 @@ input[id="task-name"]:focus {
   z-index: 20;
   /* display: none; */
 }
+
 .custom-modal.open {
   transform: translateY(0);
 }
+
 .custom-x-btn {
   position: absolute;
   width: 24px;
@@ -530,16 +607,19 @@ input[id="task-name"]:focus {
   top: 30px;
   cursor: pointer;
 }
+
 .custom-preview {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-top: 25px;
 }
+
 .custom-preview > h3 {
   font-size: 16px;
   color: var(--sub_title);
 }
+
 .preview-item {
   border-radius: 20px;
   width: 100%;
@@ -550,35 +630,43 @@ input[id="task-name"]:focus {
   display: flex;
   align-items: center;
 }
+
 .icon-preview {
   width: 24px;
   height: 24px;
   background-color: var(--main_text);
 }
+
 .preview-text {
   color: var(--main_text);
   margin-left: 15px;
 }
+
 .preview-text h3 {
   font-size: 15px;
 }
+
 .preview-text span {
   font-size: 13px;
 }
+
 .custom-color {
   margin-top: 25px;
 }
+
 .color-list {
   display: flex;
   flex-direction: row;
   gap: 10px;
 }
+
 .color-list li {
   width: 24px;
   height: 24px;
   border-radius: 5px;
   cursor: pointer;
 }
+
 .color-list li.checked {
   background-image: url("/public/icons/icon-check.svg");
   background-repeat: no-repeat;
@@ -594,6 +682,7 @@ input[id="task-name"]:focus {
   background-position: center;
   background-size: 10px;
 }
+
 .mark-list {
   width: 100%;
   height: 320px;
@@ -605,15 +694,18 @@ input[id="task-name"]:focus {
   flex-direction: column;
   padding: 15px;
 }
+
 .mark-section h3 {
   font-size: 14px;
   color: var(--sub_title);
 }
+
 .mark-section ul {
   display: flex;
   gap: 7px;
   margin-top: 10px;
 }
+
 .mark-section ul li {
   width: 30px;
   height: 30px;
@@ -625,16 +717,20 @@ input[id="task-name"]:focus {
   border: 1px solid var(--border_color);
   cursor: pointer;
 }
+
 .mark-section ul li.selected {
   background-color: var(--sub_title);
 }
+
 .mark-section ul li.selected img {
   filter: brightness(0) invert(1);
 }
+
 .mark-section ul li img {
   width: 20px;
   height: 20px;
 }
+
 .custom-set {
   width: 100%;
   height: 45px;
@@ -646,21 +742,26 @@ input[id="task-name"]:focus {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border_color);
 }
+
 .custom-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
   cursor: pointer;
 }
+
 .custom-set.active h2 {
   color: var(--pure_white);
 }
+
 .custom-modal .custom-set {
   margin-top: 40px;
 }
+
 .custom-set h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
+
 .alarm-modal {
   height: 400px;
   width: 100%;
@@ -675,9 +776,11 @@ input[id="task-name"]:focus {
   /* display: none; */
   /* 테스트 완료시 100 설정 */
 }
+
 .alarm-modal.open {
   transform: translateY(0);
 }
+
 .alarm-x-btn {
   position: absolute;
   width: 24px;
@@ -686,6 +789,7 @@ input[id="task-name"]:focus {
   right: 20px;
   top: 20px;
 }
+
 .alarm-time {
   width: 100%;
   height: 215px;
@@ -694,6 +798,7 @@ input[id="task-name"]:focus {
   align-items: flex-end;
   padding: 0;
 }
+
 .time-wrapper {
   width: 100%;
   height: 150px;
@@ -703,6 +808,7 @@ input[id="task-name"]:focus {
   position: relative;
   overflow: hidden;
 }
+
 .time-highlight {
   width: 100%;
   height: 50px;
@@ -713,19 +819,25 @@ input[id="task-name"]:focus {
   transform: translateY(-50%);
   pointer-events: none;
 }
+
 .time-colon,
 .alarm-item li {
   position: relative;
   z-index: 2;
+  color: var(--sub_title);
 }
+
 .alarm-item li.active {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
+  color: var(--main_text);
 }
+
 .time-colon {
   display: inline-flex;
   align-items: center;
 }
+
 .alarm-item {
   width: 60px;
   height: 100%;
@@ -734,6 +846,7 @@ input[id="task-name"]:focus {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .alarm-item li {
   width: 100%;
   height: 50px;
@@ -742,6 +855,7 @@ input[id="task-name"]:focus {
   align-items: center;
   scroll-snap-align: center;
 }
+
 .day-wrapper {
   background-color: var(--pure_white);
   padding: 25px 20px;
@@ -749,24 +863,29 @@ input[id="task-name"]:focus {
   border-radius: 20px 20px 0 0;
   border: 1px solid var(--border_color);
 }
+
 .alarm-day {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+
 .alarm-day h3 {
   font-size: 15px;
   color: var(--sub_title);
 }
+
 .alarm-day span {
   font-size: 14px;
   color: var(--main_color);
 }
+
 .day-list {
   margin-top: 15px;
   display: flex;
   justify-content: space-between;
 }
+
 .day-item {
   width: 35px;
   height: 35px;
@@ -778,18 +897,21 @@ input[id="task-name"]:focus {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .day-item.select {
   background-color: var(--main_color);
   border: 1px solid transparent;
   color: var(--pure_white);
   font-weight: bold;
 }
+
 .alarm-set-group {
   display: flex;
   align-items: center;
   margin-top: 35px;
   justify-content: space-between;
 }
+
 .alarm-set {
   width: 70%;
   height: 45px;
@@ -801,18 +923,22 @@ input[id="task-name"]:focus {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border_color);
 }
+
 .alarm-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
   cursor: pointer;
 }
+
 .alarm-set.active h2 {
   color: var(--pure_white);
 }
+
 .alarm-set h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
+
 .alarm-reset {
   width: 28%;
   height: 45px;
@@ -825,34 +951,42 @@ input[id="task-name"]:focus {
   border: 1px solid var(--border_color);
   cursor: pointer;
 }
+
 .alarm-reset h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
+
 /* == todo == */
 .todo {
   margin-top: 40px;
 }
+
 .todo-status {
   display: flex;
   gap: 7px;
 }
+
 .todo-status li {
   padding: 7px 12px;
   font-size: 12px;
   border-radius: 20px;
 }
+
 .todo-status li span {
   margin-left: 5px;
 }
+
 .todo-doing {
   background-color: var(--main_color);
   color: var(--pure_white);
 }
+
 .todo-done {
   background-color: var(--sub_color);
   color: var(--main_text);
 }
+
 .todo-list {
   /* border: 1px solid red; */
   margin-top: 25px;
@@ -864,19 +998,24 @@ input[id="task-name"]:focus {
   flex-direction: column;
   gap: 20px;
 }
+
 .todo-wrapper h2 {
   margin: 0;
   font-size: 16px;
 }
+
 .list-done {
   margin-top: 25px;
 }
+
 .list-done .todo-item {
   background-color: var(--sub_color);
 }
+
 .list-done .todo-item h3 {
   text-decoration: line-through;
 }
+
 .todo-item {
   border-radius: 20px;
   width: 100%;
@@ -887,27 +1026,47 @@ input[id="task-name"]:focus {
   align-items: center;
   padding: 0 20px;
 }
+
+.todo-title .icon-alarm {
+  mask-image: url("/public/icons/icon-alarm.svg");
+  -webkit-mask-image: url("/public/icons/icon-alarm.svg");
+  width: 10px;
+  height: 10px;
+}
+
 .icon-doing {
   mask-image: url("/public/icons/icon-doing.svg");
   -webkit-mask-image: url("/public/icons/icon-doing.svg");
   background-color: var(--main_text);
 }
+
+.todo-title {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-top: 3px;
+}
+
 .todo-text {
   color: var(--main_text);
-  margin-left: 15px;
+  margin-left: 16px;
 }
+
 .todo-text h3 {
   font-size: 15px;
 }
+
 .todo-text span {
   font-size: 13px;
 }
+
 .todo-mark {
   width: 24px;
   height: 24px;
   margin-left: auto;
   cursor: pointer;
 }
+
 /* action sheet */
 .action-sheet {
   width: 100%;
@@ -921,13 +1080,14 @@ input[id="task-name"]:focus {
   border-radius: 20px 20px 0 0;
   box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
   background-color: var(--pure_white);
-
   transform: translateY(100%);
   transition: 0.5s;
 }
+
 .action-sheet.open {
   transform: translateY(0);
 }
+
 .action-x-btn {
   width: 24px;
   height: 24px;
@@ -936,10 +1096,12 @@ input[id="task-name"]:focus {
   right: 20px;
   cursor: pointer;
 }
+
 .action-set {
   /* border: 1px solid red; */
   margin-top: 35px;
 }
+
 .action-edit,
 .action-delete {
   width: 100%;
@@ -950,15 +1112,15 @@ input[id="task-name"]:focus {
   gap: 7px;
   cursor: pointer;
 }
+
 .action-edit span,
 .action-delete span {
   font-size: 18px;
   font-weight: bold;
 }
+
 .action-edit {
   border-bottom: 1px solid var(--border_color);
-}
-.action-delete {
 }
 
 /* == nav == */
@@ -973,11 +1135,13 @@ nav {
   z-index: 40;
   padding: 0 40px;
 }
+
 .nav-area {
   width: 100%;
   height: 100%;
   /* background-color: red; */
 }
+
 .menu-item {
   display: flex;
   justify-content: space-between;
@@ -985,10 +1149,12 @@ nav {
   width: 100%;
   height: 100%;
 }
+
 .menu-item li {
   width: 30px;
   height: 30px;
 }
+
 .menu-item li a {
   display: flex;
   align-items: center;
@@ -996,6 +1162,7 @@ nav {
   width: 100%;
   height: 100%;
 }
+
 .icon-home,
 .icon-chart,
 .icon-setting {
@@ -1003,22 +1170,27 @@ nav {
   width: 100%;
   height: 100%;
 }
+
 /* 이중 선택자로 기존 icon과 충돌 방지 */
 .menu-item li.active .icon {
   background-color: var(--main_color);
 }
+
 .icon-home {
   mask-image: url("/public/icons/nav-home.svg");
   -webkit-mask-image: url("/public/icons/nav-home.svg");
 }
+
 .icon-chart {
   mask-image: url("/public/icons/nav-chart.svg");
   -webkit-mask-image: url("/public/icons/nav-chart.svg");
 }
+
 .icon-setting {
   mask-image: url("/public/icons/nav-setting.svg");
   -webkit-mask-image: url("/public/icons/nav-setting.svg");
 }
+
 /* == icon test == */
 .icon {
   display: inline-flex;
@@ -1031,6 +1203,7 @@ nav {
   mask-repeat: no-repeat;
   mask-position: center;
 }
+
 /* === keyframe test === */
 @keyframes floating {
   0% {
@@ -1044,9 +1217,7 @@ nav {
   }
 }
 @keyframes blink {
-  0%,
-  90%,
-  100% {
+  0%, 90%, 100% {
     transform: scaleY(1); /* 평소에는 원래 크기 */
   }
   95% {
@@ -1084,3 +1255,5 @@ nav {
     background-color: #f9f871;
   }
 }
+
+/*# sourceMappingURL=style.css.map */

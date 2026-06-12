@@ -35,7 +35,7 @@ const customFunction = {
   /* 버튼 활성화 여부 */
   customCheck: function () {
     const customSetBtn = document.querySelector(".custom-set");
-    if (this.customTask.selectedIcon && this.customTask.selectedColor) {
+    if (this.customTask.selectedIcon || this.customTask.selectedColor) {
       customSetBtn.classList.add("active");
     } else {
       customSetBtn.classList.remove("active");
@@ -47,6 +47,9 @@ const customFunction = {
       /* li 만들어서 colors 안에 있는 색상표들 각 적용 */
       const colorPreset = document.createElement("li");
       colorPreset.style.backgroundColor = customColor;
+
+      /* data-color로 담아두기 */
+      colorPreset.dataset.color = customColor;
 
       colorPreset.addEventListener("click", () => {
         /* 체크 박스. 선언 시점 중요 */
@@ -80,6 +83,9 @@ const customFunction = {
 
       iconList.forEach((iconName) => {
         const iconBox = document.createElement("li");
+        /* 미리 저장해 둠 -> li + data-icon 형식으로 저장 */
+        iconBox.dataset.icon = iconName;
+
         iconBox.innerHTML = `<img src="/public/icons/icon-${iconName}.svg" alt="${iconName}" />`;
 
         iconBox.addEventListener("click", () => {
@@ -112,34 +118,61 @@ const customFunction = {
       });
     });
   },
+  /* 리셋 */
   resetCustom: function () {
+    this.setCustom(null, null);
+  },
+  /* 커스텀 공통 설정 */
+  setCustom: function (color, icon) {
+    /* 정해진 값이 있다면 가변 값, 아니라면 기본 값 */
+    const applyColor = color || "#2d2d2d";
+    let applyIcon;
+    /* 기본 값이거나 초기화 시에는 기본 (doing) 아이콘 */
+    if (icon === "default" || icon === null) {
+      applyIcon = "doing";
+    } else {
+      applyIcon = icon;
+    }
+    /* maskURI는 applyIcon을 따라감 */
+    const maskURI = `url('/public/icons/icon-${applyIcon}.svg')`;
+
     /* 체크박스, 아이콘 선택 시각 효과 초기화 */
     const allColorPreset = document.querySelectorAll(".color-list li");
     const allIconBox = document.querySelectorAll(".mark-section ul li");
 
-    allColorPreset.forEach((li) => li.classList.remove("checked"));
-    allIconBox.forEach((li) => li.classList.remove("selected"));
+    allColorPreset.forEach((li) => {
+      li.classList.remove("checked");
+      /* 수정하기 값 대응 */
+      if (li.dataset.color === applyColor) {
+        li.classList.add("checked");
+      }
+    });
+    allIconBox.forEach((li) => {
+      li.classList.remove("selected");
+      if (li.dataset.icon === applyIcon) {
+        li.classList.add("selected");
+      }
+    });
 
-    /* 데이터 초기화 */
-    this.customTask.selectedColor = null;
-    this.customTask.selectedIcon = null;
+    /* 실제 데이터 적용(DOM 이전) */
+    this.customTask.selectedColor = color;
+    this.customTask.selectedIcon = icon;
 
-    /* 초기화 - DOM 반영 */
+    /* 데이터 적용(DOM 이후) */
     /* custom-modal : 흑백에 기본 아이콘 유지 */
     const iconPreview = document.querySelector(".icon-preview");
-    const maskURI = "url('/public/icons/icon-doing.svg')";
     const previewTitle = document.querySelector(".preview-text h3");
 
-    iconPreview.style.backgroundColor = "#2d2d2d";
-    previewTitle.style.color = "#2d2d2d";
+    iconPreview.style.backgroundColor = applyColor;
+    previewTitle.style.color = applyColor;
     iconPreview.style.maskImage = maskURI;
     iconPreview.style.webkitMaskImage = maskURI;
 
     /* add-modal */
     const iconResult = document.querySelector(".icon-result");
     const titleResult = document.querySelector(".title-result span");
-    iconResult.style.backgroundColor = "#2d2d2d";
-    titleResult.style.backgroundColor = "#2d2d2d";
+    iconResult.style.backgroundColor = applyColor;
+    titleResult.style.backgroundColor = applyColor;
     iconResult.style.maskImage = maskURI;
     iconResult.style.webkitMaskImage = maskURI;
   },
