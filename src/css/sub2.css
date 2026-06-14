@@ -1,8 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@charset "UTF-8";
 :root {
   --main_text: #2d2d2d;
   --main_color: #4c8ce4;
@@ -10,60 +6,18 @@
   --pure_white: #ffffff;
   --sub_title: #777777;
   --border_color: #f0f0f0;
-
   --pink_theme: #f0857a;
   --green_theme: #5bbf7a;
   --orange_theme: #ffc81e;
   --gray_theme: #a5abbd;
   --purple_theme: #8b7ec8;
 }
-body,
-input::placeholder {
-  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  letter-spacing: 0.015em;
-}
-ul,
-li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-header,
-nav {
-  /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
-  flex-shrink: 0;
-}
-.container {
-  width: 375px;
-  height: 800px;
-  margin: 50px auto;
-  border: 3px solid green;
-  background-color: var(--pure_white);
-  position: relative;
-  overflow-x: hidden;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-header,
-section {
-  padding: 0 20px;
-}
-header {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-}
-header h1 {
-  font-size: 24px;
-  margin: 0;
-  color: var(--main_text);
-}
+
 header span {
   color: var(--main_color);
 }
-/* == section == */
+
+/* -- section -- */
 section:not(:last-child) {
   margin-top: 20px;
 }
@@ -74,7 +28,8 @@ section h2 {
 section > ul {
   margin-top: 15px;
 }
-/* account */
+
+/* === account start === */
 .account-area {
   border: 1px solid var(--border_color);
   border-radius: 10px;
@@ -93,10 +48,13 @@ section > ul {
 .account-area li:last-child {
   border-bottom: 1px solid transparent;
 }
+
 .data-reset {
   color: red;
 }
-/* app */
+
+/* === account end === */
+/* === app start === */
 .app-area {
   border: 1px solid var(--border_color);
   border-radius: 10px;
@@ -115,7 +73,9 @@ section > ul {
 .app-area li:last-child {
   border-bottom: 1px solid transparent;
 }
-/* other */
+
+/* === app end === */
+/* === other start === */
 .other-area {
   border: 1px solid var(--border_color);
   border-radius: 10px;
@@ -134,7 +94,9 @@ section > ul {
 .other-area li:last-child {
   border-bottom: 1px solid transparent;
 }
-/* == modal == */
+
+/* === other end === */
+/* -- modal -- */
 .data-reset-modal {
   width: 320px;
   position: absolute;
@@ -147,7 +109,7 @@ section > ul {
   top: 50%;
   left: 50%;
   gap: 7px;
-  padding: 20px 30px;
+  padding: 30px 20px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   display: none;
   z-index: 10;
@@ -163,6 +125,7 @@ section > ul {
   font-size: 14px;
   color: var(--sub_title);
 }
+
 .reset-btn-group {
   margin-top: 12px;
   display: flex;
@@ -174,15 +137,18 @@ section > ul {
   cursor: pointer;
   border-radius: 5px;
 }
+
 .reset-btn {
   background-color: red;
   color: var(--pure_white);
 }
+
 .cancel-btn {
   background-color: var(--sub_color);
   border: 1px solid var(--sub_color);
 }
-/* == setting-screen == */
+
+/* -- setting-screen -- */
 /* dimmed */
 .modal-dimmed {
   position: absolute;
@@ -197,7 +163,8 @@ section > ul {
 .modal-dimmed.active {
   display: block;
 }
-/* theme */
+
+/* === theme start === */
 .color-theme {
   position: absolute;
   top: 0;
@@ -211,6 +178,7 @@ section > ul {
 .color-theme.open {
   display: block;
 }
+
 .theme-close-btn {
   width: 24px;
   height: 24px;
@@ -220,21 +188,12 @@ section > ul {
   background: url(/public/images/close-btn-image.png) no-repeat center center;
   cursor: pointer;
 }
+
 .color-list {
   display: flex;
   margin-top: 30px;
   gap: 12px;
   flex-wrap: wrap;
-}
-.item {
-  width: 150px;
-  height: 130px;
-  border: 1px solid var(--border_color);
-  border-radius: 20px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  cursor: pointer;
 }
 .color-text {
   width: 100%;
@@ -247,6 +206,18 @@ section > ul {
   align-items: center;
   font-size: 15px;
 }
+
+.item {
+  width: 150px;
+  height: 130px;
+  border: 1px solid var(--border_color);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
 .check-mark {
   width: 24px;
   height: 24px;
@@ -256,9 +227,11 @@ section > ul {
   background: url("/public/icons/icon-themecheck.svg") no-repeat center center;
   display: none;
 }
+
 .item.selected .check-mark {
   display: block;
 }
+
 /* 변수 컬러 영향에서 제외하기 위해 고정값 지정 */
 .basic {
   background-color: #4c8ce4;
@@ -266,36 +239,42 @@ section > ul {
 .basic .color-text {
   color: #4c8ce4;
 }
+
 .green {
   background-color: var(--green_theme);
 }
 .green .color-text {
   color: var(--green_theme);
 }
+
 .pink {
   background-color: var(--pink_theme);
 }
 .pink .color-text {
   color: var(--pink_theme);
 }
+
 .orange {
   background-color: var(--orange_theme);
 }
 .orange .color-text {
   color: var(--orange_theme);
 }
+
 .purple {
   background-color: var(--purple_theme);
 }
 .purple .color-text {
   color: var(--purple_theme);
 }
+
 .gray {
   background-color: var(--gray_theme);
 }
 .gray .color-text {
   color: var(--gray_theme);
 }
+
 .theme-set {
   width: 100%;
   height: 45px;
@@ -313,7 +292,9 @@ section > ul {
   color: var(--pure_white);
   font-size: 16px;
 }
-/* language */
+
+/* === theme end === */
+/* === language start === */
 .lang-setting {
   position: absolute;
   top: 50%;
@@ -351,30 +332,6 @@ section > ul {
   display: flex;
   align-items: center;
 }
-input[name="lang"] {
-  display: none;
-}
-input[name="lang"] + label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 15px;
-}
-/* 선택 전 */
-input[name="lang"] + label::before {
-  content: "";
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 1px solid var(--sub_title);
-  margin-right: 10px;
-  flex-shrink: 0;
-}
-/* 선택 후 */
-input[name="lang"]:checked + label::before {
-  background-color: var(--main_color);
-  border-color: var(--main_color);
-}
 .lang-set {
   width: 100%;
   height: 45px;
@@ -394,72 +351,34 @@ input[name="lang"]:checked + label::before {
   color: var(--pure_white);
   font-size: 16px;
 }
-/* == nav == */
-nav {
-  width: 100%;
-  height: 60px;
-  border-radius: 20px 20px 0 0;
-  background-color: var(--pure_white);
-  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
-  position: absolute;
-  bottom: 0;
-  z-index: 40;
-  padding: 0 40px;
+
+input[name=lang] {
+  display: none;
 }
-.nav-area {
-  width: 100%;
-  height: 100%;
-}
-.menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-.menu-item li {
-  width: 30px;
-  height: 30px;
-}
-.menu-item li a {
+input[name=lang] + label {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  cursor: pointer;
+  font-size: 15px;
+  /* 선택 전 */
 }
-.icon-home,
-.icon-chart,
-.icon-setting {
-  background-color: var(--main_text);
-  width: 100%;
-  height: 100%;
+input[name=lang] + label::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--sub_title);
+  margin-right: 10px;
+  flex-shrink: 0;
 }
-/* 이중 선택자로 기존 icon과 충돌 방지 */
-.menu-item li.active .icon {
+input[name=lang] {
+  /* 선택 후 */
+}
+input[name=lang]:checked + label::before {
   background-color: var(--main_color);
+  border-color: var(--main_color);
 }
-.icon-home {
-  mask-image: url("/public/icons/nav-home.svg");
-  -webkit-mask-image: url("/public/icons/nav-home.svg");
-}
-.icon-chart {
-  mask-image: url("/public/icons/nav-chart.svg");
-  -webkit-mask-image: url("/public/icons/nav-chart.svg");
-}
-.icon-setting {
-  mask-image: url("/public/icons/nav-setting.svg");
-  -webkit-mask-image: url("/public/icons/nav-setting.svg");
-}
-/* == icon test == */
-.icon {
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-}
+
+/* === language end === */
+
+/*# sourceMappingURL=sub2.css.map */

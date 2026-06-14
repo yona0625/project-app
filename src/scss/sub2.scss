@@ -1,0 +1,373 @@
+:root {
+  --main_text: #2d2d2d;
+  --main_color: #4c8ce4;
+  --sub_color: #f1f3f5;
+  --pure_white: #ffffff;
+  --sub_title: #777777;
+  --border_color: #f0f0f0;
+
+  --pink_theme: #f0857a;
+  --green_theme: #5bbf7a;
+  --orange_theme: #ffc81e;
+  --gray_theme: #a5abbd;
+  --purple_theme: #8b7ec8;
+}
+header span {
+  color: var(--main_color);
+}
+/* -- section -- */
+section {
+  &:not(:last-child) {
+    margin-top: 20px;
+  }
+  h2 {
+    font-size: 16px;
+    color: var(--main_text);
+  }
+  & > ul {
+    margin-top: 15px;
+  }
+}
+/* === account start === */
+.account {
+  &-area {
+    border: 1px solid var(--border_color);
+    border-radius: 10px;
+    li {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border_color);
+      cursor: pointer;
+      &:last-child {
+        border-bottom: 1px solid transparent;
+      }
+    }
+  }
+}
+.data-reset {
+  color: red;
+}
+/* === account end === */
+
+/* === app start === */
+.app {
+  &-area {
+    border: 1px solid var(--border_color);
+    border-radius: 10px;
+    li {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border_color);
+      cursor: pointer;
+      &:last-child {
+        border-bottom: 1px solid transparent;
+      }
+    }
+  }
+}
+/* === app end === */
+
+/* === other start === */
+.other {
+  &-area {
+    border: 1px solid var(--border_color);
+    border-radius: 10px;
+    li {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border_color);
+      cursor: pointer;
+      &:last-child {
+        border-bottom: 1px solid transparent;
+      }
+    }
+  }
+}
+/* === other end === */
+
+/* -- modal -- */
+.data-reset-modal {
+  width: 320px;
+  position: absolute;
+  background-color: var(--pure_white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  gap: 7px;
+  padding: 30px 20px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  display: none;
+  z-index: 10;
+  &.open {
+    display: flex;
+  }
+  p {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  span {
+    font-size: 14px;
+    color: var(--sub_title);
+  }
+}
+.reset-btn-group {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  li {
+    padding: 7px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+}
+.reset-btn {
+  background-color: red;
+  color: var(--pure_white);
+}
+.cancel-btn {
+  background-color: var(--sub_color);
+  border: 1px solid var(--sub_color);
+}
+
+/* -- setting-screen -- */
+/* dimmed */
+.modal-dimmed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 5;
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+/* === theme start === */
+.color-theme {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: var(--pure_white);
+  display: none;
+  &.open {
+    display: block;
+  }
+}
+.theme-close-btn {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 30px;
+  top: 23px;
+  background: url(/public/images/close-btn-image.png) no-repeat center center;
+  cursor: pointer;
+}
+.color {
+  &-list {
+    display: flex;
+    margin-top: 30px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  &-text {
+    width: 100%;
+    height: 35px;
+    position: absolute;
+    bottom: 0;
+    background-color: var(--pure_white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+  }
+}
+.item {
+  width: 150px;
+  height: 130px;
+  border: 1px solid var(--border_color);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+.check-mark {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: url("/public/icons/icon-themecheck.svg") no-repeat center center;
+  display: none;
+}
+.item.selected .check-mark {
+  display: block;
+}
+/* 변수 컬러 영향에서 제외하기 위해 고정값 지정 */
+.basic {
+  background-color: #4c8ce4;
+  .color-text {
+    color: #4c8ce4;
+  }
+}
+.green {
+  background-color: var(--green_theme);
+  .color-text {
+    color: var(--green_theme);
+  }
+}
+.pink {
+  background-color: var(--pink_theme);
+  .color-text {
+    color: var(--pink_theme);
+  }
+}
+.orange {
+  background-color: var(--orange_theme);
+  .color-text {
+    color: var(--orange_theme);
+  }
+}
+.purple {
+  background-color: var(--purple_theme);
+  .color-text {
+    color: var(--purple_theme);
+  }
+}
+.gray {
+  background-color: var(--gray_theme);
+  .color-text {
+    color: var(--gray_theme);
+  }
+}
+.theme-set {
+  width: 100%;
+  height: 45px;
+  margin-top: 50px;
+  border: 1px solid var(--border_color);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main_color);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  h2 {
+    color: var(--pure_white);
+    font-size: 16px;
+  }
+}
+/* === theme end === */
+
+/* === language start === */
+.lang {
+  &-setting {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: var(--pure_white);
+    z-index: 10;
+    display: none;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    h2 {
+      font-size: 22px;
+    }
+    &.open {
+      display: block;
+    }
+  }
+  &-close-btn {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: url(/public/images/close-btn-image.png) no-repeat center center;
+    cursor: pointer;
+  }
+  &-list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    li {
+      display: flex;
+      align-items: center;
+    }
+  }
+  &-set {
+    width: 100%;
+    height: 45px;
+    margin-top: 30px;
+    border: 1px solid var(--border_color);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main_color);
+    color: var(--pure_white);
+    font-weight: bold;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    h2 {
+      color: var(--pure_white);
+      font-size: 16px;
+    }
+  }
+}
+
+input[name="lang"] {
+  display: none;
+  & + label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 15px;
+    /* 선택 전 */
+    &::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid var(--sub_title);
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* 선택 후 */
+  &:checked + label::before {
+    background-color: var(--main_color);
+    border-color: var(--main_color);
+  }
+}
+/* === language end === */

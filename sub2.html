@@ -10,8 +10,8 @@
       crossorigin
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
     />
-    <link rel="stylesheet" href="src/css/sub2.css" />
     <link rel="stylesheet" href="src/css/common.css" />
+    <link rel="stylesheet" href="src/css/sub2.css" />
 
     <script type="module" src="src/js/sub2.js" defer></script>
   </head>
@@ -50,7 +50,7 @@
       <!-- === setting-screen === -->
       <div class="color-theme">
         <h2>테마 설정</h2>
-        <div class="theme-close-btn"></div>
+        <button class="theme-close-btn" aria-label="테마 설정 닫기"></button>
         <ul class="color-list">
           <li class="item basic">
             <span class="color-text">blue (기본)</span>
@@ -81,9 +81,14 @@
           <h2>설정하기</h2>
         </div>
       </div>
-      <div class="lang-setting">
-        <h2>언어 설정</h2>
-        <div class="lang-close-btn"></div>
+      <div
+        class="lang-setting"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="lang-message"
+      >
+        <h2 id="lang-message">언어 설정</h2>
+        <button class="lang-close-btn" aria-label="언어 설정 닫기"></button>
         <ul class="lang-list">
           <li>
             <input type="radio" name="lang" id="system" value="system" />
@@ -115,8 +120,13 @@
         </div>
       </div>
       <!-- === modal === -->
-      <div class="data-reset-modal">
-        <p>정말 삭제하시겠습니까?</p>
+      <div
+        class="data-reset-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reset-message"
+      >
+        <p id="reset-message">정말 삭제하시겠습니까?</p>
         <span>삭제한 데이터는 복구할 수 없습니다.</span>
         <ul class="reset-btn-group">
           <li class="reset-btn">삭제</li>
@@ -137,7 +147,7 @@
                 <div class="icon icon-chart"></div>
               </a>
             </li>
-            <li class="active">
+            <li class="active" aria-current="page">
               <a href="sub2.html">
                 <div class="icon icon-setting"></div>
               </a>

@@ -1,10 +1,4 @@
 @charset "UTF-8";
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   --main_text: #2d2d2d;
   --main_color: #4c8ce4;
@@ -25,39 +19,6 @@
   custom-modal: 20 
   action-sheet: 50
 */
-body,
-input::placeholder {
-  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  letter-spacing: 0.015em;
-}
-
-ul,
-li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-header,
-nav {
-  /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
-  flex-shrink: 0;
-}
-
-.container {
-  width: 375px;
-  height: 800px;
-  margin: 50px auto;
-  border: 1px solid var(--main_text);
-  background-color: var(--pure_white);
-  position: relative;
-  overflow-x: hidden;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.scroll-area,
 .add-modal,
 .custom-modal,
 .alarm-modal {
@@ -69,11 +30,6 @@ nav {
   /* flex: 1; */
 }
 
-.scroll-area {
-  padding-bottom: 80px;
-}
-
-.scroll-area::-webkit-scrollbar,
 .add-modal::-webkit-scrollbar,
 .custom-modal::-webkit-scrollbar,
 .alarm-modal::-webkit-scrollbar,
@@ -81,29 +37,65 @@ nav {
   display: none;
 }
 
-header,
-section {
-  padding: 0 20px;
-}
-
-header {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-}
-
-header h1 {
-  font-size: 24px;
-  margin: 0;
-  color: var(--main_text);
-}
-
 .header-user {
   color: var(--main_color);
 }
 
-/* == date == */
+/* -- common -- */
+.main-dimmed,
+.sub-dimmed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 5;
+  display: none;
+}
+.main-dimmed.active,
+.sub-dimmed.active {
+  display: block;
+}
+
+.sub-dimmed {
+  z-index: 15;
+}
+
+.toast {
+  position: absolute;
+  background-color: var(--sub_title);
+  bottom: 140px;
+  border-radius: 20px;
+  padding: 10px 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  opacity: 0;
+  visibility: visible;
+  transition: 0.3s;
+  pointer-events: none;
+  text-align: center;
+}
+.toast span {
+  color: var(--pure_white);
+  font-size: 14px;
+}
+.toast-cancel {
+  margin-top: 7px;
+  font-size: 15px;
+  color: var(--pure_white);
+  font-weight: bold;
+}
+.toast.show .toast-cancel {
+  pointer-events: auto;
+}
+.toast.show {
+  opacity: 1;
+  visibility: none;
+}
+
+/* -- date -- */
 .date {
   width: 100%;
   height: 85px;
@@ -111,16 +103,13 @@ header h1 {
   display: flex;
   align-items: center;
 }
-
 .date-area {
   width: 100%;
   height: 65px;
-  /* background-color: red; */
   display: flex;
   gap: 10px;
   justify-content: space-between;
 }
-
 .date-area li {
   height: 100%;
   width: 40px;
@@ -131,31 +120,26 @@ header h1 {
   justify-content: center;
   gap: 5px;
 }
-
+.date-area li b {
+  font-size: 17px;
+}
+.date-area li span {
+  font-size: 14px;
+  color: #676767;
+}
 .date-area li.active {
   background-color: var(--main_color);
 }
-
 .date-area li.active b,
 .date-area li.active span {
   color: var(--pure_white);
 }
 
-.date-area li b {
-  font-size: 17px;
-}
-
-.date-area li span {
-  font-size: 14px;
-  color: #676767;
-}
-
-/* == mascot == */
+/* === mascot start === */
 .mascot {
   display: flex;
   margin-top: 45px;
 }
-
 .mascot-face {
   width: 35px;
   height: 35px;
@@ -163,18 +147,13 @@ header h1 {
   border-radius: 100%;
   position: relative;
   animation: floating 2s ease-in-out infinite;
-  /* animation: jump 1s ease-in-out infinite; */
-  /* animation: rainbow 1s ease-in-out infinite; */
 }
-
 .mascot-face.rainbow {
   animation: floating 2s ease-in-out infinite, rainbow 1s ease-in-out 3;
 }
-
 .mascot-face.jump {
   animation: floating 2s ease-in-out infinite, jump 1s ease-in-out 3;
 }
-
 .mascot-bubble {
   position: relative;
   padding: 10px 20px;
@@ -185,7 +164,6 @@ header h1 {
   display: flex;
   align-items: center;
 }
-
 .mascot-bubble::after {
   content: "";
   position: absolute;
@@ -196,7 +174,6 @@ header h1 {
   border-bottom: 6px solid transparent;
   border-right: 20px solid var(--main_color);
 }
-
 .mascot-bubble p {
   margin: 0;
   font-size: 13px;
@@ -243,7 +220,8 @@ header h1 {
   border-radius: 4px 4px 20px 20px;
 }
 
-/* == task == */
+/* === mascot end === */
+/* === task & add-modal start === */
 .task-add-btn {
   width: 45px;
   height: 45px;
@@ -256,9 +234,7 @@ header h1 {
   bottom: 80px;
   right: 15px;
 }
-
-.task-add-btn::before,
-.task-add-btn::after {
+.task-add-btn::before, .task-add-btn::after {
   position: absolute;
   content: "";
   background-color: #fff;
@@ -266,74 +242,55 @@ header h1 {
   top: 50%;
   left: 50%;
 }
-
 .task-add-btn::before {
   width: 12px;
   height: 2px;
 }
-
 .task-add-btn::after {
   width: 2px;
   height: 12px;
 }
-
-.main-dimmed,
-.sub-dimmed {
-  position: absolute;
-  top: 0;
-  left: 0;
+.task-set {
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.25);
-  z-index: 5;
-  display: none;
-}
-
-.main-dimmed.active,
-.sub-dimmed.active {
-  display: block;
-}
-
-.sub-dimmed {
-  z-index: 15;
-}
-
-.toast {
-  position: absolute;
-  background-color: var(--sub_title);
-  bottom: 140px;
+  height: 45px;
   border-radius: 20px;
-  padding: 10px 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  opacity: 0;
-  visibility: visible;
-  transition: 0.3s;
-  /* 투명할 때 클릭 이벤트를 방지 하지 않으면, 다른 모달 클릭 이벤트를 방해함. */
-  pointer-events: none;
-  text-align: center;
+  background-color: var(--sub_color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border_color);
+  margin-top: 30px;
 }
-
-.toast span {
-  color: var(--pure_white);
-  font-size: 14px;
+.task-set.active {
+  background-color: var(--main_color);
+  border: 1px solid transparent;
+  cursor: pointer;
 }
-
-.toast-cancel {
-  margin-top: 7px;
-  font-size: 15px;
+.task-set.active h2 {
   color: var(--pure_white);
+}
+.task-set h2 {
+  font-size: 16px;
+  color: var(--sub_title);
+}
+.task-x-btn {
+  position: absolute;
+  right: 25px;
+  top: 30px;
+  width: 24px;
+  height: 24px;
+  background: url(/public/images/close-btn-image.png) no-repeat center center;
+  cursor: pointer;
+}
+.task-time {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.task-time span {
+  font-size: 21px;
   font-weight: bold;
-}
-
-.toast.show .toast-cancel {
-  pointer-events: auto;
-}
-
-.toast.show {
-  opacity: 1;
-  visibility: none;
 }
 
 .add-modal {
@@ -347,39 +304,20 @@ header h1 {
   padding: 30px 20px;
   transform: translateY(100%);
   transition: 0.5s;
-  /* display: none; */
+  overflow-y: auto;
 }
-
 .add-modal.open {
   transform: translateY(0);
 }
-
-/* 모달: 추가 */
-.add-modal {
-  overflow-y: auto;
-}
-
 .add-modal > div {
   margin-top: 25px;
 }
-
-.add-modal h2 {
+.add-modal > h2 {
   font-size: 22px;
 }
-
 .add-modal h3 {
   font-size: 15px;
   color: var(--sub_title);
-}
-
-.task-x-btn {
-  position: absolute;
-  right: 20px;
-  top: 5px;
-  width: 24px;
-  height: 24px;
-  background: url(/public/images/close-btn-image.png) no-repeat center center;
-  cursor: pointer;
 }
 
 input[id=task-name] {
@@ -391,32 +329,18 @@ input[id=task-name] {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   padding: 0 15px;
 }
-
 input[id=task-name]::placeholder {
   font-size: 14px;
   font-weight: normal;
 }
-
 input[id=task-name]:focus {
   outline: none;
-}
-
-.task-time {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.task-time span {
-  font-size: 21px;
-  font-weight: bold;
 }
 
 .time-list {
   display: flex;
   gap: 10px;
 }
-
 .time-list li {
   font-size: 13px;
   padding: 6px 15px;
@@ -425,27 +349,10 @@ input[id=task-name]:focus {
   color: var(--sub_title);
   cursor: pointer;
 }
-
 .time-list li.active {
   background-color: var(--main_color);
   color: var(--pure_white);
   font-weight: bold;
-}
-
-.custom-btn {
-  display: flex;
-  margin-top: 15px;
-  cursor: pointer;
-}
-
-.custom-icon {
-  padding: 10px 15px;
-  border: 1px solid var(--border_color);
-  border-radius: 20px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .icon-result {
@@ -466,12 +373,10 @@ input[id=task-name]:focus {
   justify-content: space-between;
   border: 1px solid var(--border_color);
 }
-
 .title-result b {
   font-weight: normal;
   font-size: 14px;
 }
-
 .title-result span {
   width: 24px;
   height: 24px;
@@ -479,110 +384,11 @@ input[id=task-name]:focus {
   background-color: red;
 }
 
-.alarm-text-area {
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.alarm-status {
-  width: 100%;
-  min-height: 45px;
-  border: 1px solid var(--border_color);
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  border-radius: 20px;
-  position: relative;
-  padding: 15px 20px;
-  background-color: var(--pure_white);
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.alarm-status b {
-  font-size: 14px;
-  font-weight: normal;
-}
-
-.alarm-result {
-  display: none;
-  font-size: 13px;
-  color: var(--sub_title);
-}
-
-.alarm-result.active {
-  display: block;
-  /* max-height: 50px; */
-}
-
-.alarm-btn {
-  width: 50px;
-  height: 25px;
-  right: 30px;
-  border-radius: 20px;
-  background-color: var(--sub_title);
-  position: absolute;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.alarm-btn li {
-  width: 20px;
-  height: 20px;
-  background-color: var(--pure_white);
-  border-radius: 50%;
-  position: absolute;
-  left: 4px;
-}
-
-.alarm-btn.set {
-  background-color: var(--main_color);
-}
-
-.alarm-btn.set li {
-  /* left를 기준으로 안 삼을거라면, 기존 left를 해제해줘야만 함. */
-  left: unset;
-  right: 4px;
-}
-
-.task-set {
-  width: 100%;
-  height: 45px;
-  border-radius: 20px;
-  background-color: var(--sub_color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  border: 1px solid var(--border_color);
-}
-
-.task-set.active {
-  background-color: var(--main_color);
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.task-set.active h2 {
-  color: var(--pure_white);
-}
-
-.task-modal .task-set {
-  margin-top: 40px;
-}
-
-.task-set h2 {
-  font-size: 16px;
-  color: var(--sub_title);
-}
-
-/* 모달: 커스텀 */
+/* === task & add-modal end === */
+/* === custom modal start === */
 .custom-modal {
   width: 100%;
   height: 550px;
-  border-radius: 20px 20px 0 0;
   background-color: var(--pure_white);
   transform: translateY(100%);
   transition: 0.5s;
@@ -591,13 +397,15 @@ input[id=task-name]:focus {
   border-radius: 30px 30px 0 0;
   padding: 30px 20px;
   z-index: 20;
-  /* display: none; */
 }
-
 .custom-modal.open {
   transform: translateY(0);
 }
-
+.custom-btn {
+  display: flex;
+  margin-top: 15px;
+  cursor: pointer;
+}
 .custom-x-btn {
   position: absolute;
   width: 24px;
@@ -607,15 +415,49 @@ input[id=task-name]:focus {
   top: 30px;
   cursor: pointer;
 }
-
 .custom-preview {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-top: 25px;
 }
-
 .custom-preview > h3 {
+  font-size: 16px;
+  color: var(--sub_title);
+}
+.custom-color {
+  margin-top: 25px;
+}
+.custom-icon {
+  padding: 10px 15px;
+  border: 1px solid var(--border_color);
+  border-radius: 20px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-set {
+  width: 100%;
+  height: 45px;
+  border-radius: 20px;
+  background-color: var(--sub_color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border_color);
+}
+.custom-set.active {
+  background-color: var(--main_color);
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.custom-set.active h2 {
+  color: var(--pure_white);
+}
+.custom-set h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
@@ -630,6 +472,16 @@ input[id=task-name]:focus {
   display: flex;
   align-items: center;
 }
+.preview-text {
+  color: var(--main_text);
+  margin-left: 15px;
+}
+.preview-text h3 {
+  font-size: 15px;
+}
+.preview-text span {
+  font-size: 13px;
+}
 
 .icon-preview {
   width: 24px;
@@ -637,41 +489,27 @@ input[id=task-name]:focus {
   background-color: var(--main_text);
 }
 
-.preview-text {
-  color: var(--main_text);
-  margin-left: 15px;
-}
-
-.preview-text h3 {
-  font-size: 15px;
-}
-
-.preview-text span {
-  font-size: 13px;
-}
-
-.custom-color {
-  margin-top: 25px;
-}
-
 .color-list {
   display: flex;
   flex-direction: row;
   gap: 10px;
 }
-
 .color-list li {
   width: 24px;
   height: 24px;
   border-radius: 5px;
   cursor: pointer;
 }
-
 .color-list li.checked {
   background-image: url("/public/icons/icon-check.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 14px;
+}
+.color-list li.reset-color.checked {
+  border: 2px solid var(--sub_title);
+  background-image: url("/public/icons/icon-xmark.svg");
+  background-size: 10px;
 }
 
 .reset-color {
@@ -694,18 +532,15 @@ input[id=task-name]:focus {
   flex-direction: column;
   padding: 15px;
 }
-
 .mark-section h3 {
   font-size: 14px;
   color: var(--sub_title);
 }
-
 .mark-section ul {
   display: flex;
   gap: 7px;
   margin-top: 10px;
 }
-
 .mark-section ul li {
   width: 30px;
   height: 30px;
@@ -717,51 +552,19 @@ input[id=task-name]:focus {
   border: 1px solid var(--border_color);
   cursor: pointer;
 }
-
 .mark-section ul li.selected {
   background-color: var(--sub_title);
 }
-
 .mark-section ul li.selected img {
   filter: brightness(0) invert(1);
 }
-
 .mark-section ul li img {
   width: 20px;
   height: 20px;
 }
 
-.custom-set {
-  width: 100%;
-  height: 45px;
-  border-radius: 20px;
-  background-color: var(--sub_color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  border: 1px solid var(--border_color);
-}
-
-.custom-set.active {
-  background-color: var(--main_color);
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.custom-set.active h2 {
-  color: var(--pure_white);
-}
-
-.custom-modal .custom-set {
-  margin-top: 40px;
-}
-
-.custom-set h2 {
-  font-size: 16px;
-  color: var(--sub_title);
-}
-
+/* === custom modal end === */
+/* === alarm modal start === */
 .alarm-modal {
   height: 400px;
   width: 100%;
@@ -771,16 +574,68 @@ input[id=task-name]:focus {
   z-index: 20;
   border-radius: 30px 30px 0 0;
   transition: 0.5s;
-  /* transform: translateY(0); */
   transform: translateY(100%);
-  /* display: none; */
-  /* 테스트 완료시 100 설정 */
 }
-
 .alarm-modal.open {
   transform: translateY(0);
 }
-
+.alarm-text-area {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+.alarm-status {
+  width: 100%;
+  min-height: 45px;
+  border: 1px solid var(--border_color);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  position: relative;
+  padding: 15px 20px;
+  background-color: var(--pure_white);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+}
+.alarm-status b {
+  font-size: 14px;
+  font-weight: normal;
+}
+.alarm-result {
+  display: none;
+  font-size: 13px;
+  color: var(--sub_title);
+}
+.alarm-result.active {
+  display: block;
+}
+.alarm-btn {
+  width: 50px;
+  height: 25px;
+  right: 30px;
+  border-radius: 20px;
+  background-color: var(--sub_title);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.alarm-btn-toggle {
+  width: 20px;
+  height: 20px;
+  background-color: var(--pure_white);
+  border-radius: 50%;
+  position: absolute;
+  left: 4px;
+}
+.alarm-btn.set {
+  background-color: var(--main_color);
+}
+.alarm-btn.set .alarm-btn-toggle {
+  left: unset;
+  right: 4px;
+}
 .alarm-x-btn {
   position: absolute;
   width: 24px;
@@ -789,7 +644,6 @@ input[id=task-name]:focus {
   right: 20px;
   top: 20px;
 }
-
 .alarm-time {
   width: 100%;
   height: 215px;
@@ -798,46 +652,6 @@ input[id=task-name]:focus {
   align-items: flex-end;
   padding: 0;
 }
-
-.time-wrapper {
-  width: 100%;
-  height: 150px;
-  display: flex;
-  gap: 40px;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.time-highlight {
-  width: 100%;
-  height: 50px;
-  position: absolute;
-  background-color: var(--sub_color);
-  z-index: 1;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.time-colon,
-.alarm-item li {
-  position: relative;
-  z-index: 2;
-  color: var(--sub_title);
-}
-
-.alarm-item li.active {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--main_text);
-}
-
-.time-colon {
-  display: inline-flex;
-  align-items: center;
-}
-
 .alarm-item {
   width: 60px;
   height: 100%;
@@ -846,7 +660,6 @@ input[id=task-name]:focus {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .alarm-item li {
   width: 100%;
   height: 50px;
@@ -855,63 +668,24 @@ input[id=task-name]:focus {
   align-items: center;
   scroll-snap-align: center;
 }
-
-.day-wrapper {
-  background-color: var(--pure_white);
-  padding: 25px 20px;
-  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 20px 20px 0 0;
-  border: 1px solid var(--border_color);
+.alarm-item li.active {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--main_text);
 }
-
 .alarm-day {
   display: flex;
   gap: 10px;
   align-items: center;
 }
-
 .alarm-day h3 {
   font-size: 15px;
   color: var(--sub_title);
 }
-
 .alarm-day span {
   font-size: 14px;
   color: var(--main_color);
 }
-
-.day-list {
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.day-item {
-  width: 35px;
-  height: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--border_color);
-  background-color: var(--pure_white);
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.day-item.select {
-  background-color: var(--main_color);
-  border: 1px solid transparent;
-  color: var(--pure_white);
-  font-weight: bold;
-}
-
-.alarm-set-group {
-  display: flex;
-  align-items: center;
-  margin-top: 35px;
-  justify-content: space-between;
-}
-
 .alarm-set {
   width: 70%;
   height: 45px;
@@ -923,22 +697,24 @@ input[id=task-name]:focus {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border_color);
 }
-
 .alarm-set.active {
   background-color: var(--main_color);
   border: 1px solid transparent;
   cursor: pointer;
 }
-
 .alarm-set.active h2 {
   color: var(--pure_white);
 }
-
 .alarm-set h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
-
+.alarm-set-group {
+  display: flex;
+  align-items: center;
+  margin-top: 35px;
+  justify-content: space-between;
+}
 .alarm-reset {
   width: 28%;
   height: 45px;
@@ -951,71 +727,110 @@ input[id=task-name]:focus {
   border: 1px solid var(--border_color);
   cursor: pointer;
 }
-
 .alarm-reset h2 {
   font-size: 16px;
   color: var(--sub_title);
 }
 
-/* == todo == */
+.time-wrapper {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.time-highlight {
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  background-color: var(--sub_color);
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.time-colon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.time-colon,
+.alarm-item li {
+  position: relative;
+  z-index: 2;
+  color: var(--sub_title);
+}
+
+.day-wrapper {
+  background-color: var(--pure_white);
+  padding: 25px 20px;
+  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 20px 20px 0 0;
+  border: 1px solid var(--border_color);
+}
+.day-list {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.day-item {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border_color);
+  background-color: var(--pure_white);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.day-item.select {
+  background-color: var(--main_color);
+  border: 1px solid transparent;
+  color: var(--pure_white);
+  font-weight: bold;
+}
+
+/* === alarm modal end === */
+/* === todo start === */
 .todo {
   margin-top: 40px;
 }
-
 .todo-status {
   display: flex;
   gap: 7px;
 }
-
 .todo-status li {
   padding: 7px 12px;
   font-size: 12px;
   border-radius: 20px;
 }
-
 .todo-status li span {
   margin-left: 5px;
 }
-
 .todo-doing {
   background-color: var(--main_color);
   color: var(--pure_white);
 }
-
 .todo-done {
   background-color: var(--sub_color);
   color: var(--main_text);
 }
-
 .todo-list {
-  /* border: 1px solid red; */
   margin-top: 25px;
 }
-
 .todo-wrapper {
   margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .todo-wrapper h2 {
   margin: 0;
   font-size: 16px;
 }
-
-.list-done {
-  margin-top: 25px;
-}
-
-.list-done .todo-item {
-  background-color: var(--sub_color);
-}
-
-.list-done .todo-item h3 {
-  text-decoration: line-through;
-}
-
 .todo-item {
   border-radius: 20px;
   width: 100%;
@@ -1026,12 +841,43 @@ input[id=task-name]:focus {
   align-items: center;
   padding: 0 20px;
 }
-
+.todo-title {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-top: 3px;
+}
 .todo-title .icon-alarm {
   mask-image: url("/public/icons/icon-alarm.svg");
   -webkit-mask-image: url("/public/icons/icon-alarm.svg");
   width: 10px;
   height: 10px;
+}
+.todo-text {
+  color: var(--main_text);
+  margin-left: 16px;
+}
+.todo-text h3 {
+  font-size: 15px;
+}
+.todo-text span {
+  font-size: 13px;
+}
+.todo-mark {
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.list-done {
+  margin-top: 25px;
+}
+.list-done .todo-item {
+  background-color: var(--sub_color);
+}
+.list-done .todo-item h3 {
+  text-decoration: line-through;
 }
 
 .icon-doing {
@@ -1040,34 +886,8 @@ input[id=task-name]:focus {
   background-color: var(--main_text);
 }
 
-.todo-title {
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  margin-top: 3px;
-}
-
-.todo-text {
-  color: var(--main_text);
-  margin-left: 16px;
-}
-
-.todo-text h3 {
-  font-size: 15px;
-}
-
-.todo-text span {
-  font-size: 13px;
-}
-
-.todo-mark {
-  width: 24px;
-  height: 24px;
-  margin-left: auto;
-  cursor: pointer;
-}
-
-/* action sheet */
+/* === todo end === */
+/* === action sheet start === */
 .action-sheet {
   width: 100%;
   height: 180px;
@@ -1083,11 +903,9 @@ input[id=task-name]:focus {
   transform: translateY(100%);
   transition: 0.5s;
 }
-
 .action-sheet.open {
   transform: translateY(0);
 }
-
 .action-x-btn {
   width: 24px;
   height: 24px;
@@ -1096,14 +914,10 @@ input[id=task-name]:focus {
   right: 20px;
   cursor: pointer;
 }
-
 .action-set {
-  /* border: 1px solid red; */
   margin-top: 35px;
 }
-
-.action-edit,
-.action-delete {
+.action-edit, .action-delete {
   width: 100%;
   height: 50px;
   border-radius: 5px;
@@ -1112,99 +926,16 @@ input[id=task-name]:focus {
   gap: 7px;
   cursor: pointer;
 }
-
-.action-edit span,
-.action-delete span {
+.action-edit span, .action-delete span {
   font-size: 18px;
   font-weight: bold;
 }
-
 .action-edit {
   border-bottom: 1px solid var(--border_color);
 }
 
-/* == nav == */
-nav {
-  width: 100%;
-  height: 60px;
-  border-radius: 20px 20px 0 0;
-  background-color: var(--pure_white);
-  box-shadow: 0 -10px 10px 0 rgba(0, 0, 0, 0.05);
-  position: absolute;
-  bottom: 0;
-  z-index: 40;
-  padding: 0 40px;
-}
-
-.nav-area {
-  width: 100%;
-  height: 100%;
-  /* background-color: red; */
-}
-
-.menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.menu-item li {
-  width: 30px;
-  height: 30px;
-}
-
-.menu-item li a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.icon-home,
-.icon-chart,
-.icon-setting {
-  background-color: var(--main_text);
-  width: 100%;
-  height: 100%;
-}
-
-/* 이중 선택자로 기존 icon과 충돌 방지 */
-.menu-item li.active .icon {
-  background-color: var(--main_color);
-}
-
-.icon-home {
-  mask-image: url("/public/icons/nav-home.svg");
-  -webkit-mask-image: url("/public/icons/nav-home.svg");
-}
-
-.icon-chart {
-  mask-image: url("/public/icons/nav-chart.svg");
-  -webkit-mask-image: url("/public/icons/nav-chart.svg");
-}
-
-.icon-setting {
-  mask-image: url("/public/icons/nav-setting.svg");
-  -webkit-mask-image: url("/public/icons/nav-setting.svg");
-}
-
-/* == icon test == */
-.icon {
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-}
-
-/* === keyframe test === */
+/* === action sheet end === */
+/* === keyframe === */
 @keyframes floating {
   0% {
     transform: translateY(0);

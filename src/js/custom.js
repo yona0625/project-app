@@ -124,6 +124,8 @@ const customFunction = {
   },
   /* 커스텀 공통 설정 */
   setCustom: function (color, icon) {
+    const resetColor = document.querySelector(".reset-color");
+    
     /* 정해진 값이 있다면 가변 값, 아니라면 기본 값 */
     const applyColor = color || "#2d2d2d";
     let applyIcon;
@@ -147,6 +149,9 @@ const customFunction = {
         li.classList.add("checked");
       }
     });
+    if (color === null) {
+      resetColor.classList.add("checked");
+    }
     allIconBox.forEach((li) => {
       li.classList.remove("selected");
       if (li.dataset.icon === applyIcon) {

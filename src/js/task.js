@@ -3,7 +3,6 @@ import { alarmFunction } from "./alarm.js";
 import { customFunction } from "./custom.js";
 
 const taskFunction = {
-
   /* 삭제 toast를 위한 변수 */
   deleteToastTimer: null,
   deleteToastTask: null,
@@ -62,8 +61,12 @@ const taskFunction = {
     /* 시간 */
     timePreset.forEach((timeSet) => {
       timeSet.addEventListener("click", () => {
-        timePreset.forEach((item) => item.classList.remove("active"));
+        timePreset.forEach((item) => {
+          item.classList.remove("active");
+          item.setAttribute("aria-checked", "false");
+        });
         timeSet.classList.add("active");
+        timeSet.setAttribute("aria-checked", "true");
 
         const selectedTime = timeSet.dataset.time;
         newTask.duration = selectedTime;
@@ -125,6 +128,7 @@ const taskFunction = {
     document.querySelector(".add-modal h2").textContent = "할 일을 추가하세요";
     document.querySelector(".alarm-result").classList.remove("active");
     document.querySelector(".task-set").classList.remove("active");
+    document.querySelector(".task-set h2").textContent = "추가하기";
     document
       .querySelectorAll(".time-list li")
       .forEach((li) => li.classList.remove("active"));
@@ -274,14 +278,21 @@ const taskFunction = {
     const scrollArea = document.querySelector(".scroll-area");
     const container = document.querySelector(".container");
     const mainDimmed = document.querySelector(".main-dimmed");
+    const nav = document.querySelector("nav");
 
     /* dimmed */
     mainDimmed.addEventListener("click", () => {
       /* 항상 클릭 시점에 modal을 찾아야 하므로 안에 선언 */
       const openModal = document.querySelector(".modal-area .open");
       const openSheet = document.querySelector(".action-sheet.open");
-      if (openModal) openModal.classList.remove("open");
-      if (openSheet) openSheet.classList.remove("open");
+      if (openModal) {
+        openModal.classList.remove("open");
+        openModal.inert = true;
+      }
+      if (openSheet) {
+        openSheet.classList.remove("open");
+        openModal.inert = true;
+      }
       mainDimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
     });
@@ -294,13 +305,22 @@ const taskFunction = {
     const openAddModal = () => {
       this.resetTask();
       taskModal.classList.add("open");
+      taskModal.inert = false;
       mainDimmed.classList.add("active");
       scrollArea.style.overflow = "hidden";
+
+      /* 모달이 열린 동안 tab 시에 외부 영역에 접근 못 하도록(=focus가 안 가도록) 잠금 */
+      scrollArea.inert = true;
+      nav.inert = true;
     };
     const closeAddModal = () => {
       taskModal.classList.remove("open");
+      taskModal.inert = true;
       mainDimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
+
+      scrollArea.inert = false;
+      nav.inert = false;
     };
     /* fixTask, addTask에서 쓰기 위해 외부로 노출 */
     this.closeAddModal = closeAddModal;
@@ -339,12 +359,14 @@ const taskFunction = {
     /* 열기 */
     customAddBtn.addEventListener("click", () => {
       customModal.classList.add("open");
+      customModal.inert = false;
     });
     /* 닫기 */
     customCloseBtn.addEventListener("click", (e) => {
       /* 이벤트 버블링 방지 */
       e.stopPropagation();
       customModal.classList.remove("open");
+      customModal.inert = true;
       /* ★ 수정하기든, 새로 추가한 일이든 마지막으로 설정한 newTask 값을 유지해야 함 */
       customFunction.setCustom(newTask.color, newTask.icon);
     });
@@ -357,6 +379,7 @@ const taskFunction = {
       newTask.icon = customFunction.customTask.selectedIcon;
 
       customModal.classList.remove("open");
+      customModal.inert = true;
     });
 
     /* === alarm-modal === */
@@ -371,12 +394,14 @@ const taskFunction = {
     /* 열기 */
     alarmAddBtn.addEventListener("click", () => {
       alarmModal.classList.add("open");
+      alarmModal.inert = false;
       subDimmed.classList.add("active");
     });
     /* 닫기 - x버튼 */
     alarmCloseBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       alarmModal.classList.remove("open");
+      alarmModal.inert = true;
       subDimmed.classList.remove("active");
       alarmFunction.resetAlarm();
     });
@@ -398,8 +423,10 @@ const taskFunction = {
         document.querySelector(".day-status").textContent;
       alarmResult.classList.add("active");
       alarmAddBtn.classList.add("set");
+      alarmAddBtn.setAttribute("aria-checked", "true");
 
       alarmModal.classList.remove("open");
+      alarmModal.inert = true;
       subDimmed.classList.remove("active");
     });
     /* 초기화 */
@@ -411,6 +438,7 @@ const taskFunction = {
       newTask.alarm = null;
       alarmResult.classList.remove("active");
       alarmAddBtn.classList.remove("set");
+      alarmAddBtn.setAttribute("aria-checked", "false");
     });
   },
   /* 수정/삭제 ui */
@@ -422,7 +450,11 @@ const taskFunction = {
     const closeBtn = document.querySelector(".action-x-btn");
     const container = document.querySelector(".container");
 
+    const scrollArea = document.querySelector(".scroll-area");
+    const nav = document.querySelector("nav");
+
     actionSheet.classList.add("open");
+    actionSheet.inert = false;
     mainDimmed.classList.add("active");
 
     /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
@@ -431,7 +463,11 @@ const taskFunction = {
       e.stopPropagation();
       this.deleteTask(taskId);
       actionSheet.classList.remove("open");
+      actionSheet.inert = true;
       mainDimmed.classList.remove("active");
+
+      scrollArea.inert = false;
+      nav.inert = false;
     };
     /* 수정 */
     editBtn.onclick = (e) => {
@@ -472,13 +508,21 @@ const taskFunction = {
       document.querySelector(".task-set").classList.add("active");
       document.querySelector(".task-set h2").textContent = "수정하기";
       document.querySelector(".add-modal").classList.add("open");
+      document.querySelector(".add-modal").inert = false;
       document.querySelector(".main-dimmed").classList.add("active");
       actionSheet.classList.remove("open");
+
+      scrollArea.inert = false;
+      nav.inert = false;
     };
     closeBtn.onclick = (e) => {
       e.stopPropagation();
       actionSheet.classList.remove("open");
+      actionSheet.inert = true;
       mainDimmed.classList.remove("active");
+
+      scrollArea.inert = false;
+      nav.inert = false;
     };
   },
   /* toast - 할 일 추가 */

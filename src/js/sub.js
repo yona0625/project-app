@@ -98,6 +98,12 @@ const updateChart = (data, labels, config) => {
   allChart.data.datasets[0].backgroundColor = updateMaxColors(data);
   updateReport(data);
   allChart.update();
+
+  // 접근성 aria 변경 - 주간 <-> 월간 변경
+  todoChart.setAttribute(
+    "aria-label",
+    `${config.mainTitle} ${config.subTitle} 차트`,
+  );
 };
 // 2. 내부(실질) 데이터
 const updateReport = (reportData) => {
