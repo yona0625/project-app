@@ -197,8 +197,12 @@ const chartBtns = document.querySelectorAll(".chart-btn li");
 chartBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
     /* 탭 버튼 효과 */
-    chartBtns.forEach((item) => item.classList.remove("active"));
+    chartBtns.forEach((item) => {
+      item.classList.remove("active");
+      item.setAttribute("aria-selected", "false");
+    });
     btn.classList.add("active");
+    btn.setAttribute("aria-selected", "true");
 
     /* 탭 + 대사 효과 */
     const bubble = document.querySelector(".mascot-bubble p");
