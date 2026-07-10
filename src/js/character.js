@@ -127,7 +127,7 @@ const dayMessage = {
     const currentMessage = this.messages[timeMessage];
 
     if (headerTime) headerTime.textContent = currentMessage.headerTitle;
-    if (headerUserName) headerUserName.textContent = " 00님";
+    if (headerUserName) headerUserName.textContent = " guest님";
 
     this.showRandomBubble(bubble);
   },
