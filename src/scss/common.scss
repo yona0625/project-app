@@ -3,30 +3,36 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body,
 input::placeholder {
   font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   letter-spacing: 0.015em;
 }
+
 ul,
 li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 header,
 nav {
   /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
   flex-shrink: 0;
 }
+
 .scroll-area {
   overflow-y: auto;
   scrollbar-width: none; // 파이어폭스
   padding-bottom: 80px;
+
   &::-webkit-scrollbar {
     display: none; // 크롬, 사파리
   }
 }
+
 button {
   border: none;
   background: none;
@@ -36,10 +42,12 @@ button {
   cursor: pointer;
   width: 100%;
 }
+
 .container {
-  width: 375px;
-  height: 800px;
-  margin: 50px auto;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  // margin: 20px auto;
   border: 1px solid var(--main_text);
   background-color: var(--pure_white);
   position: relative;
@@ -47,22 +55,32 @@ button {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+
+  @media (min-width: 480px) {
+    width: 375px;
+    height: 800px;
+    margin: 50px auto;
+  }
 }
+
 header,
 section {
   padding: 0 20px;
 }
+
 header {
   width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
 }
+
 header h1 {
   font-size: 24px;
   margin: 0;
   color: var(--main_text);
 }
+
 /* == nav == */
 nav {
   width: 100%;
@@ -75,10 +93,12 @@ nav {
   z-index: 40;
   padding: 0 40px;
 }
+
 .nav-area {
   width: 100%;
   height: 100%;
 }
+
 .menu-item {
   display: flex;
   justify-content: space-between;
@@ -86,10 +106,12 @@ nav {
   width: 100%;
   height: 100%;
 }
+
 .menu-item li {
   width: 30px;
   height: 30px;
 }
+
 .menu-item li a {
   display: flex;
   align-items: center;
@@ -97,6 +119,7 @@ nav {
   width: 100%;
   height: 100%;
 }
+
 .icon-home,
 .icon-chart,
 .icon-setting {
@@ -121,18 +144,22 @@ nav {
 .menu-item li.active .icon {
   background-color: var(--main_color);
 }
+
 .icon-home {
   mask-image: url("/public/icons/nav-home.svg");
   -webkit-mask-image: url("/public/icons/nav-home.svg");
 }
+
 .icon-chart {
   mask-image: url("/public/icons/nav-chart.svg");
   -webkit-mask-image: url("/public/icons/nav-chart.svg");
 }
+
 .icon-setting {
   mask-image: url("/public/icons/nav-setting.svg");
   -webkit-mask-image: url("/public/icons/nav-setting.svg");
 }
+
 /* == icon test == */
 .icon {
   display: inline-flex;
