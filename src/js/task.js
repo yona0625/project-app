@@ -1,14 +1,17 @@
 import { newTask } from "./state.js";
 import { alarmFunction } from "./alarm.js";
 import { customFunction } from "./custom.js";
+import { showToast } from "./toast.js";
 import { openModal, closeModal } from "./modal.js";
 import { renderTasks, initTaskModal } from "./render.js";
 import { showActionSheet } from "./actionSheet.js";
+import { showDeleteToast } from "./toast.js";
 
 const taskFunction = {
   /* 삭제 toast를 위한 변수 */
-  deleteToastTimer: null,
-  deleteToastTask: null,
+  // deleteToastTimer: null,
+  // deleteToastTask: null,
+  /* -> toast.js에 옮겨서 일단 주석 */
 
   /* 수정/삭제를 위한 플래그 */
   mode: "add",
@@ -28,7 +31,7 @@ const taskFunction = {
   /* ===== 데이터 처리 ===== */
   addTask: function () {
     if (newTask.title.trim() === "") {
-      this.showToast("제목을 입력해주세요!");
+      showToast("제목을 입력해주세요!");
       return;
     }
 
