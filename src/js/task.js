@@ -1,6 +1,7 @@
 import { newTask } from "./state.js";
 import { alarmFunction } from "./alarm.js";
 import { customFunction } from "./custom.js";
+import { openModal, closeModal } from "./modal.js";
 
 const taskFunction = {
   /* 삭제 toast를 위한 변수 */
@@ -283,16 +284,16 @@ const taskFunction = {
     /* dimmed */
     mainDimmed.addEventListener("click", () => {
       /* 항상 클릭 시점에 modal을 찾아야 하므로 안에 선언 */
-      const openModal = document.querySelector(".modal-area .open");
+      const activedModal = document.querySelector(".modal-area .open");
       const openSheet = document.querySelector(".action-sheet.open");
-      if (openModal) {
-        openModal.classList.remove("open");
-        openModal.inert = true;
+      if (activedModal) {
+        closeModal(activedModal);
       }
+
       if (openSheet) {
-        openSheet.classList.remove("open");
-        openModal.inert = true;
+        closeModal(openSheet);
       }
+      /* 남아있는 모달이 있는지 확인 후 딤드 닫기 */
       mainDimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
     });
@@ -304,8 +305,7 @@ const taskFunction = {
 
     const openAddModal = () => {
       this.resetTask();
-      taskModal.classList.add("open");
-      taskModal.inert = false;
+      openModal(taskModal);
       mainDimmed.classList.add("active");
       scrollArea.style.overflow = "hidden";
 
@@ -314,8 +314,7 @@ const taskFunction = {
       nav.inert = true;
     };
     const closeAddModal = () => {
-      taskModal.classList.remove("open");
-      taskModal.inert = true;
+      closeModal(taskModal);
       mainDimmed.classList.remove("active");
       scrollArea.style.overflow = "auto";
 
@@ -358,15 +357,13 @@ const taskFunction = {
 
     /* 열기 */
     customAddBtn.addEventListener("click", () => {
-      customModal.classList.add("open");
-      customModal.inert = false;
+      openModal(customModal);
     });
     /* 닫기 */
     customCloseBtn.addEventListener("click", (e) => {
       /* 이벤트 버블링 방지 */
       e.stopPropagation();
-      customModal.classList.remove("open");
-      customModal.inert = true;
+      closeModal(customModal);
       /* ★ 수정하기든, 새로 추가한 일이든 마지막으로 설정한 newTask 값을 유지해야 함 */
       customFunction.setCustom(newTask.color, newTask.icon);
     });
@@ -378,8 +375,8 @@ const taskFunction = {
       newTask.color = customFunction.customTask.selectedColor;
       newTask.icon = customFunction.customTask.selectedIcon;
 
-      customModal.classList.remove("open");
-      customModal.inert = true;
+      closeModal(customModal);
+
     });
 
     /* === alarm-modal === */
@@ -393,15 +390,13 @@ const taskFunction = {
 
     /* 열기 */
     alarmAddBtn.addEventListener("click", () => {
-      alarmModal.classList.add("open");
-      alarmModal.inert = false;
+      openModal(alarmModal);
       subDimmed.classList.add("active");
     });
     /* 닫기 - x버튼 */
     alarmCloseBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      alarmModal.classList.remove("open");
-      alarmModal.inert = true;
+      closeModal(alarmModal);
       subDimmed.classList.remove("active");
       alarmFunction.resetAlarm();
     });
@@ -425,8 +420,7 @@ const taskFunction = {
       alarmAddBtn.classList.add("set");
       alarmAddBtn.setAttribute("aria-checked", "true");
 
-      alarmModal.classList.remove("open");
-      alarmModal.inert = true;
+      closeModal(alarmModal);
       subDimmed.classList.remove("active");
     });
     /* 초기화 */
