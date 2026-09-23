@@ -89,8 +89,10 @@ const taskFunction = {
   deleteTask: function (taskId) {
     this.deleteToastTask = this.tasks.find((t) => t.id === taskId);
     this.tasks = this.tasks.filter((t) => t.id !== taskId);
-    this.renderTasks();
-    this.showDeleteToast();
+    renderTasks(this.tasks, (id) => this.openActionSheet(id));
+    showDeleteToast(this.tasks, this.deleteToastTask, (id) =>
+      this.openActionSheet(id),
+    );
   },
   fixTask: function () {
     const editTask = this.tasks.find((t) => t.id === this.editId);
