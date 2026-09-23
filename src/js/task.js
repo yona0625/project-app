@@ -3,6 +3,7 @@ import { alarmFunction } from "./alarm.js";
 import { customFunction } from "./custom.js";
 import { openModal, closeModal } from "./modal.js";
 import { renderTasks, initTaskModal } from "./render.js";
+import { showActionSheet } from "./actionSheet.js";
 
 const taskFunction = {
   /* 삭제 toast를 위한 변수 */
@@ -308,138 +309,46 @@ const taskFunction = {
     });
   },
   /* 수정/삭제 ui */
-  showActionSheet: function (taskId) {
-    const actionSheet = document.querySelector(".action-sheet");
-    const mainDimmed = document.querySelector(".main-dimmed");
-    const deleteBtn = document.querySelector(".action-delete");
-    const editBtn = document.querySelector(".action-edit");
-    const closeBtn = document.querySelector(".action-x-btn");
-    const container = document.querySelector(".container");
 
-    const scrollArea = document.querySelector(".scroll-area");
-    const nav = document.querySelector("nav");
+  openActionSheet: function (taskId) {
+    showActionSheet(taskId, {
+      onDelete: (id) => this.deleteTask(id),
+      onEdit: (id) => {
+        this.mode = "edit";
+        this.editId = id;
+        const editTask = this.tasks.find((t) => t.id === id);
 
-    actionSheet.classList.add("open");
-    actionSheet.inert = false;
-    mainDimmed.classList.add("active");
+        /* editTask로 덮어야 수정 시에도 유지가 됨. */
+        //   this.newTask = { ...editTask };
+        // 스프레드 연산자 재할당 불가 -> 다 가져옴
+        newTask.title = editTask.title;
+        newTask.duration = editTask.duration;
+        newTask.icon = editTask.icon;
+        newTask.color = editTask.color;
+        newTask.alarm = editTask.alarm;
+        newTask.done = editTask.done;
 
-    /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
-    /* 삭제 */
-    deleteBtn.onclick = (e) => {
-      e.stopPropagation();
-      this.deleteTask(taskId);
-      actionSheet.classList.remove("open");
-      actionSheet.inert = true;
-      mainDimmed.classList.remove("active");
+        /* add, custom 모달 수정 시 값 유지(초기화) */
+        initTaskModal(editTask);
 
-      scrollArea.inert = false;
-      nav.inert = false;
-    };
-    /* 수정 */
-    editBtn.onclick = (e) => {
-      e.stopPropagation();
-      this.mode = "edit";
-      this.editId = taskId;
-      const editTask = this.tasks.find((t) => t.id === taskId);
+        customFunction.customTask.selectedColor = editTask.color;
+        customFunction.customTask.selectedIcon = editTask.icon;
 
-      /* editTask로 덮어야 수정 시에도 유지가 됨. */
-      //   this.newTask = { ...editTask };
-      // 스프레드 연산자 재할당 불가 -> 다 가져옴
-      newTask.title = editTask.title;
-      newTask.duration = editTask.duration;
-      newTask.icon = editTask.icon;
-      newTask.color = editTask.color;
-      newTask.alarm = editTask.alarm;
-      newTask.done = editTask.done;
+        customFunction.setCustom(editTask.color, editTask.icon);
 
-      /* add, custom 모달 수정 시 값 유지(초기화) */
-      this.initTaskModal(editTask);
-
-      customFunction.customTask.selectedColor = editTask.color;
-      customFunction.customTask.selectedIcon = editTask.icon;
-
-      customFunction.setCustom(editTask.color, editTask.icon);
-
-      /* 수정하기 모달로 내용 교체 */
-      document.querySelector(".add-modal h2").textContent =
-        "할 일을 수정하세요";
-      /* 해당 타임 프리셋에 맞게 active 활성화, 나머지는 비활성화 */
-      document.querySelectorAll(".time-list li").forEach((li) => {
-        if (li.dataset.time === editTask.duration) {
-          li.classList.add("active");
-        } else {
-          li.classList.remove("active");
-        }
-      });
-      document.querySelector(".task-set").classList.add("active");
-      document.querySelector(".task-set h2").textContent = "수정하기";
-      document.querySelector(".add-modal").classList.add("open");
-      document.querySelector(".add-modal").inert = false;
-      document.querySelector(".main-dimmed").classList.add("active");
-      actionSheet.classList.remove("open");
-
-      scrollArea.inert = false;
-      nav.inert = false;
-    };
-    closeBtn.onclick = (e) => {
-      e.stopPropagation();
-      actionSheet.classList.remove("open");
-      actionSheet.inert = true;
-      mainDimmed.classList.remove("active");
-
-      scrollArea.inert = false;
-      nav.inert = false;
-    };
-  },
-  /* toast - 할 일 추가 */
-  showToast: function (message) {
-    const toast = document.querySelector(".toast");
-    const toastMsg = document.querySelector(".toast-msg");
-    const toastCancel = document.querySelector(".toast-cancel");
-    toastMsg.textContent = message;
-    toastCancel.style.display = "none";
-    toast.classList.add("show");
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2000);
-  },
-  /* toast - 삭제 시 */
-  showDeleteToast: function () {
-    const toast = document.querySelector(".toast");
-    const toastMsg = document.querySelector(".toast-msg");
-    const toastCancel = document.querySelector(".toast-cancel");
-
-    toastCancel.style.display = "block";
-    toastMsg.textContent = "삭제되었습니다";
-    toast.classList.add("show");
-
-    /* 연속 작동으로 인한 타이머 혼선 방지 */
-    clearTimeout(this.deleteToastTimer);
-
-    /* cancel을 하지 않을 경우 */
-    this.deleteToastTimer = setTimeout(() => {
-      /* filter를 통해 조건에 따라 재배열이 이루어지고(=삭제), 이 값을 저장해야 하므로 로컬 스토리지에 반영 */
-      localStorage.setItem("tasks", JSON.stringify(this.tasks));
-      /* character.js랑 연결 */
-      document.dispatchEvent(
-        new CustomEvent("tasksUpdated", { detail: this.tasks }),
-      );
-      this.deleteToastTask = null;
-      toast.classList.remove("show");
-    }, 3000);
-
-    /* cancel을 할 경우 */
-    toastCancel.onclick = () => {
-      /* 타이머 정지 -> 다시 원상복구하고 스토리지에 저장, toast 숨기기 */
-      clearTimeout(this.deleteToastTimer);
-      if (this.deleteToastTask) {
-        this.tasks.push(this.deleteToastTask);
-        this.deleteToastTask = null;
-        localStorage.setItem("tasks", JSON.stringify(this.tasks));
-        this.renderTasks();
-      }
-      toast.classList.remove("show");
-    };
+        /* 수정하기 모달로 내용 교체 */
+        document.querySelector(".add-modal h2").textContent =
+          "할 일을 수정하세요";
+        /* 해당 타임 프리셋에 맞게 active 활성화, 나머지는 비활성화 */
+        document.querySelectorAll(".time-list li").forEach((li) => {
+          if (li.dataset.time === editTask.duration) {
+            li.classList.add("active");
+          } else {
+            li.classList.remove("active");
+          }
+        });
+      },
+    });
   },
   /* 버튼 활성화 여부 */
   taskCheck: function () {
