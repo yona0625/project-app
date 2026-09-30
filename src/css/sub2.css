@@ -185,7 +185,7 @@ section > ul {
   position: absolute;
   right: 30px;
   top: 23px;
-  background: url(/public/images/close-btn-image.png) no-repeat center center;
+  background: url(../../public/images/close-btn-image.png) no-repeat center center;
   cursor: pointer;
 }
 
@@ -194,6 +194,7 @@ section > ul {
   margin-top: 30px;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .color-text {
   width: 100%;
@@ -208,14 +209,20 @@ section > ul {
 }
 
 .item {
-  width: 150px;
-  height: 130px;
+  width: 48%;
+  height: 160px;
   border: 1px solid var(--border_color);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   cursor: pointer;
+}
+@media (min-width: 480px) {
+  .item {
+    width: 150px;
+    height: 130px;
+  }
 }
 
 .check-mark {
@@ -224,7 +231,7 @@ section > ul {
   position: absolute;
   left: 10px;
   top: 10px;
-  background: url("/public/icons/icon-themecheck.svg") no-repeat center center;
+  background: url("../../public/icons/icon-themecheck.svg") no-repeat center center;
   display: none;
 }
 
@@ -319,7 +326,7 @@ section > ul {
   position: absolute;
   right: 20px;
   top: 20px;
-  background: url(/public/images/close-btn-image.png) no-repeat center center;
+  background: url(../../public/images/close-btn-image.png) no-repeat center center;
   cursor: pointer;
 }
 .lang-list {
@@ -379,6 +386,4 @@ input[name=lang]:checked + label::before {
   border-color: var(--main_color);
 }
 
-/* === language end === */
-
-/*# sourceMappingURL=sub2.css.map */
+/* === language end === *//*# sourceMappingURL=sub2.css.map */

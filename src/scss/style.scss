@@ -14,7 +14,7 @@
   toast: 100  
   add-modal: 10
   alarm-modal: 20
-  custom-modal: 20 
+  custom-modal: 20  
   action-sheet: 50
 */
 .add-modal,
@@ -23,9 +23,6 @@
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* nav -> absolute로 변경, 60px 패딩 삭제 */
-  /* padding-bottom: 60px; */
-  /* flex: 1; */
 }
 .add-modal::-webkit-scrollbar,
 .custom-modal::-webkit-scrollbar,
@@ -273,7 +270,7 @@
     top: 30px;
     width: 24px;
     height: 24px;
-    background: url(/public/images/close-btn-image.png) no-repeat center center;
+    background: url(../../public/images/close-btn-image.png) no-repeat center center;
     cursor: pointer;
   }
   &-time {
@@ -346,8 +343,8 @@ input[id="task-name"] {
   }
 }
 .icon-result {
-  mask-image: url("/public/icons/icon-doing.svg");
-  -webkit-mask-image: url("/public/icons/icon-doing.svg");
+  mask-image: url("../../public/icons/icon-doing.svg");
+  -webkit-mask-image: url("../../public/icons/icon-doing.svg");
   background-color: var(--main_color);
   padding: 10px;
 }
@@ -400,7 +397,7 @@ input[id="task-name"] {
     position: absolute;
     width: 24px;
     height: 24px;
-    background: url(/public/images/close-btn-image.png) no-repeat center center;
+    background: url(../../public/images/close-btn-image.png) no-repeat center center;
     right: 20px;
     top: 30px;
     cursor: pointer;
@@ -490,14 +487,14 @@ input[id="task-name"] {
     border-radius: 5px;
     cursor: pointer;
     &.checked {
-      background-image: url("/public/icons/icon-check.svg");
+      background-image: url("../../public/icons/icon-check.svg");
       background-repeat: no-repeat;
       background-position: center;
       background-size: 14px;
     }
     &.reset-color.checked {
       border: 2px solid var(--sub_title);
-      background-image: url("/public/icons/icon-xmark.svg");
+      background-image: url("../../public/icons/icon-xmark.svg");
       background-size: 10px;
     }
   }
@@ -505,7 +502,7 @@ input[id="task-name"] {
 .reset-color {
   background-color: var(--pure_white);
   border: 1px solid var(--border_color);
-  background-image: url("/public/icons/icon-xmark.svg");
+  background-image: url("../../public/icons/icon-xmark.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 10px;
@@ -534,7 +531,6 @@ input[id="task-name"] {
       li {
         width: 30px;
         height: 30px;
-        /* background-color: red; */
         border-radius: 5px;
         display: flex;
         justify-content: center;
@@ -634,7 +630,7 @@ input[id="task-name"] {
     position: absolute;
     width: 24px;
     height: 24px;
-    background: url(/public/images/close-btn-image.png) no-repeat center center;
+    background: url(../../public/images/close-btn-image.png) no-repeat center center;
     right: 20px;
     top: 20px;
   }
@@ -842,8 +838,8 @@ input[id="task-name"] {
     align-items: center;
     margin-top: 3px;
     .icon-alarm {
-      mask-image: url("/public/icons/icon-alarm.svg");
-      -webkit-mask-image: url("/public/icons/icon-alarm.svg");
+      mask-image: url("../../public/icons/icon-alarm.svg");
+      -webkit-mask-image: url("../../public/icons/icon-alarm.svg");
       width: 10px;
       height: 10px;
     }
@@ -875,8 +871,8 @@ input[id="task-name"] {
   }
 }
 .icon-doing {
-  mask-image: url("/public/icons/icon-doing.svg");
-  -webkit-mask-image: url("/public/icons/icon-doing.svg");
+  mask-image: url("../../public/icons/icon-doing.svg");
+  -webkit-mask-image: url("../../public/icons/icon-doing.svg");
   background-color: var(--main_text);
 }
 /* === todo end === */
@@ -905,7 +901,7 @@ input[id="task-name"] {
   &-x-btn {
     width: 24px;
     height: 24px;
-    background: url(/public/images/close-btn-image.png) no-repeat center center;
+    background: url(../../public/images/close-btn-image.png) no-repeat center center;
     position: absolute;
     right: 20px;
     cursor: pointer;
@@ -949,10 +945,10 @@ input[id="task-name"] {
   0%,
   90%,
   100% {
-    transform: scaleY(1); /* 평소에는 원래 크기 */
+    transform: scaleY(1); 
   }
   95% {
-    transform: scaleY(0.1); /* 95% 시점에 세로로 아주 납작하게 (감은 효과) */
+    transform: scaleY(0.1);
   }
 }
 @keyframes jump {

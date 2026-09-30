@@ -8,11 +8,6 @@ import { showActionSheet } from "./actionSheet.js";
 import { showDeleteToast } from "./toast.js";
 
 const taskFunction = {
-  /* 삭제 toast를 위한 변수 */
-  // deleteToastTimer: null,
-  // deleteToastTask: null,
-  /* -> toast.js에 옮겨서 일단 주석 */
-
   /* 수정/삭제를 위한 플래그 */
   mode: "add",
   editId: null,
@@ -209,10 +204,6 @@ const taskFunction = {
       const modalArea = taskModal.contains(e.target);
       const openBtnArea = openBtn.contains(e.target);
       /* custom/alarm 모달은 클릭 이벤트가 이루어지기 전 선언이 먼저 되므로 하단에 쓰여도 사용 가능(콜백) */
-
-      /* 다른 모달이 계속 추가되었을 때 하단 if문을 간소화 하기 위한 함수. */
-      /* 만약 모달이 한 개라도 열려있다면 그걸로 접근을 제한하면 되므로 그냥 셀렉터로 선택 */
-      /* ★★★ 단, add-modal이 열린 상태에서는 이미 open이 붙고, 이 때 add-modal을 제외한 나머지의 open이 붙은 서브모달들만을 제한해서 잡아야만 본래의 add-modal이 닫힐 수 있음. */
       const otherModalOpen = () => {
         return (
           document.querySelector(".modal-area .open:not(.add-modal)") !== null
@@ -234,12 +225,14 @@ const taskFunction = {
     /* 열기 */
     customAddBtn.addEventListener("click", () => {
       openModal(customModal);
+      subDimmed.classList.add("active");
     });
     /* 닫기 */
     customCloseBtn.addEventListener("click", (e) => {
       /* 이벤트 버블링 방지 */
       e.stopPropagation();
       closeModal(customModal);
+      subDimmed.classList.remove("active");
       /* ★ 수정하기든, 새로 추가한 일이든 마지막으로 설정한 newTask 값을 유지해야 함 */
       customFunction.setCustom(newTask.color, newTask.icon);
     });
@@ -253,6 +246,7 @@ const taskFunction = {
 
       closeModal(customModal);
 
+      subDimmed.classList.remove("active");
     });
 
     /* === alarm-modal === */

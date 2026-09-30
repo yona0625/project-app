@@ -1,7 +1,6 @@
 import { openModal, closeModal } from "./modal.js";
 
 /* 수정/삭제 ui */
-/* 순서에 무관하게 받기 위해 중괄호로 넘김 */
 function showActionSheet(taskId, { onDelete, onEdit }) {
   const actionSheet = document.querySelector(".action-sheet");
   const mainDimmed = document.querySelector(".main-dimmed");
@@ -19,7 +18,6 @@ function showActionSheet(taskId, { onDelete, onEdit }) {
   scrollArea.inert = true;
   nav.inert = true;
 
-  /* 이벤트 리스너는 기존 이벤트를 제거하지 않는 이상 계속 누적, onclick은 덮어 씌우므로 누적되지 않음. 수정/삭제의 경우 다른 것과 다르게 누를 '때마다' 실행되므로 이벤트 리스너가 부적합 */
   /* 삭제 */
   deleteBtn.onclick = (e) => {
     e.stopPropagation();

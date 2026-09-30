@@ -210,7 +210,7 @@ section {
   position: absolute;
   right: 30px;
   top: 23px;
-  background: url(/public/images/close-btn-image.png) no-repeat center center;
+  background: url(../../public/images/close-btn-image.png) no-repeat center center;
   cursor: pointer;
 }
 
@@ -259,7 +259,7 @@ section {
   position: absolute;
   left: 10px;
   top: 10px;
-  background: url("/public/icons/icon-themecheck.svg") no-repeat center center;
+  background: url("../../public/icons/icon-themecheck.svg") no-repeat center center;
   display: none;
 }
 
@@ -366,7 +366,7 @@ section {
     position: absolute;
     right: 20px;
     top: 20px;
-    background: url(/public/images/close-btn-image.png) no-repeat center center;
+    background: url(../../public/images/close-btn-image.png) no-repeat center center;
     cursor: pointer;
   }
 

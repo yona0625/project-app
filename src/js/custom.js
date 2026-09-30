@@ -86,7 +86,7 @@ const customFunction = {
         /* 미리 저장해 둠 -> li + data-icon 형식으로 저장 */
         iconBox.dataset.icon = iconName;
 
-        iconBox.innerHTML = `<img src="/public/icons/icon-${iconName}.svg" alt="${iconName}" />`;
+        iconBox.innerHTML = `<img src="public/icons/icon-${iconName}.svg" alt="${iconName}" />`;
 
         iconBox.addEventListener("click", () => {
           /* 체크 박스 */
@@ -99,13 +99,13 @@ const customFunction = {
 
           /* 이미지 마스크, css와 동일 */
           const iconResult = document.querySelector(".icon-result");
-          iconResult.style.maskImage = `url("/public/icons/icon-${iconName}.svg")`;
-          iconResult.style.webkitMaskImage = `url("/public/icons/icon-${iconName}.svg")`;
+          iconResult.style.maskImage = `url("public/icons/icon-${iconName}.svg")`;
+          iconResult.style.webkitMaskImage = `url("public/icons/icon-${iconName}.svg")`;
 
           /* 미리보기 반영 */
           const iconPreview = document.querySelector(".icon-preview");
-          iconPreview.style.maskImage = `url("/public/icons/icon-${iconName}.svg")`;
-          iconPreview.style.webkitMaskImage = `url("/public/icons/icon-${iconName}.svg")`;
+          iconPreview.style.maskImage = `url("public/icons/icon-${iconName}.svg")`;
+          iconPreview.style.webkitMaskImage = `url("public/icons/icon-${iconName}.svg")`;
 
           /* newTask가 아니라 customTask로 받아야 함 */
           /* 지금의 newTask는 흑백이 기본 값인데, 흑백이 아니라 커스텀으로 들어가야 하므로 */
@@ -126,17 +126,15 @@ const customFunction = {
   setCustom: function (color, icon) {
     const resetColor = document.querySelector(".reset-color");
     
-    /* 정해진 값이 있다면 가변 값, 아니라면 기본 값 */
     const applyColor = color || "#2d2d2d";
     let applyIcon;
-    /* 기본 값이거나 초기화 시에는 기본 (doing) 아이콘 */
+    /* 기본 값 혹은 초기화 시: 기본 (doing) 아이콘 */
     if (icon === "default" || icon === null) {
       applyIcon = "doing";
     } else {
       applyIcon = icon;
     }
-    /* maskURI는 applyIcon을 따라감 */
-    const maskURI = `url('/public/icons/icon-${applyIcon}.svg')`;
+    const maskURI = `url('public/icons/icon-${applyIcon}.svg')`;
 
     /* 체크박스, 아이콘 선택 시각 효과 초기화 */
     const allColorPreset = document.querySelectorAll(".color-list li");

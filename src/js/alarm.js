@@ -5,7 +5,6 @@ const alarmFunction = {
     {
       length: 12,
     },
-    /* 시간은 1부터 시작하므로 + 1 */
     (_, i) => i + 1,
   ),
   minutes: Array.from(
@@ -21,9 +20,9 @@ const alarmFunction = {
     days: [],
   },
   init: function () {
-    this.renderAlarm(this.ampm, ".alarm-ampm", 0); // 오전
-    this.renderAlarm(this.hours, ".alarm-hour", 6); // 7시 시작
-    this.renderAlarm(this.minutes, ".alarm-minute", 0); // 00분
+    this.renderAlarm(this.ampm, ".alarm-ampm", 0); 
+    this.renderAlarm(this.hours, ".alarm-hour", 6); 
+    this.renderAlarm(this.minutes, ".alarm-minute", 0);
     this.timeSelect();
     this.daySelect();
     this.updateDayStatus();
@@ -58,7 +57,6 @@ const alarmFunction = {
   /* 버튼 활성화 여부 */
   alarmCheck: function () {
     const alarmSetBtn = document.querySelector(".alarm-set");
-    /* 나머지 데이터는 이미 있으니 요일이 하나라도 선택 되었다면 */
     if (this.alarmData.days.length > 0) {
       alarmSetBtn.classList.add("active");
     } else {
@@ -66,22 +64,19 @@ const alarmFunction = {
     }
     this.updateDayStatus();
   },
-  /* !== Object.entries로 배열의 key:value 가져오는 거랑 다름, 실제로 넘길 값 / 받을 곳 + index 추가 */
   renderAlarm: function (alarmData, dataTarget, defaultIndex) {
     const alarmDataList = document.querySelector(dataTarget);
 
-    /* 여백을 만들어줘야 맨 상단을 가운데로 가져올 수 있음 */
+    /* 상단 요소를 가운데 선택하기 위한 여백 생성 */
     const emptyTopBlock = document.createElement("li");
     alarmDataList.appendChild(emptyTopBlock);
 
     /* 두 번째 인자 = 인덱스 */
     alarmData.forEach((item, i) => {
-      /* 각각 한 칸 씩의 알람 설정 속 블록 */
       const eachAlarmBlock = document.createElement("li");
       eachAlarmBlock.textContent = item;
       if (i === defaultIndex) {
         eachAlarmBlock.classList.add("active");
-        /* 7시로 스크롤 초기화, 인덱스 만큼 스크롤을 읽어서 내림 */
         setTimeout(() => {
           alarmDataList.scrollTop = i * eachAlarmBlock.offsetHeight;
         }, 0);
@@ -97,17 +92,14 @@ const alarmFunction = {
     const timeItems = document.querySelectorAll(".alarm-item");
     timeItems.forEach((timeItem, index) => {
       timeItem.addEventListener("scroll", () => {
-        /* 스크롤로 구분되는 오후/오전, 시간, 분을 한 칸인 높이 50으로 나누고, 스크롤(인덱스)로 선택된 특정 시간을 찾음 */
         const scrollIndex = Math.round(timeItem.scrollTop / 50);
-        /* 만약 빈 li를 가리키면 통과(undefined가 뜸) */
         if (scrollIndex < 0) return;
 
         /* 볼드/크기 하이라이트 */
-        /* 전체 특정 요소가 무엇이 올지 모르기 때문에 전체에서 active를 지우고 active에 붙이는 식으로 처리 */
         timeItem
           .querySelectorAll("li")
           .forEach((li) => li.classList.remove("active"));
-        /* 앞뒤에 공백으로 li가 있으므로 +1을 해야 실제 데이터부터 시작 */
+        /* 앞뒤에 공백으로 인해 +1을 해야 실제 데이터부터 시작 */
         const activeLi = timeItem.querySelectorAll("li")[scrollIndex + 1];
         if (activeLi) activeLi.classList.add("active");
 
@@ -151,10 +143,7 @@ const alarmFunction = {
     const { ampm, hour, minute, days } = this.alarmData;
 
     /* 분을 두 자리 수로 설정 */
-    /* 만약 10보다 작은 1, 2, 3이라면 앞에 0을 붙여야 01, 02, 03으로 나옴. */
     const minuteText = minute < 10 ? `0${minute}` : minute;
-
-    /* 배열을 공백없는 문자열로 바꾸고 합쳐서 대조할 수 있도록 변환 */
     const dayStr = days.join("");
 
     /* 날짜 라벨링 */

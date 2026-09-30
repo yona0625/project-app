@@ -20,7 +20,6 @@ li {
 
 header,
 nav {
-  /* scroll-area의 flex: 1이 없을 때도 줄어들지 않게 안전장치 */
   flex-shrink: 0;
 }
 
@@ -44,9 +43,9 @@ button {
 }
 
 .container {
-  width: 375px;
-  height: 800px;
-  margin: 50px auto;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
   border: 1px solid var(--main_text);
   background-color: var(--pure_white);
   position: relative;
@@ -54,6 +53,13 @@ button {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+@media (min-width: 480px) {
+  .container {
+    width: 375px;
+    height: 800px;
+    margin: 50px auto;
+  }
 }
 
 header,
@@ -139,18 +145,18 @@ nav {
 }
 
 .icon-home {
-  mask-image: url("/public/icons/nav-home.svg");
-  -webkit-mask-image: url("/public/icons/nav-home.svg");
+  mask-image: url("../../public/icons/nav-home.svg");
+  -webkit-mask-image: url("../../public/icons/nav-home.svg");
 }
 
 .icon-chart {
-  mask-image: url("/public/icons/nav-chart.svg");
-  -webkit-mask-image: url("/public/icons/nav-chart.svg");
+  mask-image: url("../../public/icons/nav-chart.svg");
+  -webkit-mask-image: url("../../public/icons/nav-chart.svg");
 }
 
 .icon-setting {
-  mask-image: url("/public/icons/nav-setting.svg");
-  -webkit-mask-image: url("/public/icons/nav-setting.svg");
+  mask-image: url("../../public/icons/nav-setting.svg");
+  -webkit-mask-image: url("../../public/icons/nav-setting.svg");
 }
 
 /* == icon test == */
@@ -164,6 +170,4 @@ nav {
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
-}
-
-/*# sourceMappingURL=common.css.map */
+}/*# sourceMappingURL=common.css.map */

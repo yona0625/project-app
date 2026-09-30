@@ -102,7 +102,7 @@ header span {
     & .more {
       width: 15px;
       height: 15px;
-      background: url("/public/icons/icon-more.svg") no-repeat center center;
+      background: url("../../public/icons/icon-more.svg") no-repeat center center;
     }
   }
   &-btn {
@@ -165,7 +165,6 @@ header span {
   &-item {
     width: 100%;
     height: 60px;
-    /* background-color: #f0f0f0; */
     background-color: var(--pure_white);
     border-radius: 20px;
     display: flex;
@@ -225,9 +224,9 @@ header span {
   0%,
   90%,
   100% {
-    transform: scaleY(1); /* 평소에는 원래 크기 */
+    transform: scaleY(1); 
   }
   95% {
-    transform: scaleY(0.1); /* 95% 시점에 세로로 아주 납작하게 (감은 효과) */
+    transform: scaleY(0.1); 
   }
 }

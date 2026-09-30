@@ -71,8 +71,8 @@ const dayMessage = {
   init: function () {
     const mascotFace = document.querySelector(".mascot-face");
     const bubble = document.querySelector(".mascot-bubble p");
-    /* === 실시간 대사 반응(add/fix/delete/checkbox 대응) === */
 
+    /* === 실시간 대사 반응(add/fix/delete/checkbox 대응) === */
     document.addEventListener("tasksUpdated", (e) => {
       const tasks = e.detail;
       const doing = tasks.filter(function (t) {
