@@ -33,8 +33,8 @@ function renderTasks(tasks, onActionSheetOpen) {
          <div class=
          "icon icon-doing"
          style="background-color: ${task.color};
-         -webkit-mask-image: url('/public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');
-         mask-image: url('/public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');">
+         -webkit-mask-image: url('public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');
+         mask-image: url('public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');">
          </div>
          <div class="todo-text">
             <h3 style="color: ${task.color}">${task.title}</h3>
@@ -45,8 +45,8 @@ function renderTasks(tasks, onActionSheetOpen) {
           </div>    
          </div>
          <div class="todo-mark icon" style="
-            mask-image: url('/public/icons/${checkIcon}.svg');
-            -webkit-mask-image: url('/public/icons/${checkIcon}.svg');
+            mask-image: url('public/icons/${checkIcon}.svg');
+            -webkit-mask-image: url('public/icons/${checkIcon}.svg');
             background-color: var(--main_color);">
          </div>`;
 
@@ -110,8 +110,8 @@ function initTaskModal(initTask) {
   const previewTitle = document.querySelector(".preview-text h3");
   const maskURI =
     initTask.icon === "default"
-      ? `url('/public/icons/icon-doing.svg')`
-      : `url('/public/icons/icon-${initTask.icon}.svg')`;
+      ? `url('public/icons/icon-doing.svg')`
+      : `url('public/icons/icon-${initTask.icon}.svg')`;
 
   /* add-modal */
   taskName.value = initTask.title;
