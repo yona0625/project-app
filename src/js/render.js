@@ -33,8 +33,8 @@ function renderTasks(tasks, onActionSheetOpen) {
          <div class=
          "icon icon-doing"
          style="background-color: ${task.color};
-         -webkit-mask-image: url('public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');
-         mask-image: url('public/icons/icon-${task.icon === "default" ? "doing" : task.icon}.svg');">
+         -webkit-mask-image: url('public/icons/${task.icon === "default" ? "icon-doing" : "custom/icon-" + task.icon}.svg');
+         mask-image: url('public/icons/${task.icon === "default" ? "icon-doing" : "custom/icon-" + task.icon}.svg');">
          </div>
          <div class="todo-text">
             <h3 style="color: ${task.color}">${task.title}</h3>
@@ -111,7 +111,7 @@ function initTaskModal(initTask) {
   const maskURI =
     initTask.icon === "default"
       ? `url('public/icons/icon-doing.svg')`
-      : `url('public/icons/icon-${initTask.icon}.svg')`;
+      : `url('public/icons/custom/icon-${initTask.icon}.svg')`;
 
   /* add-modal */
   taskName.value = initTask.title;
