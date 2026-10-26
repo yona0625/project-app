@@ -3,10 +3,11 @@ import { newTask } from "./state.js";
 
 const customFunction = {
   icons: {
-    routine: ["walk", "sleep", "music"],
-    food: ["chicken", "fish", "cheese", "noodle"],
-    animal: ["dog", "cat", "bird"],
-    others: ["smile", "star", "plant"],
+    routine: ["run", "bike", "swim", "dumbbell"],
+    work: ["book", "pencil", "meeting", "calendar", "laptop", "call"],
+    daily: ["subway", "clean", "shopping", "medicine", "sleep", "wash", "meal", "drink", "car"],
+    hobby: ["music", "piano", "paint", "movie", "trip", "fishing", "walk", "camera"],
+    others: ["smile", "star", "plant", "dog", "cat", "bird", "moon", "math", "check", "sun", "crown", "code", "delivery", "trophy"],
   },
   colors: [
     "#DA5C53",
